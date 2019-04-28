@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="NetView.View.UC_Output"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NetView.View"
+             xmlns:Convert="clr-namespace:NetView.Converts"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Convert:MsgType2Image x:Key="MsgType2Image"/>
+            <Convert:DateTime2Text x:Key="DateTime2Text"/>
+            <Convert:MsgType2Brush x:Key="MsgType2Brush"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <ListView ItemsSource="{Binding MsgCollect, RelativeSource={RelativeSource  Mode=FindAncestor, AncestorType=UserControl}}"
+                  BorderThickness="1">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Name="MenuClear" Header="Clear" ToolTip="Clear Message" Click="MenuClear_Click"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderThickness="0.1" BorderBrush="Black" CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="2000"/>
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{Binding MsgType,Converter={StaticResource MsgType2Image}}" Height="24" Width="24"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="8"/>
+                            <TextBlock Text="{Binding MsgTime, Converter={StaticResource DateTime2Text}}" FontSize="14" Foreground="{Binding MsgType, Converter={StaticResource MsgType2Brush}}"
+                                   HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="1"/>
+                            <TextBlock Text="{Binding MsgContent}" Grid.Column="2" FontSize="14" Foreground="{Binding MsgType, Converter={StaticResource MsgType2Brush}}"
+                                   HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <TextBlock Grid.Column="3"/>
+                        </Grid>
+                    </Border>
+
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>
