@@ -58,30 +58,20 @@ namespace NetView
                 BusTypeNode.ImageIndex = 1;
                 var DevBusType = DeviceCfg.Where(d => d.BusType.Equals(BusType));
                 for (int i = 0; i < DevBusType.Count(); i++)
-                    BusRelationshipList.Add(DevBusType.ElementAt(i).BusRelationship);
+                    BusRelationshipList.Add(DevBusType.ElementAt(i).Category);
                 foreach (var Relationship in BusRelationshipList.Distinct())
                 {
-                    var CompanyNameList = new List<string>();
+                    var DeviceNameList = new List<string>();
                     var BusRelationshipNode = new TreeNode(Relationship);
                     BusRelationshipNode.ImageIndex = 2;
-                    var DevBusRelationship = DevBusType.Where(d => d.BusRelationship.Equals(Relationship));
+                    var DevBusRelationship = DevBusType.Where(d => d.Category.Equals(Relationship));
                     for (int i = 0; i < DevBusRelationship.Count(); i++)
-                        CompanyNameList.Add(DevBusRelationship.ElementAt(i).CompanyName);
-                    foreach (var CompanyName in CompanyNameList.Distinct())
+                        DeviceNameList.Add(DevBusRelationship.ElementAt(i).DeviceName);
+                    foreach (var Dev in DeviceNameList.Distinct())
                     {
-                        var DeviceNameList = new List<string>();
-                        var CompanyNameNode = new TreeNode(CompanyName);
-                        CompanyNameNode.ImageIndex = 3;
-                        var DevCompanyName = DevBusRelationship.Where(d => d.CompanyName.Equals(CompanyName));
-                        for (int i = 0; i < DevCompanyName.Count(); i++)
-                            DeviceNameList.Add(DevCompanyName.ElementAt(i).DeviceName);
-                        foreach (var Dev in DeviceNameList.Distinct())
-                        {
-                            var DeviceNameNode = new TreeNode(Dev);
-                            DeviceNameNode.ImageIndex = 4;
-                            CompanyNameNode.Nodes.Add(DeviceNameNode);
-                        }
-                        BusRelationshipNode.Nodes.Add(CompanyNameNode);
+                        var DeviceNameNode = new TreeNode(Dev);
+                        DeviceNameNode.ImageIndex = 4;
+                        BusRelationshipNode.Nodes.Add(DeviceNameNode);
                     }
                     BusTypeNode.Nodes.Add(BusRelationshipNode);
                 }
