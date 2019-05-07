@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetView", "NetView\NetView.csproj", "{362471BD-506A-4C0C-B6EF-6C3586BF7044}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetViewTests", "NetViewTests\NetViewTests.csproj", "{EDA2DFD4-3AE8-4E90-9374-43B975ED4539}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{362471BD-506A-4C0C-B6EF-6C3586BF7044}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{362471BD-506A-4C0C-B6EF-6C3586BF7044}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{362471BD-506A-4C0C-B6EF-6C3586BF7044}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDA2DFD4-3AE8-4E90-9374-43B975ED4539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDA2DFD4-3AE8-4E90-9374-43B975ED4539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDA2DFD4-3AE8-4E90-9374-43B975ED4539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDA2DFD4-3AE8-4E90-9374-43B975ED4539}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

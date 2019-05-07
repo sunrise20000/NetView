@@ -94,7 +94,9 @@ namespace NetView
         }
         private void TreeViewDevice_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            
+            //总线是否只有一个
+            //一种总线的配置界面是否一致
+            //界面上所有的参数对应XML里面什么内容
         }
 
     }
