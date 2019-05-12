@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             DevExpress.Utils.Animation.PushTransition pushTransition1 = new DevExpress.Utils.Animation.PushTransition();
-            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer3 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
+            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer9 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
             this.documentGroup1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup(this.components);
             this.document1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
@@ -375,7 +375,7 @@
             // 
             this.barDockControlTop.CausesValidation = false;
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 29);
             this.barDockControlTop.Manager = this.barManager1;
             this.barDockControlTop.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.barDockControlTop.Size = new System.Drawing.Size(1916, 47);
@@ -393,19 +393,19 @@
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 47);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 76);
             this.barDockControlLeft.Manager = this.barManager1;
             this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 981);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 952);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1916, 47);
+            this.barDockControlRight.Location = new System.Drawing.Point(1916, 76);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 981);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 952);
             // 
             // dockManager1
             // 
@@ -521,12 +521,14 @@
             // 
             this.MenuOpen.Caption = "Open";
             this.MenuOpen.Id = 5;
+            this.MenuOpen.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuOpen.ImageOptions.Image")));
             this.MenuOpen.Name = "MenuOpen";
             // 
             // MenuSave
             // 
             this.MenuSave.Caption = "Save";
             this.MenuSave.Id = 6;
+            this.MenuSave.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuSave.ImageOptions.Image")));
             this.MenuSave.Name = "MenuSave";
             // 
             // MenuSaveAs
@@ -562,18 +564,21 @@
             // 
             this.MenuCut.Caption = "Cut";
             this.MenuCut.Id = 12;
+            this.MenuCut.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuCut.ImageOptions.Image")));
             this.MenuCut.Name = "MenuCut";
             // 
             // MenuCopy
             // 
             this.MenuCopy.Caption = "Copy";
             this.MenuCopy.Id = 13;
+            this.MenuCopy.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuCopy.ImageOptions.Image")));
             this.MenuCopy.Name = "MenuCopy";
             // 
             // MenuPaste
             // 
             this.MenuPaste.Caption = "Paste";
             this.MenuPaste.Id = 14;
+            this.MenuPaste.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuPaste.ImageOptions.Image")));
             this.MenuPaste.Name = "MenuPaste";
             // 
             // MenuSelectAll
@@ -623,6 +628,7 @@
             // 
             this.MenuConnect.Caption = "Connect";
             this.MenuConnect.Id = 21;
+            this.MenuConnect.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuConnect.ImageOptions.Image")));
             this.MenuConnect.Name = "MenuConnect";
             // 
             // MenuDisconnect
@@ -635,42 +641,49 @@
             // 
             this.MenuCommunicationSetting.Caption = "CommunicationSettings";
             this.MenuCommunicationSetting.Id = 24;
+            this.MenuCommunicationSetting.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuCommunicationSetting.ImageOptions.Image")));
             this.MenuCommunicationSetting.Name = "MenuCommunicationSetting";
             // 
             // MenuSetup
             // 
             this.MenuSetup.Caption = "Setup";
             this.MenuSetup.Id = 25;
+            this.MenuSetup.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuSetup.ImageOptions.Image")));
             this.MenuSetup.Name = "MenuSetup";
             // 
             // MenuDownLoad
             // 
             this.MenuDownLoad.Caption = "DownLoad";
             this.MenuDownLoad.Id = 26;
+            this.MenuDownLoad.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuDownLoad.ImageOptions.Image")));
             this.MenuDownLoad.Name = "MenuDownLoad";
             // 
             // DownUpLoad
             // 
             this.DownUpLoad.Caption = "UpLoad";
             this.DownUpLoad.Id = 27;
+            this.DownUpLoad.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("DownUpLoad.ImageOptions.Image")));
             this.DownUpLoad.Name = "DownUpLoad";
             // 
             // MenuStart
             // 
             this.MenuStart.Caption = "Start";
             this.MenuStart.Id = 28;
+            this.MenuStart.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuStart.ImageOptions.Image")));
             this.MenuStart.Name = "MenuStart";
             // 
             // MenuStop
             // 
             this.MenuStop.Caption = "Stop";
             this.MenuStop.Id = 29;
+            this.MenuStop.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuStop.ImageOptions.Image")));
             this.MenuStop.Name = "MenuStop";
             // 
             // MenuMonitor
             // 
             this.MenuMonitor.Caption = "Monitor";
             this.MenuMonitor.Id = 30;
+            this.MenuMonitor.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuMonitor.ImageOptions.Image")));
             this.MenuMonitor.Name = "MenuMonitor";
             // 
             // barSubItem14
@@ -704,7 +717,7 @@
             // 
             this.barDockControl1.CausesValidation = false;
             this.barDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.barDockControl1.Location = new System.Drawing.Point(0, 47);
+            this.barDockControl1.Location = new System.Drawing.Point(0, 0);
             this.barDockControl1.Manager = this.barManager2;
             this.barDockControl1.Size = new System.Drawing.Size(1916, 29);
             // 
@@ -712,7 +725,7 @@
             // 
             this.barDockControl2.CausesValidation = false;
             this.barDockControl2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControl2.Location = new System.Drawing.Point(0, 1028);
+            this.barDockControl2.Location = new System.Drawing.Point(0, 1053);
             this.barDockControl2.Manager = this.barManager2;
             this.barDockControl2.Size = new System.Drawing.Size(1916, 0);
             // 
@@ -720,17 +733,17 @@
             // 
             this.barDockControl3.CausesValidation = false;
             this.barDockControl3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControl3.Location = new System.Drawing.Point(0, 76);
+            this.barDockControl3.Location = new System.Drawing.Point(0, 29);
             this.barDockControl3.Manager = this.barManager2;
-            this.barDockControl3.Size = new System.Drawing.Size(0, 952);
+            this.barDockControl3.Size = new System.Drawing.Size(0, 1024);
             // 
             // barDockControl4
             // 
             this.barDockControl4.CausesValidation = false;
             this.barDockControl4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControl4.Location = new System.Drawing.Point(1916, 76);
+            this.barDockControl4.Location = new System.Drawing.Point(1916, 29);
             this.barDockControl4.Manager = this.barManager2;
-            this.barDockControl4.Size = new System.Drawing.Size(0, 952);
+            this.barDockControl4.Size = new System.Drawing.Size(0, 1024);
             // 
             // skinBarSubItem1
             // 
@@ -1028,9 +1041,9 @@
             this.tabbedView1.Documents.AddRange(new DevExpress.XtraBars.Docking2010.Views.BaseDocument[] {
             this.document1});
             this.tabbedView1.RootContainer.Element = null;
-            dockingContainer3.Element = this.documentGroup1;
+            dockingContainer9.Element = this.documentGroup1;
             this.tabbedView1.RootContainer.Nodes.AddRange(new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer[] {
-            dockingContainer3});
+            dockingContainer9});
             // 
             // Form1
             // 
@@ -1041,14 +1054,14 @@
             this.Controls.Add(this.dockPanel1);
             this.Controls.Add(this.dockPanel3);
             this.Controls.Add(this.dockPanel2);
-            this.Controls.Add(this.barDockControl3);
-            this.Controls.Add(this.barDockControl4);
-            this.Controls.Add(this.barDockControl2);
-            this.Controls.Add(this.barDockControl1);
             this.Controls.Add(this.barDockControlLeft);
             this.Controls.Add(this.barDockControlRight);
             this.Controls.Add(this.barDockControlBottom);
             this.Controls.Add(this.barDockControlTop);
+            this.Controls.Add(this.barDockControl3);
+            this.Controls.Add(this.barDockControl4);
+            this.Controls.Add(this.barDockControl2);
+            this.Controls.Add(this.barDockControl1);
             this.Font = new System.Drawing.Font("Tahoma", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.Name = "Form1";

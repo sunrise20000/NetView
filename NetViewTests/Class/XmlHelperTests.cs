@@ -16,19 +16,19 @@ namespace NetView.Class.Tests
         {
             XmlParse xml = new XmlParse();
             xml.LoadXml("2.xml");
-            Console.WriteLine(xml.ReadNodeString("0"));
-            xml.SetNodeString("0", "Ricky");
-            xml.DeleteNode("2");
-            xml.DeleteNode("3");
-            xml.AddNode("KKKKK", "JJJJJ");
+            Console.WriteLine(xml.ReadNodeString("1"));
+            //xml.SetNodeString("0", "Ricky");
+            //xml.DeleteNode("2");
+            //xml.DeleteNode("3");
+            //xml.AddNode("KKKKK", "JJJJJ");
 
-            xml.Save("3.xml");
-            xml.LoadXml("3.xml");
+            //xml.Save("3.xml");
+            //xml.LoadXml("3.xml");
 
            
 
 
-            Console.WriteLine(xml.ReadNodeString("0"));
+            //Console.WriteLine(xml.ReadNodeString("0"));
         }
     }
 }

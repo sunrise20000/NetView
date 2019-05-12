@@ -78,10 +78,10 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\AvilableDeviceModel.cs" />
-    <Compile Include="Model\DeviceDataModel\DataType_DT1601.cs" />
-    <Compile Include="Model\DeviceDataModel\SubItemModel.cs" />
+    <Compile Include="Model\DataTypeModel\DataType_DT1601.cs" />
+    <Compile Include="Model\DataTypeModel\SubItemModelBaseForDataType.cs" />
     <Compile Include="Model\MessageModel.cs" />
-    <Compile Include="Model\DeviceDataModel\DataModel.cs" />
+    <Compile Include="Model\DataTypeModel\DataTypeBase.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfoBase.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL1001.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL2001.cs" />

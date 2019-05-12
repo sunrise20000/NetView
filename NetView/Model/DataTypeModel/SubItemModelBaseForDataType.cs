@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetView.Model.DeviceDataModel
+namespace NetView.Model.DataTypeModel
 {
     public class SubItemModelBaseForDataType
     {
@@ -22,6 +22,5 @@ namespace NetView.Model.DeviceDataModel
 
         public string Category { get; private set; } = "o";
 
-       
     }
 }

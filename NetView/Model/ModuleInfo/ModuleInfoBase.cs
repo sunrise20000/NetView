@@ -15,5 +15,7 @@ namespace NetView.Model.ModuleInfo
         public int TotalNum_SubItem { get; set; }
 
         public int Bitsize_SubItem { get; set; }
+
+        public string Name { get; set; }
     }
 }

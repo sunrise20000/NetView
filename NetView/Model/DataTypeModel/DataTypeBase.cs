@@ -1,10 +1,13 @@
-﻿using System;
+﻿using NetView.Class;
+using NetView.Model.ModuleInfo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
-namespace NetView.Model.DeviceDataModel
+namespace NetView.Model.DataTypeModel
 {
     public enum EnumDeviceName
     {
@@ -18,9 +21,15 @@ namespace NetView.Model.DeviceDataModel
         HL4002,
     }
 
-    public class DataModel
+    public class DataTypeBase
     {
         EnumDeviceName deviceType = EnumDeviceName.HL1001;
+        protected readonly static XmlParse xmlParse = new XmlParse();
+        public DataTypeBase()
+        {
+         
+        }
+
         public string DeviceType
         {
             get { return deviceType.ToString(); }
@@ -32,23 +41,22 @@ namespace NetView.Model.DeviceDataModel
         public int SubItemNum { get; set; }
 
         protected List<SubItemModelBaseForDataType> SubItemList { get; private set; } = new List<SubItemModelBaseForDataType>();
-       
+
         /// <summary>
         /// 默认是添加在最后
         /// </summary>
         /// <param name="ModuleType">类型</param>
-        public virtual void AddModule(params EnumDeviceName[] ModuleType)
+        public virtual void AddModule<T>(params T[] Module) where T : ModuleInfoBase
         {
 
         }
 
-
         /// <summary>
-        /// 
+        /// 插入模块
         /// </summary>
         /// <param name="ModuleType">Module的类型</param>
         /// <param name="PosBase0">第几个Module</param>
-        public virtual void InsertModule(EnumDeviceName ModuleType, int PosBase0)
+        public virtual void InsertModule<T>(T Module, int PosBase0) where T : ModuleInfoBase
         {
 
         }
@@ -57,7 +65,7 @@ namespace NetView.Model.DeviceDataModel
         /// 移除第几个模块
         /// </summary>
         /// <param name="PosBase0"></param>
-        public virtual void RemoveModule(int PosBase0)
+        public virtual void RemoveModule<T>(T Module) where T : ModuleInfoBase
         {
 
         }
@@ -65,9 +73,15 @@ namespace NetView.Model.DeviceDataModel
         /// <summary>
         /// 修改模块信息
         /// </summary>
-        public virtual void ModifyModule()
+        public virtual void ModifyModule<T>(T Module) where T : ModuleInfoBase
         {
 
+        }
+
+        public virtual T[] GetCurrentModuleList<T>() where T : ModuleInfoBase
+        {
+            
+            return null;
         }
     }
 }
