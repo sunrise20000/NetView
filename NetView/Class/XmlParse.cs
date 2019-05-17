@@ -28,7 +28,6 @@ namespace NetView.Class
             lock (xmlLock)
             {
                var nodes = NodeFather.Elements().Where(e=>e.Name.LocalName.Equals(MutifySubNodeName));
-               var n = nodes.FirstOrDefault();
                return nodes;
             }
         }
