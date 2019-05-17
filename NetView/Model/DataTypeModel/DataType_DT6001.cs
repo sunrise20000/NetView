@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace NetView.Model.DataTypeModel
 {
-    public class DataType_DT1601 : DataTypeBase
+    public class DataType_DT6001 : DataTypeBase
     {
 
-        public DataType_DT1601(string XmlFile) : base(XmlFile)
+        public DataType_DT6001(string XmlFile) : base(XmlFile)
         {
 
         }

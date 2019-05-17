@@ -78,7 +78,10 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\AvilableDeviceModel.cs" />
+    <Compile Include="Model\DataTypeModel\DataType_DT1A00.cs" />
+    <Compile Include="Model\DataTypeModel\DataType_DT6001.cs" />
     <Compile Include="Model\DataTypeModel\DataType_DT1601.cs" />
+    <Compile Include="Model\DataTypeModel\DataType_DT7010.cs" />
     <Compile Include="Model\DataTypeModel\SubItemModelBaseForDataType.cs" />
     <Compile Include="Model\MessageModel.cs" />
     <Compile Include="Model\DataTypeModel\DataTypeBase.cs" />
@@ -93,6 +96,7 @@
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL4002.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL3002.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL3001.cs" />
+    <Compile Include="Model\ObjectModel\ObjectModelBase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\UC_Output.xaml.cs">
