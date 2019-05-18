@@ -29,7 +29,9 @@ namespace NetView.Model.ModuleInfo
 
         public EnumType DataTypeOfSubItem { get; set; }
       
+        public string Header { get; set; }
 
+        public bool NeedIndex { get; set; }
 
     }
 }

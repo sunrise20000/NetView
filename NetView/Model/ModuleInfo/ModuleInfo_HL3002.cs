@@ -19,6 +19,8 @@ namespace NetView.Model.ModuleInfo
                     DataTypeOfSubItem = EnumType.UINT,
                     IOType = EnumModuleIOType.IN,
                     Name = "HL3002",
+                    Header = $"AI_420mA_Ch{i+1}_",
+                    NeedIndex = true,
                 });
         }
     }

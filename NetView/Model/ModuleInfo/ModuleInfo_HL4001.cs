@@ -17,8 +17,10 @@ namespace NetView.Model.ModuleInfo
                 {
                     DeviceType = EnumDeviceName.HL4001,
                     DataTypeOfSubItem = EnumType.UINT,
-                    IOType = EnumModuleIOType.IN,
+                    IOType = EnumModuleIOType.OUT,
                     Name = "HL4001",
+                    Header = $"AO_010V_Ch{i+1}_",
+                    NeedIndex = true,
                 });
         }
     }

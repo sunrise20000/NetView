@@ -12,14 +12,24 @@ namespace NetView.Model.ModuleInfo
         {
             DeviceType = EnumDeviceName.HL5001;
             Name = DeviceType.ToString();
-            for (int i = 0; i < 2; i++)
-                ModuleList.Add(new Module_32()
-                {
-                    DeviceType = EnumDeviceName.HL5001,
-                    DataTypeOfSubItem = EnumType.UDINT,
-                    IOType = EnumModuleIOType.IN,
-                    Name = "HL5001",
-                });
+      
+            ModuleList.Add(new Module_32()
+            {
+                DeviceType = EnumDeviceName.HL5001,
+                DataTypeOfSubItem = EnumType.UDINT,
+                IOType = EnumModuleIOType.IN,
+                Name = "HL5001",
+                Header= "Counter600_H_"
+
+            });
+            ModuleList.Add(new Module_32()
+            {
+                DeviceType = EnumDeviceName.HL5001,
+                DataTypeOfSubItem = EnumType.UDINT,
+                IOType = EnumModuleIOType.IN,
+                Name = "HL5001",
+                Header = "Counter600_L_"
+            });
         }
     }
 }

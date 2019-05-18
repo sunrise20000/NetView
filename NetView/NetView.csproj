@@ -64,7 +64,6 @@
   <ItemGroup>
     <Compile Include="Class\EthercatSettingMgr.cs" />
     <Compile Include="Class\Singleton.cs" />
-    <Compile Include="Class\XmlHelper.cs" />
     <Compile Include="Class\XmlParse.cs" />
     <Compile Include="Config\ConfigMgr.cs" />
     <Compile Include="Config\DeviceConfigEntry.cs" />

@@ -18,6 +18,8 @@ namespace NetView.Model.ModuleInfo
                 DataTypeOfSubItem = EnumType.UDINT,
                 IOType = EnumModuleIOType.IN,
                 Name = "HL5002",
+                Header = "AbsEncodeSSI_",
+                NeedIndex = false,
             });
 
             ModuleList.Add(new Module_16()
@@ -26,6 +28,8 @@ namespace NetView.Model.ModuleInfo
                 DataTypeOfSubItem = EnumType.UINT,
                 IOType = EnumModuleIOType.OUT,
                 Name = "HL5002",
+                Header = "AbsEncode_Cmd_",
+                NeedIndex = false,
             });
            
         }

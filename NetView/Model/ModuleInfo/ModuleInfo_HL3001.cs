@@ -12,13 +12,15 @@ namespace NetView.Model.ModuleInfo
         {
             DeviceType = EnumDeviceName.HL3001;
             Name = DeviceType.ToString();
-            for (int i=0;i<4;i++)
+            for (int i = 0; i < 4; i++)
                 ModuleList.Add(new Module_16()
                 {
                     DeviceType = EnumDeviceName.HL3001,
                     DataTypeOfSubItem = EnumType.UINT,
                     IOType = EnumModuleIOType.IN,
                     Name = "HL3001",
+                    Header = $"AI_010V_Ch{i+1}_",
+                    NeedIndex = true,
                 });
         }
     }

@@ -16,10 +16,12 @@ namespace NetView.Model.ModuleInfo
             Name = DeviceType.ToString();
 
             ModuleList.Add(new Module_8() {
-                DeviceType=EnumDeviceName.HL1001,
+                DeviceType = EnumDeviceName.HL1001,
                 DataTypeOfSubItem = EnumType.USINT,
                 IOType = EnumModuleIOType.IN,
                 Name = "HL1001",
+                Header = "DI24V_",
+                NeedIndex = false,
             });
         }
     }

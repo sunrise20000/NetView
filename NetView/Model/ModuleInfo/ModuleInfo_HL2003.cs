@@ -18,7 +18,9 @@ namespace NetView.Model.ModuleInfo
                 DeviceType = EnumDeviceName.HL2003,
                 DataTypeOfSubItem = EnumType.USINT,
                 IOType = EnumModuleIOType.OUT,
-                Name = "HL2002",
+                Name = "HL2003",
+                Header = "DO24V_",
+                NeedIndex = false,
             });
         }
     }

@@ -98,50 +98,50 @@ namespace NetView.Class
             }
         }
 
-        public string ReadNodeString(string SunItemValue)
-        {
-            var n = GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
-            var es = GetMutifyElement(n, "DataType");
-            var Dic = new Dictionary<string, string>();
-            Dic.Add("Name", "DT1018");
-            var v = GetElementFromMutiElement(es, Dic);
-            var ss = GetMutifyElement(v, "SubItem");
-            Dic.Clear();
-            Dic.Add("SubIdx", SunItemValue);
-            var x= GetElementFromMutiElement(ss, Dic);
-            //var n =(from node in xmlDoc.Element("EtherCATInfo").Element("Descriptions").Element("Devices").Element("Device").Element("Profile").Element("Dictionary").Element("DataTypes").Elements() where node.Element("Name")!=null && node.Element("Name").Value.Equals("DT1018") select node).FirstOrDefault();
-            //var v = (from vs in n.Elements() where vs.Name.LocalName.Equals("SubItem") && vs.Element("SubIdx").Value.Equals(SunItemValue) select vs).FirstOrDefault();
-            return x.Element("Name").Value;
-        }
+        //public string ReadNodeString(string SunItemValue)
+        //{
+        //    var n = GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
+        //    var es = GetMutifyElement(n, "DataType");
+        //    var Dic = new Dictionary<string, string>();
+        //    Dic.Add("Name", "DT1018");
+        //    var v = GetElementFromMutiElement(es, Dic);
+        //    var ss = GetMutifyElement(v, "SubItem");
+        //    Dic.Clear();
+        //    Dic.Add("SubIdx", SunItemValue);
+        //    var x= GetElementFromMutiElement(ss, Dic);
+        //    //var n =(from node in xmlDoc.Element("EtherCATInfo").Element("Descriptions").Element("Devices").Element("Device").Element("Profile").Element("Dictionary").Element("DataTypes").Elements() where node.Element("Name")!=null && node.Element("Name").Value.Equals("DT1018") select node).FirstOrDefault();
+        //    //var v = (from vs in n.Elements() where vs.Name.LocalName.Equals("SubItem") && vs.Element("SubIdx").Value.Equals(SunItemValue) select vs).FirstOrDefault();
+        //    return x.Element("Name").Value;
+        //}
 
-        public void SetNodeString(string SunItemValue,string NameValue)
-        {
-            var n = (from node in xmlDoc.Element("EtherCATInfo").Element("Descriptions").Element("Devices").Element("Device").Element("Profile").Element("Dictionary").Element("DataTypes").Elements() where node.Element("Name") != null && node.Element("Name").Value.Equals("DT1018") select node).FirstOrDefault();
-            var v = (from vs in n.Elements() where vs.Name.LocalName.Equals("SubItem") && vs.Element("SubIdx").Value.Equals(SunItemValue) select vs).FirstOrDefault();
-            v.SetElementValue("Name", NameValue);
+        //public void SetNodeString(string SunItemValue,string NameValue)
+        //{
+        //    var n = (from node in xmlDoc.Element("EtherCATInfo").Element("Descriptions").Element("Devices").Element("Device").Element("Profile").Element("Dictionary").Element("DataTypes").Elements() where node.Element("Name") != null && node.Element("Name").Value.Equals("DT1018") select node).FirstOrDefault();
+        //    var v = (from vs in n.Elements() where vs.Name.LocalName.Equals("SubItem") && vs.Element("SubIdx").Value.Equals(SunItemValue) select vs).FirstOrDefault();
+        //    v.SetElementValue("Name", NameValue);
             
-        }
+        //}
 
         public void Save(string FilePath)
         {
             xmlDoc.Save(FilePath);
         }
 
-        public void DeleteNode(string SunItemValue)
-        {
-            var n = (from node in xmlDoc.Element("EtherCATInfo").Element("Descriptions").Element("Devices").Element("Device").Element("Profile").Element("Dictionary").Element("DataTypes").Elements() where node.Element("Name") != null && node.Element("Name").Value.Equals("DT1018") select node).FirstOrDefault();
-            var v = (from vs in n.Elements() where vs.Name.LocalName.Equals("SubItem") && vs.Element("SubIdx").Value.Equals(SunItemValue) select vs).FirstOrDefault();
-            if(v!=null)
-                v.Remove();
-        }
+        //public void DeleteNode(string SunItemValue)
+        //{
+        //    var n = (from node in xmlDoc.Element("EtherCATInfo").Element("Descriptions").Element("Devices").Element("Device").Element("Profile").Element("Dictionary").Element("DataTypes").Elements() where node.Element("Name") != null && node.Element("Name").Value.Equals("DT1018") select node).FirstOrDefault();
+        //    var v = (from vs in n.Elements() where vs.Name.LocalName.Equals("SubItem") && vs.Element("SubIdx").Value.Equals(SunItemValue) select vs).FirstOrDefault();
+        //    if(v!=null)
+        //        v.Remove();
+        //}
 
-        public void AddNode(string NodeName, string SunItemValue)
-        {
-            var n = (from node in xmlDoc.Element("EtherCATInfo").Element("Descriptions").Element("Devices").Element("Device").Element("Profile").Element("Dictionary").Element("DataTypes").Elements() where node.Element("Name") != null && node.Element("Name").Value.Equals("DT1018") select node).FirstOrDefault();
-            XElement xInsert = new XElement(NodeName, SunItemValue);
-            xInsert.SetAttributeValue("Hello", "4545645");
-            n.Add(xInsert);
-        }
+        //public void AddNode(string NodeName, string SunItemValue)
+        //{
+        //    var n = (from node in xmlDoc.Element("EtherCATInfo").Element("Descriptions").Element("Devices").Element("Device").Element("Profile").Element("Dictionary").Element("DataTypes").Elements() where node.Element("Name") != null && node.Element("Name").Value.Equals("DT1018") select node).FirstOrDefault();
+        //    XElement xInsert = new XElement(NodeName, SunItemValue);
+        //    xInsert.SetAttributeValue("Hello", "4545645");
+        //    n.Add(xInsert);
+        //}
 
         public string GetSubElementValue(XElement E, string SubElementName)
         {
@@ -158,5 +158,60 @@ namespace NetView.Class
                 return E.Attribute(AttributeName).Value;
             }
         }
+
+
+        public XElement CreateElement(string ElementName)
+        {
+            var E = new XElement(ElementName);
+            return E;
+        }
+
+        public void SetElementAttribute(XElement Element, Dictionary<string, string> AttributeDic)
+        {
+            foreach (var it in AttributeDic)
+                Element.SetAttributeValue(it.Key, it.Value);
+        }
+
+        public void SetSubElement(XElement ParentElement, params XElement[] ChildElement)
+        {
+            foreach (var it in ChildElement)
+                ParentElement.Add(it);
+        }
+
+        public void SetSubElement(XElement ParentElement, params string[] ChildElementName)
+        {
+            foreach (var it in ChildElementName)
+                ParentElement.Add(new XElement(it));
+        }
+
+        public bool SetSubElementValue(XElement ParentElement, int Index, string Value)
+        {
+            if (Index > ParentElement.Elements().Count() - 1)
+                return false;
+            ParentElement.Elements().ElementAt(Index).Value = Value;
+            return true;
+        }
+        public bool SetSubElementValue(XElement ParentElement, string SubElementName, string Value)
+        {
+            var E = ParentElement.Element(SubElementName);
+            if (E != null)
+            {
+                E.Value = Value;
+                return true;
+            }
+            return false;
+        }
+
+        public bool DeleteElement(XElement ParentElement, int Index)
+        {
+            if (ParentElement.Elements().Count() - 1 > Index)
+            {
+                ParentElement.Elements().ElementAt(Index).Remove();
+                return true;
+            }
+            return false;
+        }
+
+        
     }
 }

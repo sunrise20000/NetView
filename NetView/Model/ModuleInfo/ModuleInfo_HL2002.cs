@@ -19,6 +19,8 @@ namespace NetView.Model.ModuleInfo
                 DataTypeOfSubItem = EnumType.USINT,
                 IOType = EnumModuleIOType.OUT,
                 Name = "HL2002",
+                Header = "DO24V_",
+                NeedIndex = false,
             });
         }
     }

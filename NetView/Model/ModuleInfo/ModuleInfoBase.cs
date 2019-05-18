@@ -25,5 +25,6 @@ namespace NetView.Model.ModuleInfo
         public EnumDeviceName DeviceType { get; set; }
         public string Name { get; set; }
         public List<ModuleBase> ModuleList { get; }= new List<ModuleBase>();
+
     }
 }

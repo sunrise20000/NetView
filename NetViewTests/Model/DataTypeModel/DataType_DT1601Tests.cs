@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NetView.Model.DataTypeModel;
+using NetView.Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +14,28 @@ namespace NetView.Model.DataTypeModel.Tests
         [TestMethod()]
         public void GetCurrentModuleListTest()
         {
-            DataTypeBase DB = new DataType_DT1601(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
-            var Info=DB.GetCurrentModuleList();
+            EthercatSettingMgr Mgr = new EthercatSettingMgr(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
+            var L = Mgr.GetDeviceList();
+            foreach (var it in L)
+                Console.WriteLine(it.Name);
+            //Assert.Fail();
+        }
+
+        [TestMethod()]
+        public void SaveListTest()
+        {
+            EthercatSettingMgr Mgr = new EthercatSettingMgr(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
+            Mgr.SaveFile(new List<ModuleInfo.ModuleInfoBase>() {
+                new ModuleInfo.ModuleInfo_HL2001(),
+                new ModuleInfo.ModuleInfo_HL4002(),
+                new ModuleInfo.ModuleInfo_HL2001(),
+                new ModuleInfo.ModuleInfo_HL5002(),
+                new ModuleInfo.ModuleInfo_HL4002(),
+                new ModuleInfo.ModuleInfo_HL2002(),
+                new ModuleInfo.ModuleInfo_HL2001(),
+                new ModuleInfo.ModuleInfo_HL2002(),
+                new ModuleInfo.ModuleInfo_HL2001(),
+            });
             //Assert.Fail();
         }
     }
