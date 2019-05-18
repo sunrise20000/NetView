@@ -28,7 +28,6 @@ namespace NetView.Config
             #endregion
         }
 
-
         public DeviceConfigEntry DeviceCfgEntry { get; private set; } = null;
     }
 }

@@ -10,10 +10,16 @@ namespace NetView.Model.ModuleInfo
     {
         public ModuleInfo_HL3002()
         {
-            this.Bitsize_DataType = 64;
-            this.TotalNum_SubItem = 4;
-            this.Type_SubItem = "UINT";
-            this.Bitsize_SubItem = 16;
+            DeviceType = EnumDeviceName.HL3002;
+            Name = DeviceType.ToString();
+            for (int i = 0; i < 4; i++)
+                ModuleList.Add(new Module_16()
+                {
+                    DeviceType = EnumDeviceName.HL3002,
+                    DataTypeOfSubItem = EnumType.UINT,
+                    IOType = EnumModuleIOType.IN,
+                    Name = "HL3002",
+                });
         }
     }
 }

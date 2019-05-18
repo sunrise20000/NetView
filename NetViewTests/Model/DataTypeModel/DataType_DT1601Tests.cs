@@ -14,7 +14,7 @@ namespace NetView.Model.DataTypeModel.Tests
         [TestMethod()]
         public void GetCurrentModuleListTest()
         {
-            DataTypeBase DB = new DataType_DT1601(@"C:\Users\cn11321\source\repos\NetView\Document\HL6805.xml");
+            DataTypeBase DB = new DataType_DT1601(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
             var Info=DB.GetCurrentModuleList();
             //Assert.Fail();
         }

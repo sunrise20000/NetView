@@ -8,12 +8,19 @@ namespace NetView.Model.ModuleInfo
 {
     public class ModuleInfo_HL1001 : ModuleInfoBase
     {
+
         public ModuleInfo_HL1001()
         {
-            this.Bitsize_DataType = 8;
-            this.TotalNum_SubItem = 1;
-            this.Type_SubItem = "USINT";
-            this.Bitsize_SubItem = 8;
+            
+            DeviceType = EnumDeviceName.HL1001;
+            Name = DeviceType.ToString();
+
+            ModuleList.Add(new Module_8() {
+                DeviceType=EnumDeviceName.HL1001,
+                DataTypeOfSubItem = EnumType.USINT,
+                IOType = EnumModuleIOType.IN,
+                Name = "HL1001",
+            });
         }
     }
 }

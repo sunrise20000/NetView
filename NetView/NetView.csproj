@@ -62,6 +62,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class\EthercatSettingMgr.cs" />
     <Compile Include="Class\Singleton.cs" />
     <Compile Include="Class\XmlHelper.cs" />
     <Compile Include="Class\XmlParse.cs" />
@@ -78,13 +79,8 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\AvilableDeviceModel.cs" />
-    <Compile Include="Model\DataTypeModel\DataType_DT1A00.cs" />
-    <Compile Include="Model\DataTypeModel\DataType_DT6001.cs" />
-    <Compile Include="Model\DataTypeModel\DataType_DT1601.cs" />
-    <Compile Include="Model\DataTypeModel\DataType_DT7010.cs" />
-    <Compile Include="Model\DataTypeModel\SubItemModelBaseForDataType.cs" />
     <Compile Include="Model\MessageModel.cs" />
-    <Compile Include="Model\DataTypeModel\DataTypeBase.cs" />
+    <Compile Include="Model\ModuleInfo\ModuleBase.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfoBase.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL1001.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL2001.cs" />
@@ -96,7 +92,9 @@
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL4002.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL3002.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfo_HL3001.cs" />
-    <Compile Include="Model\ObjectModel\ObjectModelBase.cs" />
+    <Compile Include="Model\ModuleInfo\Module_16.cs" />
+    <Compile Include="Model\ModuleInfo\Module_32.cs" />
+    <Compile Include="Model\ModuleInfo\Module_8.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\UC_Output.xaml.cs">
