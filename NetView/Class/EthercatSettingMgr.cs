@@ -123,6 +123,7 @@ namespace NetView.Class
                 }
             }
             var L = ModuleNameList.Distinct();
+            var ModuleInfoList = new List<ModuleInfoBase>();
             foreach (var l in L)
             {
                 var name = l.Split('_')[1];
@@ -137,9 +138,21 @@ namespace NetView.Class
             return ModuleInfoList;
         }
 
-        public void SaveFile(List<ModuleInfoBase> DeviceList, string FileName)
+        public void SaveFile(List<string> PureNameList, string FileName)
         {
-            var ListAdjust= AdjustName(DeviceList);
+            var ModuleInfoList = new List<ModuleInfoBase>();
+            foreach (var it in PureNameList)
+            {
+                //var name = it.Split('_')[1];
+                string insName = "NetView.Model.ModuleInfo.ModuleInfo_" + it;
+                Type type = Type.GetType(insName);
+                var mi = type.Assembly.CreateInstance(insName);
+                ModuleInfoBase obj = mi as ModuleInfoBase;
+                obj.Name = it;
+                obj.DeviceType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), it);
+                ModuleInfoList.Add(obj);
+            }
+            var ListAdjust= AdjustName(ModuleInfoList);
 
             //输出
             //SaveDT1601(ListAdjust);

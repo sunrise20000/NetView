@@ -193,8 +193,7 @@ namespace SubBusContrainer
             {
                 m_g.DrawLine(m_pen, new Point(control.Left + control.Width / 2, control.Top + control.Height), new Point(control.Left + control.Width / 2, this.Height / 2));
                 m_g.FillEllipse(new System.Drawing.SolidBrush(Color.Gray), new Rectangle(control.Left + control.Width / 2 - 5, this.Height / 2 - 5, 15, 15));
-            }
-            
+            }   
         }
 
         /// <summary>
@@ -263,6 +262,47 @@ namespace SubBusContrainer
                 }
             }
             RefushLine();
+        }
+
+        public void ReplaceNewList(List<string> NameListWithIndex)
+        {
+            foreach (Control member in this.Controls)
+            {
+                if ((member is SubBusModel))
+                {
+                    this.Controls.Remove(member);
+                    member.Dispose();
+                }
+                
+            }
+            RefushLine();
+
+            foreach (var Name in NameListWithIndex)
+            {
+                Point point = new Point();
+               
+                var len = this.Controls.Count;
+
+                if (len != 0)
+                {
+                    point.X = this.Controls[len-1].Left + 50;
+                    point.Y = this.Controls[len - 1].Top + 50;
+                }
+                else
+                {
+                    point.X = 50;
+                    point.Y = 50;     
+                }     
+                
+                SubBusModel userControl1 = new SubBusModel(point);
+                userControl1.Name = Name;
+                userControl1.ControlMoveEvent += RefushLine;
+                this.Controls.Add(userControl1);
+                userControl1.BringToFront();
+                userControl1.Focus();
+                DrawLine(userControl1);
+            }
+            m_g.Flush();
         }
         public void ShowProperty(string subproductname)
         {

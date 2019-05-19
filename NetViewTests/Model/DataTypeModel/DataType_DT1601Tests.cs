@@ -27,17 +27,17 @@ namespace NetView.Model.DataTypeModel.Tests
         {
             EthercatSettingMgr Mgr = new EthercatSettingMgr();
             Mgr.LoadXmlFile(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
-            Mgr.SaveFile(new List<ModuleInfo.ModuleInfoBase>() {
-                //new ModuleInfo.ModuleInfo_HL2001(),
-                //new ModuleInfo.ModuleInfo_HL4002(),
-                //new ModuleInfo.ModuleInfo_HL2001(),
-                new ModuleInfo.ModuleInfo_HL5002(),
-                //new ModuleInfo.ModuleInfo_HL4002(),
-                //new ModuleInfo.ModuleInfo_HL2002(),
-                //new ModuleInfo.ModuleInfo_HL2001(),
-                //new ModuleInfo.ModuleInfo_HL2002(),
-                //new ModuleInfo.ModuleInfo_HL2001(),
-            }, @"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
+            //Mgr.SaveFile(new List<ModuleInfo.ModuleInfoBase>() {
+            //    new ModuleInfo.ModuleInfo_HL2001(),
+            //    new ModuleInfo.ModuleInfo_HL4002(),
+            //    new ModuleInfo.ModuleInfo_HL2001(),
+            //    new ModuleInfo.ModuleInfo_HL5002(),
+            //    new ModuleInfo.ModuleInfo_HL4002(),
+            //    new ModuleInfo.ModuleInfo_HL2002(),
+            //    new ModuleInfo.ModuleInfo_HL2001(),
+            //    new ModuleInfo.ModuleInfo_HL2002(),
+            //    new ModuleInfo.ModuleInfo_HL2001(),
+            //}, @"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
             //Assert.Fail();
         }
     }

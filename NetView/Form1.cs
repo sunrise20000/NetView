@@ -20,7 +20,8 @@ namespace NetView
         AvilableDeviceModel[] DeviceCfg = null;
         string FileOpenPath = @"C:\";
         EthercatSettingMgr EthercatMgr = new EthercatSettingMgr();
-
+        ProductContrainer MiddleControl = null;
+        treeviewContrainer LeftControl = null;
 
         public Form1()
         {
@@ -97,12 +98,12 @@ namespace NetView
 
 
             //添加中间控件
-            ProductContrainer MiddleControl = new ProductContrainer("Ethercat");
+            MiddleControl = new ProductContrainer("Ethercat");
             MiddleControl.Dock = DockStyle.Fill;
             this.dockPanelMiddle.Controls.Add(MiddleControl);
 
             //添加侧面控件
-            treeviewContrainer LeftControl = new treeviewContrainer();
+            LeftControl = new treeviewContrainer();
             LeftControl.Dock = DockStyle.Fill;
             this.dockPanelLeft.Controls.Add(LeftControl);
             LeftControl.ProductContrainer = MiddleControl;
@@ -148,10 +149,18 @@ namespace NetView
             {
                 FileOpenPath = ofd.FileName;//获取在文件对话框中选定的路径或者字符串
                 EthercatMgr.LoadXmlFile(FileOpenPath);
-                var List = EthercatMgr.GetDeviceList();
-                foreach (var it in List)
-                    Console.WriteLine(it.Name);
+                var ListDevice = EthercatMgr.GetDeviceList();
+                List<string> L = new List<string>();
+                foreach (var it in ListDevice)
+                {
+                    var NameSubList = it.Name.Split('_');   //1_HL2001_1
+                    var Name = $"{NameSubList[1]}_{NameSubList[2]}";
+                    L.Add(Name);
+                }
+                LeftControl.ReplaceNewList(L);
             }
+            
+           
         }
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -166,7 +175,7 @@ namespace NetView
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 FileOpenPath = sfd.FileName;
-                EthercatMgr.SaveFile(new List<Model.ModuleInfo.ModuleInfoBase>(), FileOpenPath);
+                EthercatMgr.SaveFile(LeftControl.PureNameList, FileOpenPath);
             }
         }
 

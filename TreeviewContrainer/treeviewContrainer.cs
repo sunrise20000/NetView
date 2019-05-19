@@ -13,6 +13,26 @@ namespace TreeviewContrainer
     public partial class treeviewContrainer: UserControl
     {
         private ProductContrainer productContrainer;
+        public List<string> PureNameList
+        {
+            get
+            {
+                var NameList = new List<string>();
+                foreach (TreeNode it in treeView_ProductInfo.Nodes)
+                {
+                    if (it.Text.Equals("Ethercat"))
+                    {
+                        int i = 0;
+                        foreach (TreeNode node in it.Nodes)
+                            NameList.Add($"{node.Text.Split('_')[0]}");
+                        break;
+                    }
+                }
+                return NameList;
+            }
+        }
+
+
         public ProductContrainer ProductContrainer
         {
             get { return productContrainer; }
@@ -86,28 +106,32 @@ namespace TreeviewContrainer
                         NodeTextDic.Add(i++, NameInGui);
                         node.Text = NameInGui;
                     }
-
                     break;
                 }
+            }     
+        }
+        public void ReplaceNewList(List<string> NameListWithIndex)
+        {
+            foreach (TreeNode it in treeView_ProductInfo.Nodes)
+            {
+                if (it.Text.Equals("Ethercat"))
+                {
+                    while (it.Nodes.Count > 0)
+                        it.Nodes.RemoveAt(0);
+                    foreach (var Name in NameListWithIndex)
+                        it.Nodes.Add(Name);
+                    break;
+                }       
             }
-          
+            ProductContrainer.ReplaceNewList(NameListWithIndex);
+
 
         }
-
 
 
         public treeviewContrainer()
         {
             InitializeComponent();
-           
-        }
-
-        private void treeView_ProductInfo_ItemDrag(object sender, ItemDragEventArgs e)
-        {
-            return;
-            if (treeView_ProductInfo.SelectedNode == null)
-                return;
-            treeView_ProductInfo.DoDragDrop(treeView_ProductInfo.SelectedNode.Text, DragDropEffects.Copy);
         }
 
         private void treeView_ProductInfo_MouseClick(object sender, MouseEventArgs e)
@@ -189,6 +213,11 @@ namespace TreeviewContrainer
             }
         }
 
+        /// <summary>
+        /// Left——》Middle
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void tSMItem_SubModel_Delete_Click(object sender, EventArgs e)
         {
             TreeNode _treenode = treeView_ProductInfo.SelectedNode;

@@ -60,7 +60,6 @@
             this.treeView_ProductInfo.Name = "treeView_ProductInfo";
             this.treeView_ProductInfo.Size = new System.Drawing.Size(169, 333);
             this.treeView_ProductInfo.TabIndex = 0;
-            this.treeView_ProductInfo.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView_ProductInfo_ItemDrag);
             this.treeView_ProductInfo.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView_ProductInfo_MouseClick);
             this.treeView_ProductInfo.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView_ProductInfo_MouseDoubleClick);
             // 
