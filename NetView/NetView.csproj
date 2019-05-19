@@ -130,7 +130,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SubBusContrainer\SubBusContrainer.csproj">
+      <Project>{01a6a00b-3da7-40cc-9f3d-fbb830662d4d}</Project>
+      <Name>SubBusContrainer</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

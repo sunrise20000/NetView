@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-
+using SubBusContrainer;
 namespace NetView
 {
     public partial class Form1 : DevExpress.XtraEditors.XtraForm
@@ -86,6 +86,15 @@ namespace NetView
             this.uC_Output1.MsgCollect.Add(new MessageModel(Definations.EnumMsgType.Error,"Msg1"));
             this.uC_Output1.MsgCollect.Add(new MessageModel(Definations.EnumMsgType.Info, "Msg1"));
             this.uC_Output1.MsgCollect.Add(new MessageModel(Definations.EnumMsgType.Warning, "Msg1"));
+
+
+            //添加中间控件
+            ProductContrainer MiddleControl = new ProductContrainer();
+            MiddleControl.Dock = DockStyle.Fill;
+            this.dockPanelMiddle.Controls.Add(MiddleControl);
+
+            //添加侧面控件
+
         }
 
         private void TreeViewDevice_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
