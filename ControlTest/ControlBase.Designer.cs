@@ -40,10 +40,13 @@
             // 
             this.label1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.label1.Location = new System.Drawing.Point(5, 5);
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(104, 68);
+            this.label1.Size = new System.Drawing.Size(87, 64);
             this.label1.TabIndex = 0;
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.label1_MouseDoubleClick);
             this.label1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label1_MouseDown);
             this.label1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.label1_MouseMove);
@@ -56,30 +59,31 @@
             this.toolStripMenuItem_Delete,
             this.toolStripMenuItem_Property});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 80);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(101, 48);
             // 
             // toolStripMenuItem_Delete
             // 
             this.toolStripMenuItem_Delete.Name = "toolStripMenuItem_Delete";
-            this.toolStripMenuItem_Delete.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem_Delete.Size = new System.Drawing.Size(100, 22);
             this.toolStripMenuItem_Delete.Text = "删除";
             this.toolStripMenuItem_Delete.Click += new System.EventHandler(this.toolStripMenuItem_Delete_Click);
             // 
             // toolStripMenuItem_Property
             // 
             this.toolStripMenuItem_Property.Name = "toolStripMenuItem_Property";
-            this.toolStripMenuItem_Property.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem_Property.Size = new System.Drawing.Size(100, 22);
             this.toolStripMenuItem_Property.Text = "属性";
             this.toolStripMenuItem_Property.Click += new System.EventHandler(this.toolStripMenuItem_Property_Click);
             // 
             // ControlBase
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.label1);
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "ControlBase";
-            this.Size = new System.Drawing.Size(116, 80);
+            this.Size = new System.Drawing.Size(87, 64);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 

@@ -9,13 +9,13 @@ using System.Windows.Forms;
 
 namespace ControlTest
 {
-    public partial class FormSubModelParam : Form
+    public partial class FormBusModelParam : Form
     {
         #region 字段state
-        ControlBase m_controlBase;
+        BusModel m_controlBase;
        
         #endregion
-        public FormSubModelParam(ControlBase controlBase)
+        public FormBusModelParam(BusModel controlBase)
         {
             InitializeComponent();
             this.m_controlBase = controlBase;

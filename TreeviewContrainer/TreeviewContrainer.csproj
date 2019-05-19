@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{5DFD49D9-223B-4FCD-A0B7-800B003A2378}</ProjectGuid>
+    <ProjectGuid>{88623C3E-18F8-4CE2-8D78-452E203CDC97}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>ControlTest</RootNamespace>
-    <AssemblyName>ControlTest</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <RootNamespace>TreeviewContrainer</RootNamespace>
+    <AssemblyName>TreeviewContrainer</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -37,32 +37,30 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControlBase.cs">
+    <Compile Include="treeviewContrainer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ControlBase.Designer.cs">
-      <DependentUpon>ControlBase.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FormSubModelParam.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormSubModelParam.Designer.cs">
-      <DependentUpon>FormSubModelParam.cs</DependentUpon>
+    <Compile Include="treeviewContrainer.Designer.cs">
+      <DependentUpon>treeviewContrainer.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ControlBase.resx">
-      <DependentUpon>ControlBase.cs</DependentUpon>
+    <EmbeddedResource Include="treeviewContrainer.resx">
+      <DependentUpon>treeviewContrainer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSubModelParam.resx">
-      <DependentUpon>FormSubModelParam.cs</DependentUpon>
-    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SubBusContrainer\SubBusContrainer.csproj">
+      <Project>{01a6a00b-3da7-40cc-9f3d-fbb830662d4d}</Project>
+      <Name>SubBusContrainer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

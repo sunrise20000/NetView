@@ -1,6 +1,6 @@
 ﻿namespace ControlTest
 {
-    partial class FormSubModelParam
+    partial class FormSubBusModelParam
     {
         /// <summary>
         /// Required designer variable.
@@ -47,127 +47,134 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(77, 36);
+            this.label1.Location = new System.Drawing.Point(87, 43);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(47, 15);
+            this.label1.Size = new System.Drawing.Size(53, 18);
             this.label1.TabIndex = 0;
             this.label1.Text = "Name:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(77, 75);
+            this.label2.Location = new System.Drawing.Point(87, 90);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(47, 15);
+            this.label2.Size = new System.Drawing.Size(53, 18);
             this.label2.TabIndex = 0;
             this.label2.Text = "Type:";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(61, 114);
+            this.label3.Location = new System.Drawing.Point(69, 137);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(63, 15);
+            this.label3.Size = new System.Drawing.Size(71, 18);
             this.label3.TabIndex = 0;
             this.label3.Text = "Param3:";
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(61, 153);
+            this.label4.Location = new System.Drawing.Point(69, 184);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(63, 15);
+            this.label4.Size = new System.Drawing.Size(71, 18);
             this.label4.TabIndex = 0;
             this.label4.Text = "Param4:";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(61, 192);
+            this.label5.Location = new System.Drawing.Point(69, 230);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(63, 15);
+            this.label5.Size = new System.Drawing.Size(71, 18);
             this.label5.TabIndex = 0;
             this.label5.Text = "Param5:";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(61, 231);
+            this.label6.Location = new System.Drawing.Point(69, 277);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(63, 15);
+            this.label6.Size = new System.Drawing.Size(71, 18);
             this.label6.TabIndex = 0;
             this.label6.Text = "Param6:";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(61, 270);
+            this.label7.Location = new System.Drawing.Point(69, 324);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(63, 15);
+            this.label7.Size = new System.Drawing.Size(71, 18);
             this.label7.TabIndex = 0;
             this.label7.Text = "Param7:";
             // 
             // txt_Name
             // 
-            this.txt_Name.Location = new System.Drawing.Point(151, 33);
+            this.txt_Name.Location = new System.Drawing.Point(170, 40);
+            this.txt_Name.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txt_Name.Name = "txt_Name";
             this.txt_Name.ReadOnly = true;
-            this.txt_Name.Size = new System.Drawing.Size(266, 25);
+            this.txt_Name.Size = new System.Drawing.Size(299, 28);
             this.txt_Name.TabIndex = 1;
             // 
             // cmB_Type
             // 
             this.cmB_Type.FormattingEnabled = true;
-            this.cmB_Type.Location = new System.Drawing.Point(151, 74);
+            this.cmB_Type.Location = new System.Drawing.Point(170, 89);
+            this.cmB_Type.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmB_Type.Name = "cmB_Type";
-            this.cmB_Type.Size = new System.Drawing.Size(266, 23);
+            this.cmB_Type.Size = new System.Drawing.Size(299, 26);
             this.cmB_Type.TabIndex = 2;
             // 
             // cmB_Param3
             // 
             this.cmB_Param3.FormattingEnabled = true;
-            this.cmB_Param3.Location = new System.Drawing.Point(151, 113);
+            this.cmB_Param3.Location = new System.Drawing.Point(170, 136);
+            this.cmB_Param3.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmB_Param3.Name = "cmB_Param3";
-            this.cmB_Param3.Size = new System.Drawing.Size(266, 23);
+            this.cmB_Param3.Size = new System.Drawing.Size(299, 26);
             this.cmB_Param3.TabIndex = 2;
             // 
             // cmB_Param4
             // 
             this.cmB_Param4.FormattingEnabled = true;
-            this.cmB_Param4.Location = new System.Drawing.Point(151, 152);
+            this.cmB_Param4.Location = new System.Drawing.Point(170, 182);
+            this.cmB_Param4.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmB_Param4.Name = "cmB_Param4";
-            this.cmB_Param4.Size = new System.Drawing.Size(266, 23);
+            this.cmB_Param4.Size = new System.Drawing.Size(299, 26);
             this.cmB_Param4.TabIndex = 2;
             // 
             // cmB_Param5
             // 
             this.cmB_Param5.FormattingEnabled = true;
-            this.cmB_Param5.Location = new System.Drawing.Point(151, 191);
+            this.cmB_Param5.Location = new System.Drawing.Point(170, 229);
+            this.cmB_Param5.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmB_Param5.Name = "cmB_Param5";
-            this.cmB_Param5.Size = new System.Drawing.Size(266, 23);
+            this.cmB_Param5.Size = new System.Drawing.Size(299, 26);
             this.cmB_Param5.TabIndex = 2;
             // 
             // cmB_Param6
             // 
             this.cmB_Param6.FormattingEnabled = true;
-            this.cmB_Param6.Location = new System.Drawing.Point(151, 230);
+            this.cmB_Param6.Location = new System.Drawing.Point(170, 276);
+            this.cmB_Param6.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmB_Param6.Name = "cmB_Param6";
-            this.cmB_Param6.Size = new System.Drawing.Size(266, 23);
+            this.cmB_Param6.Size = new System.Drawing.Size(299, 26);
             this.cmB_Param6.TabIndex = 2;
             // 
             // cmB_Param7
             // 
             this.cmB_Param7.FormattingEnabled = true;
-            this.cmB_Param7.Location = new System.Drawing.Point(151, 269);
+            this.cmB_Param7.Location = new System.Drawing.Point(170, 323);
+            this.cmB_Param7.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cmB_Param7.Name = "cmB_Param7";
-            this.cmB_Param7.Size = new System.Drawing.Size(266, 23);
+            this.cmB_Param7.Size = new System.Drawing.Size(299, 26);
             this.cmB_Param7.TabIndex = 2;
             // 
-            // FormSubModelParam
+            // FormSubBusModelParam
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(498, 317);
+            this.ClientSize = new System.Drawing.Size(560, 380);
             this.Controls.Add(this.cmB_Param7);
             this.Controls.Add(this.cmB_Param6);
             this.Controls.Add(this.cmB_Param5);
@@ -183,10 +190,11 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FormSubModelParam";
-            this.Text = "FormSubModelParam";
+            this.Name = "FormSubBusModelParam";
+            this.Text = "FormSubBusModelParam";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormSubModelParam_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

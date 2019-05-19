@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\ProductAddedArgs.cs" />
     <Compile Include="ProductContrainer.cs">
       <SubType>UserControl</SubType>
     </Compile>

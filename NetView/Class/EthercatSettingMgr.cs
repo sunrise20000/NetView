@@ -9,13 +9,14 @@ namespace NetView.Class
 {
     public class EthercatSettingMgr
     {
+        public static string ExtString { get; } = "xml";
         private List<ModuleInfoBase> ModuleInfoList  = new List<ModuleInfoBase>();
-        private  XmlParse Xml = null;
+        private  XmlParse Xml = new XmlParse();
         private string FileName="";
-        public EthercatSettingMgr(string FileName)
+
+        public void LoadXmlFile(string FileName)
         {
             this.FileName = FileName;
-            Xml = new XmlParse();
             Xml.LoadXml(FileName);
         }
 
@@ -136,24 +137,34 @@ namespace NetView.Class
             return ModuleInfoList;
         }
 
-        public void SaveFile(List<ModuleInfoBase> DeviceList)
+        public void SaveFile(List<ModuleInfoBase> DeviceList, string FileName)
         {
             var ListAdjust= AdjustName(DeviceList);
 
             //输出
-            SaveDT1601(ListAdjust);
-            SaveDT7010(ListAdjust);
-            Savex1601(ListAdjust);
-            Savex7010(ListAdjust);
-            SaveRxPdo(ListAdjust);
+            //SaveDT1601(ListAdjust);
+            //SaveDT7010(ListAdjust);
+            //Savex1601(ListAdjust);
+            //Savex7010(ListAdjust);
+            //SaveRxPdo(ListAdjust);
 
-            //输入
-            SaveDT1A00(ListAdjust);
-            SaveDT6001(ListAdjust);
-            Savex1A00(ListAdjust);
-            Savex6001(ListAdjust);
-            SaveTxPdo(ListAdjust);
+            ////输入
+            //SaveDT1A00(ListAdjust);
+            //SaveDT6001(ListAdjust);
+            //Savex1A00(ListAdjust);
+            //Savex6001(ListAdjust);
+            //SaveTxPdo(ListAdjust);
+            SaveDT1(ListAdjust, EnumModuleIOType.OUT);
+            SaveDT2(ListAdjust, EnumModuleIOType.OUT);
+            Savex1(ListAdjust, EnumModuleIOType.OUT);
+            Savex2(ListAdjust, EnumModuleIOType.OUT);
+            SavePdo(ListAdjust, EnumModuleIOType.OUT);
 
+            SaveDT1(ListAdjust, EnumModuleIOType.IN);
+            SaveDT2(ListAdjust, EnumModuleIOType.IN);
+            Savex1(ListAdjust, EnumModuleIOType.IN);
+            Savex2(ListAdjust, EnumModuleIOType.IN);
+            SavePdo(ListAdjust, EnumModuleIOType.IN);
 
             Xml.Save(FileName);
         }
@@ -579,6 +590,215 @@ namespace NetView.Class
                     Xml.SetSubElement(e, "Index", "SubIndex", "BitLen", "Name", "DataType");
 
                     Xml.SetSubElementValue(e, "Index", $"#x6001");
+                    Xml.SetSubElementValue(e, "SubIndex", $"{SubIdx++}");
+                    Xml.SetSubElementValue(e, "BitLen", $"{DesModule.BitSize}");
+                    Xml.SetSubElementValue(e, "Name", $"{DesModule.Header}{Module.Name}");
+                    Xml.SetSubElementValue(e, "DataType", $"{DesModule.DataTypeOfSubItem}");
+
+                    Xml.SetSubElement(n, e);
+                }
+            }
+        }
+        #endregion
+
+        #region Private Method
+        private void SaveDT1(List<ModuleInfoBase> ListAdjust,EnumModuleIOType IOType)
+        {
+            int BitOffs = 16;
+            int SubIdx = 1;
+
+            var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
+            var es = Xml.GetMutifyElement(n, "DataType");
+            var Dic = new Dictionary<string, string>();
+            Dic.Add("Name", IOType==EnumModuleIOType.OUT? "DT1601" : "DT1A00");
+            var v = Xml.GetElementFromMutiElement(es, Dic);
+            var ss = Xml.GetMutifyElement(v, "SubItem");
+            while (Xml.GetMutifyElement(v, "SubItem").Count() > 1)
+            {
+                v.Elements().ElementAt(v.Elements().Count() - 1).Remove();
+            }
+
+            foreach (var Module in ListAdjust)
+            {
+                var DesModules = Module.ModuleList.Where(m => m.IOType == IOType);
+                for (int j = 0; j < DesModules.Count(); j++)
+                {
+                    var DesModule = DesModules.ElementAt(j);
+                    var e = Xml.CreateElement("SubItem");
+                    Xml.SetSubElement(e, "SubIdx", "Name", "Type", "BitSize", "BitOffs", "Flags");
+
+                    Xml.SetSubElementValue(e, "SubIdx", $"{SubIdx}");
+                    Xml.SetSubElementValue(e, "Name", string.Format("SunIndex {0:D3}", SubIdx++));
+                    Xml.SetSubElementValue(e, "Type", $"{DesModule.DataTypeOfSubItem.ToString()}");
+                    Xml.SetSubElementValue(e, "BitSize", $"{DesModule.BitSize}");
+                    Xml.SetSubElementValue(e, "BitOffs", $"{BitOffs}");
+                    BitOffs += DesModule.BitSize;
+
+                    var ee = Xml.GetSingleElement(e, "Flags");
+                    Xml.SetSubElement(ee, "Access", "Category");
+
+                    var eee = Xml.GetSingleElement(ee, "Access");
+                    Xml.SetSubElementValue(ee, "Access", "ro");
+
+                    Xml.SetSubElement(v, e);
+                }
+            }
+            Xml.SetSubElementValue(v, "BitSize", $"{BitOffs}");
+        }
+
+        /// <summary>
+        /// 输出的详细名称
+        /// </summary>
+        /// <param name="ListAdjust"></param>
+        private void SaveDT2(List<ModuleInfoBase> ListAdjust, EnumModuleIOType IOType)
+        {
+            int BitOffs = 16;
+            int SubIdx = 1;
+
+            var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
+            var es = Xml.GetMutifyElement(n, "DataType");
+            var Dic = new Dictionary<string, string>();
+            Dic.Add("Name", IOType==EnumModuleIOType.OUT? "DT7010" : "DT6001");
+            var v = Xml.GetElementFromMutiElement(es, Dic);
+            var ss = Xml.GetMutifyElement(v, "SubItem");
+            while (Xml.GetMutifyElement(v, "SubItem").Count() > 1)
+            {
+                v.Elements().ElementAt(v.Elements().Count() - 1).Remove();
+            }
+
+            foreach (var Module in ListAdjust)
+            {
+                var DesModules = Module.ModuleList.Where(m => m.IOType == IOType);
+                for (int j = 0; j < DesModules.Count(); j++)
+                {
+                    var DesModule = DesModules.ElementAt(j);
+                    var e = Xml.CreateElement("SubItem");
+                    Xml.SetSubElement(e, "SubIdx", "Name", "Type", "BitSize", "BitOffs", "Flags");
+
+                    Xml.SetSubElementValue(e, "SubIdx", $"{SubIdx++}");
+                    Xml.SetSubElementValue(e, "Name", $"{DesModule.Header}{Module.Name}");
+                    Xml.SetSubElementValue(e, "Type", $"{DesModule.DataTypeOfSubItem.ToString()}");
+                    Xml.SetSubElementValue(e, "BitSize", $"{DesModule.BitSize}");
+                    Xml.SetSubElementValue(e, "BitOffs", $"{BitOffs}");
+                    BitOffs += DesModule.BitSize;
+
+                    var ee = Xml.GetSingleElement(e, "Flags");
+                    Xml.SetSubElement(ee, "Access", "Category");
+
+                    var eee = Xml.GetSingleElement(ee, "Access");
+                    Xml.SetSubElementValue(ee, "Access", "ro");
+                    Xml.SetSubElementValue(ee, "Category", "o");
+
+                    Xml.SetSubElement(v, e);
+                }
+            }
+            Xml.SetSubElementValue(v, "BitSize", $"{BitOffs}");
+
+        }
+
+        private void Savex1(List<ModuleInfoBase> ListAdjust, EnumModuleIOType IOType)
+        {
+            int SubIdx = 1;
+            var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "Objects");
+            var es = Xml.GetMutifyElement(n, "Object");
+            var Dic = new Dictionary<string, string>();
+            Dic.Add("Index", IOType==EnumModuleIOType.OUT? "#x1601" : "#x1A00");
+            var v = Xml.GetElementFromMutiElement(es, Dic);
+
+            var infoE = Xml.GetSingleElement(v, "Info");
+            var ss = Xml.GetMutifyElement(infoE, "SubItem");
+
+            while (Xml.GetMutifyElement(infoE, "SubItem").Count() > 1)
+            {
+                infoE.Elements().ElementAt(infoE.Elements().Count() - 1).Remove();
+            }
+
+            foreach (var Module in ListAdjust)
+            {
+                var DesModules = Module.ModuleList.Where(m => m.IOType == IOType);
+                for (int j = 0; j < DesModules.Count(); j++)
+                {
+                    var DesModule = DesModules.ElementAt(j);
+                    var e = Xml.CreateElement("SubItem");
+                    Xml.SetSubElement(e, "Name", "Info");
+
+                    Xml.SetSubElementValue(e, "Name", string.Format("SunIndex {0:D3}", SubIdx));
+                    var ee = Xml.GetSingleElement(e, "Info");
+                    Xml.SetSubElement(ee, "DefaultData");
+                    //08011070   0710    01   08
+                    Xml.SetSubElementValue(ee, "DefaultData", string.Format("{0:D2}{1:D2}{2}", DesModule.BitSize, SubIdx++, IOType==EnumModuleIOType.OUT? "1070" : "0160"));
+                    Xml.SetSubElement(infoE, e);
+                }
+            }
+            //修改第一个SubItem的DefaultData
+            var FirstE = Xml.GetSingleElement(infoE, "SubItem", "Info");
+            Xml.SetSubElementValue(FirstE, "DefaultData", $"{SubIdx - 1}");
+        }
+
+        private void Savex2(List<ModuleInfoBase> ListAdjust, EnumModuleIOType IOType)
+        {
+            int SubIdx = 1;
+            var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "Objects");
+            var es = Xml.GetMutifyElement(n, "Object");
+            var Dic = new Dictionary<string, string>();
+            Dic.Add("Index", IOType==EnumModuleIOType.OUT? "#x7010" : "#x6001");
+            var v = Xml.GetElementFromMutiElement(es, Dic);
+
+            var infoE = Xml.GetSingleElement(v, "Info");
+            var ss = Xml.GetMutifyElement(infoE, "SubItem");
+
+            while (Xml.GetMutifyElement(infoE, "SubItem").Count() > 1)
+            {
+                infoE.Elements().ElementAt(infoE.Elements().Count() - 1).Remove();
+            }
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var Module in ListAdjust)
+            {
+                var DesModules = Module.ModuleList.Where(m => m.IOType == IOType);
+                for (int j = 0; j < DesModules.Count(); j++)
+                {
+                    var DesModule = DesModules.ElementAt(j);
+                    var e = Xml.CreateElement("SubItem");
+                    Xml.SetSubElement(e, "Name", "Info");
+
+                    Xml.SetSubElementValue(e, "Name", $"{DesModule.Header}{Module.Name}");
+                    var ee = Xml.GetSingleElement(e, "Info");
+                    Xml.SetSubElement(ee, "DefaultData");
+                    //00-8Bit, 0000-16Bit, 00000000-32Bit
+                    sb.Clear();
+                    for (int i = 0; i < DesModule.BitSize / 8; i++)
+                        sb.Append("00");
+                    Xml.SetSubElementValue(ee, "DefaultData", sb.ToString());
+                    Xml.SetSubElement(infoE, e);
+                    SubIdx++;
+                }
+            }
+            //修改第一个SubItem的DefaultData
+            var FirstE = Xml.GetSingleElement(infoE, "SubItem", "Info");
+            Xml.SetSubElementValue(FirstE, "DefaultData", $"{SubIdx - 1}");
+        }
+
+        private void SavePdo(List<ModuleInfoBase> ListAdjust, EnumModuleIOType IOType)
+        {
+            int SubIdx = 1;
+            var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", IOType==EnumModuleIOType.OUT? "RxPdo" : "TxPdo");
+
+            while (Xml.GetMutifyElement(n, "Entry").Count() > 0)
+            {
+                n.Elements().ElementAt(n.Elements().Count() - 1).Remove();
+            }
+
+            foreach (var Module in ListAdjust)
+            {
+                var DesModules = Module.ModuleList.Where(m => m.IOType == IOType);
+                for (int j = 0; j < DesModules.Count(); j++)
+                {
+                    var DesModule = DesModules.ElementAt(j);
+                    var e = Xml.CreateElement("Entry");
+                    Xml.SetSubElement(e, "Index", "SubIndex", "BitLen", "Name", "DataType");
+
+                    Xml.SetSubElementValue(e, "Index", IOType==EnumModuleIOType.OUT? "#x7010" : "#x6001");
                     Xml.SetSubElementValue(e, "SubIndex", $"{SubIdx++}");
                     Xml.SetSubElementValue(e, "BitLen", $"{DesModule.BitSize}");
                     Xml.SetSubElementValue(e, "Name", $"{DesModule.Header}{Module.Name}");

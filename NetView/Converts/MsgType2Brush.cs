@@ -19,13 +19,13 @@ namespace NetView.Converts
             switch (msg)
             {
                 case EnumMsgType.Info:
-                    brush = new SolidColorBrush(Color.FromRgb(0,0,255));
+                    brush = new SolidColorBrush(Color.FromRgb(18, 150, 219));
                     break;
                 case EnumMsgType.Warning:
-                    brush = new SolidColorBrush(Color.FromRgb(255,229,0));
+                    brush = new SolidColorBrush(Color.FromRgb(243,153,43));
                     break;
                 case EnumMsgType.Error:
-                    brush = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                    brush = new SolidColorBrush(Color.FromRgb(208, 2, 27));
                     break;
                 default:
                     break;

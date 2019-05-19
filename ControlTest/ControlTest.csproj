@@ -41,27 +41,48 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusModel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BusModel.Designer.cs">
+      <DependentUpon>BusModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="ControlBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ControlBase.Designer.cs">
       <DependentUpon>ControlBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSubModelParam.cs">
+    <Compile Include="FormBusModelParam.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSubModelParam.Designer.cs">
-      <DependentUpon>FormSubModelParam.cs</DependentUpon>
+    <Compile Include="FormBusModelParam.Designer.cs">
+      <DependentUpon>FormBusModelParam.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormSubBusModelParam.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormSubBusModelParam.Designer.cs">
+      <DependentUpon>FormSubBusModelParam.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SubBusModel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SubBusModel.Designer.cs">
+      <DependentUpon>SubBusModel.cs</DependentUpon>
+    </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ControlBase.resx">
       <DependentUpon>ControlBase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSubModelParam.resx">
-      <DependentUpon>FormSubModelParam.cs</DependentUpon>
+    <EmbeddedResource Include="FormBusModelParam.resx">
+      <DependentUpon>FormBusModelParam.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormSubBusModelParam.resx">
+      <DependentUpon>FormSubBusModelParam.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

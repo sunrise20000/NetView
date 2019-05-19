@@ -135,6 +135,10 @@
       <Project>{01a6a00b-3da7-40cc-9f3d-fbb830662d4d}</Project>
       <Name>SubBusContrainer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TreeviewContrainer\TreeviewContrainer.csproj">
+      <Project>{88623c3e-18f8-4ce2-8d78-452e203cdc97}</Project>
+      <Name>TreeviewContrainer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
