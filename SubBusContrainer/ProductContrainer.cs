@@ -18,6 +18,7 @@ namespace SubBusContrainer
         private Graphics m_g;
         private Pen m_pen;
         private Panel _p;
+        SubBusModel LastSubModel = null;
         // private Image m_image;
         // private Graphics m_imageG;
         public event EventHandler<ProductAddedArgs> OnProductChangedEvent;
@@ -43,7 +44,7 @@ namespace SubBusContrainer
             //  this.panel_Product.VisibleChanged += Panel_Product_VisibleChanged;
         }
 
-        public string BusName{ get; private set; }
+        public string BusName { get; private set; }
         /// <summary>
         /// 
         /// </summary>
@@ -57,7 +58,7 @@ namespace SubBusContrainer
             _p.Top = this.Height / 2 - 2;
             _p.BackColor = Color.Red;
             this.Controls.Add(_p);
-           
+
 
             m_g = this.CreateGraphics();
             m_pen = new Pen(Color.Red, 3);
@@ -75,22 +76,37 @@ namespace SubBusContrainer
             Point point = this.PointToClient(new Point(e.X, e.Y));
 
             object info = e.Data.GetData(typeof(string));
-            SubBusModel userControl1 = new SubBusModel( point);
+            SubBusModel userControl1 = new SubBusModel(point);
             List<string> ControlNameList = new List<string>();
             foreach (Control it in this.Controls)
-                if((it as SubBusModel)!=null)
+                if ((it as SubBusModel) != null)
                     ControlNameList.Add((it as SubBusModel).Name);
 
-            var ExistControlName = ControlNameList.Where(c=>c.Contains(info.ToString()));
+            var ExistControlName = ControlNameList.Where(c => c.Contains(info.ToString()));
 
-            userControl1.Name = $"{info.ToString()}_{ExistControlName.Count()+1}";
+            userControl1.Name = $"{info.ToString()}_{ExistControlName.Count() + 1}";
             userControl1.ControlMoveEvent += RefushLine;
+            userControl1.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
             this.Controls.Add(userControl1);
 
             DrawLine(userControl1);
             m_g.Flush();
 
             OnProductChangedEvent?.Invoke(this, new ProductAddedArgs() { ProductName = userControl1.Name, IsAdd = true, });
+        }
+
+        /// <summary>
+        /// Middle->Left
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UserControl1_OnSubBusModleDelete(object sender, EventArgs e)
+        {
+            if (sender is SubBusModel)
+            {
+                SubBusModel SubBusModel = sender as SubBusModel;
+                OnProductChangedEvent?.Invoke(this, new ProductAddedArgs() { ProductName = SubBusModel.Name, IsAdd = false });
+            }
         }
 
         private void panel_Product_DragEnter(object sender, DragEventArgs e)
@@ -121,12 +137,12 @@ namespace SubBusContrainer
 
         private void Panel_Product_SizeChanged(object sender, EventArgs e)
         {
-            
+
             _p.Width = this.Width;
             _p.Top = this.Height / 2 - 2;
             m_g = this.CreateGraphics();
             m_g.Clear(this.BackColor);
-            
+
             foreach (var member in this.Controls)
             {
                 ControlBase control = member as ControlBase;
@@ -135,7 +151,7 @@ namespace SubBusContrainer
                     DrawLine(control);
                 }
             }
-           
+
         }
         private void RefushLine(object sender, ControlMoveEventArgs e)
         {
@@ -193,7 +209,7 @@ namespace SubBusContrainer
             {
                 m_g.DrawLine(m_pen, new Point(control.Left + control.Width / 2, control.Top + control.Height), new Point(control.Left + control.Width / 2, this.Height / 2));
                 m_g.FillEllipse(new System.Drawing.SolidBrush(Color.Gray), new Rectangle(control.Left + control.Width / 2 - 5, this.Height / 2 - 5, 15, 15));
-            }   
+            }
         }
 
         /// <summary>
@@ -206,25 +222,25 @@ namespace SubBusContrainer
             {
                 throw new Exception("已存在当前名称的产品");
             }
-            Point point=new Point();
-            foreach(var member in this.Controls)
+            Point point = new Point();
+            if (LastSubModel == null)
             {
-                ControlBase controlBase = member as ControlBase;
-                if(controlBase!=null)
-                {
-                    point.X = controlBase.Left + 20;
-                    point.Y = controlBase.Top + 20;
-                    break;
-                }
+                point.X = 0;
+                point.Y = 20;
             }
-            SubBusModel userControl1 = new SubBusModel(point);
-            
-            userControl1.Name = subproductname;
-            userControl1.ControlMoveEvent += RefushLine;
-            this.Controls.Add(userControl1);
-            userControl1.BringToFront();
-            userControl1.Focus();
-            DrawLine(userControl1);
+            else
+            {
+                point.X = LastSubModel.Location.X + 100;
+                point.Y = LastSubModel.Location.Y;
+            }
+            LastSubModel = new SubBusModel(point);
+            LastSubModel.Name = subproductname;
+            LastSubModel.ControlMoveEvent += RefushLine;
+            LastSubModel.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
+            this.Controls.Add(LastSubModel);
+            LastSubModel.BringToFront();
+            LastSubModel.Focus();
+            DrawLine(LastSubModel);
             m_g.Flush();
         }
         private bool CheckExit(string subproductname)
@@ -247,7 +263,7 @@ namespace SubBusContrainer
         /// 响应Left——》Middle的删除消息
         /// </summary>
         /// <param name="subproductname"></param>
-        public void RemoveSubProduct(string subproductname)
+        public void DeleteSubProduct(string subproductname)
         {
             foreach (var member in this.Controls)
             {
@@ -266,41 +282,39 @@ namespace SubBusContrainer
 
         public void ReplaceNewList(List<string> NameListWithIndex)
         {
-            foreach (Control member in this.Controls)
+            List<SubBusModel> list = new List<SubBusModel>();
+            foreach (var member in this.Controls)
             {
                 if ((member is SubBusModel))
                 {
-                    this.Controls.Remove(member);
-                    member.Dispose();
+                    list.Add(member as SubBusModel);
                 }
-                
             }
+            foreach (var it in list)
+                it.Dispose();
             RefushLine();
-
+            LastSubModel = null;
             foreach (var Name in NameListWithIndex)
             {
                 Point point = new Point();
-               
-                var len = this.Controls.Count;
-
-                if (len != 0)
+                if (LastSubModel == null)
                 {
-                    point.X = this.Controls[len-1].Left + 50;
-                    point.Y = this.Controls[len - 1].Top + 50;
+                    point.X = 0;
+                    point.Y = 20;
                 }
                 else
                 {
-                    point.X = 50;
-                    point.Y = 50;     
-                }     
-                
-                SubBusModel userControl1 = new SubBusModel(point);
-                userControl1.Name = Name;
-                userControl1.ControlMoveEvent += RefushLine;
-                this.Controls.Add(userControl1);
-                userControl1.BringToFront();
-                userControl1.Focus();
-                DrawLine(userControl1);
+                    point.X = this.LastSubModel.Location.X + 100;
+                    point.Y = this.LastSubModel.Location.Y;
+                }
+
+                LastSubModel = new SubBusModel(point);
+                LastSubModel.Name = Name;
+                LastSubModel.ControlMoveEvent += RefushLine;
+                this.Controls.Add(LastSubModel);
+                LastSubModel.BringToFront();
+                LastSubModel.Focus();
+                DrawLine(LastSubModel);
             }
             m_g.Flush();
         }
@@ -323,7 +337,7 @@ namespace SubBusContrainer
         public List<SubBusModel> EnumProduct()
         {
             List<SubBusModel> controlBasesList = new List<SubBusModel>();
-            foreach(var mem in this.Controls)
+            foreach (var mem in this.Controls)
             {
                 SubBusModel SubBusModel = mem as SubBusModel;
                 if (SubBusModel != null)
@@ -332,19 +346,23 @@ namespace SubBusContrainer
             }
             return controlBasesList;
         }
-
-
-        /// <summary>
-        /// Middle——》Left  删除
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void panel_Product_ControlRemoved(object sender, ControlEventArgs e)
+        public void ReName(List<string> NameList)
         {
-            if (e.Control is SubBusModel)
+            List<Tuple<int,int, SubBusModel>> KpList =new List<Tuple<int, int, SubBusModel>>();
+            int i = 0;
+            foreach (var member in this.Controls)
             {
-                SubBusModel SubBusModel = e.Control as SubBusModel;
-                OnProductChangedEvent?.Invoke(this, new ProductAddedArgs() { ProductName = SubBusModel.Name, IsAdd = false });
+                SubBusModel SubBm = member as SubBusModel;
+                if (SubBm != null)
+                {
+                    KpList.Add(new Tuple<int, int, SubBusModel>( i++, SubBm.Location.X,SubBm));
+                }
+            }
+            KpList.Sort((a, b) => a.Item2.CompareTo(b.Item2));
+
+            for (i=0;i<KpList.Count;i++)
+            {
+                KpList.ElementAt(i).Item3.Name = NameList[i];            
             }
         }
     }

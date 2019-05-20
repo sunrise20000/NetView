@@ -22,12 +22,13 @@ namespace NetView
         EthercatSettingMgr EthercatMgr = new EthercatSettingMgr();
         ProductContrainer MiddleControl = null;
         treeviewContrainer LeftControl = null;
-
+        const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
         public Form1()
         {
             InitializeComponent();
             LoadCfg();
             InitCtrl();
+            EthercatMgr.LoadXmlFile(FILE_DEMO_XML_FILE);
         }
         private void LoadCfg()
         {
@@ -133,7 +134,7 @@ namespace NetView
         /// <param name="e"></param>
         private void barButtonItemNew_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            EthercatMgr.LoadXmlFile(@"Template\Demo.xml");
+            EthercatMgr.LoadXmlFile(FILE_DEMO_XML_FILE);
         }
 
         private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -153,12 +154,10 @@ namespace NetView
                 List<string> L = new List<string>();
                 foreach (var it in ListDevice)
                 {
-                    L.Add(it.PureName);
+                    L.Add($"{it.PureName}_{it.LocalIndex}");
                 }
-                LeftControl.ReplaceNewList(L);
-            }
-            
-           
+               LeftControl.ReplaceNewList(L); 
+            }                   
         }
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

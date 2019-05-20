@@ -38,7 +38,7 @@
             this.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.Name = "ProductContrainer";
             this.Size = new System.Drawing.Size(957, 537);
-            this.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.panel_Product_ControlRemoved);
+           
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.panel_Product_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.panel_Product_DragEnter);
             this.DragOver += new System.Windows.Forms.DragEventHandler(this.panel_Product_DragOver);

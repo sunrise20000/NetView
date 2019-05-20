@@ -16,8 +16,8 @@ namespace ControlTest
        
         private bool m_leftMouseDownFlag;//鼠标左键按下标志
         private Point m_lastPoint;//控件上一时刻鼠标位置 
-    
-    
+
+        public event EventHandler OnSubBusModleDelete;
         #endregion
         #region 属性定义
         public new  string Name
@@ -29,7 +29,7 @@ namespace ControlTest
                 this.label1.Text = m_name;
             }
         }
-       
+        public bool IsAllowMove { get; set; } = true;
         #endregion
         #region 事件定义
         public event EventHandler<ControlMoveEventArgs> ControlMoveEvent;
@@ -56,7 +56,7 @@ namespace ControlTest
         }
         private void label1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (m_leftMouseDownFlag)
+            if (IsAllowMove && m_leftMouseDownFlag)
             {
                 this.Left += e.Location.X - m_lastPoint.X;
                 this.Top += e.Location.Y - m_lastPoint.Y;                       
@@ -84,6 +84,7 @@ namespace ControlTest
         private void toolStripMenuItem_Delete_Click(object sender, EventArgs e)
         {
             OnControlMove(new ControlMoveEventArgs("LeftMouseDown"));
+            OnSubBusModleDelete?.Invoke(this, e);
             this.Dispose();
         }  
 

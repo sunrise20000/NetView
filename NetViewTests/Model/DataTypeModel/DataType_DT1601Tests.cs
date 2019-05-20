@@ -18,7 +18,7 @@ namespace NetView.Model.DataTypeModel.Tests
             Mgr.LoadXmlFile(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
             var L = Mgr.GetDeviceList();
             foreach (var it in L)
-                Console.WriteLine(it.Name);
+                Console.WriteLine(it.PureName);
             //Assert.Fail();
         }
 

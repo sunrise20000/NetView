@@ -110,6 +110,8 @@ namespace TreeviewContrainer
                         NodeTextDic.Add(i++, NameInGui);
                         node.Text = NameInGui;
                     }
+
+                    ProductContrainer.ReName(NodeTextDic.Values.ToList());
                     break;
                 }
             }     
@@ -128,8 +130,6 @@ namespace TreeviewContrainer
                 }       
             }
             ProductContrainer.ReplaceNewList(NameListWithIndex);
-
-
         }
 
 
@@ -227,7 +227,7 @@ namespace TreeviewContrainer
             TreeNode _treenode = treeView_ProductInfo.SelectedNode;
             if (_treenode != null)
             {
-                productContrainer.RemoveSubProduct(_treenode.Text);
+                productContrainer.DeleteSubProduct(_treenode.Text);
                 treeView_ProductInfo.Nodes.Remove(_treenode);
             }
         }
@@ -235,6 +235,7 @@ namespace TreeviewContrainer
         private void refrushNameMenu_Click(object sender, EventArgs e)
         {
             RenameTreeNode();
+            
         }
     }
 }
