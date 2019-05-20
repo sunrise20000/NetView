@@ -1,4 +1,5 @@
-﻿using NetView.Model.ModuleInfo;
+﻿using NetView.Model;
+using NetView.Model.ModuleInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,47 +21,32 @@ namespace NetView.Class
             Xml.LoadXml(FileName);
         }
 
-        public List<ModuleInfoBase> GetDeviceList()
+        public List<ModuleNameModel> GetDeviceList()
         {
            
             var Output= GetDeviceListOutput();
             var Input = GetDeviceListInput();
-            Dictionary<int, ModuleInfoBase> NameListDic = new Dictionary<int, ModuleInfoBase>();
+            Dictionary<int, ModuleNameModel> NameListDic = new Dictionary<int, ModuleNameModel>();
             foreach (var it in Output)
             {
-                var list = it.Name.Split('_');
-                if (list.Length > 2)
-                {
-                    var TotalIndex = int.Parse(list[list.Length-3]);
-                    var TrueName = list[list.Length - 2];
-                    var SubIndex = int.Parse(list[list.Length - 1]);
-                    NameListDic.Add(TotalIndex,it);
-                }
+                if(!NameListDic.Keys.Contains(it.TotolIndex))
+                    NameListDic.Add(it.TotolIndex,it);   
             }
             foreach (var it in Input)
             {
-                var list = it.Name.Split('_');
-                if (list.Length > 2)
-                {
-                    var TotalIndex = int.Parse(list[list.Length - 3]);
-                    var TrueName = list[list.Length - 2];
-                    var SubIndex = int.Parse(list[list.Length - 1]);
-                    if (!NameListDic.Keys.Contains(TotalIndex))
-                    {
-                        NameListDic.Add(TotalIndex, it);
-                    }
-                }
+                if (!NameListDic.Keys.Contains(it.TotolIndex))
+                    NameListDic.Add(it.TotolIndex, it);    
             }
             NameListDic.ToList().Sort((a, b) => a.Key.CompareTo(b.Key));
-            var ModuleInfoList=new List<ModuleInfoBase>();
+            var NameModleList=new List<ModuleNameModel>();
             foreach (var it in NameListDic)
             {
-                ModuleInfoList.Add(it.Value);
+                NameModleList.Add(it.Value);
             }
-            return ModuleInfoList;
+            return NameModleList;
         }
 
-        private List<ModuleInfoBase> GetDeviceListInput()
+        private List<ModuleNameModel> GetDeviceListInput()
         {
             List<string> ModuleNameList = new List<string>();
             var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
@@ -84,22 +70,21 @@ namespace NetView.Class
                 }
             }
             var L = ModuleNameList.Distinct();
-            var ModuleInfoList = new List<ModuleInfoBase>();
+            var NameModleList = new List<ModuleNameModel>();
             foreach (var l in L)
             {
-                var name = l.Split('_')[1];
-                string insName = "NetView.Model.ModuleInfo.ModuleInfo_" + name;
-                Type type = Type.GetType(insName);
-                var mi = type.Assembly.CreateInstance(insName);
-                ModuleInfoBase obj = mi as ModuleInfoBase;
-                obj.Name = l;
-                obj.DeviceType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), name);
-                ModuleInfoList.Add(obj);
+                var list = l.Split('_');
+                NameModleList.Add(new ModuleNameModel()
+                {
+                    TotolIndex = int.Parse(list[0]),
+                    PureName = list[1],
+                    LocalIndex = int.Parse(list[2])
+                });
             }
-            return ModuleInfoList;
+            return NameModleList;
         }
 
-        private List<ModuleInfoBase> GetDeviceListOutput()
+        private List<ModuleNameModel> GetDeviceListOutput()
         {
             List<string> ModuleNameList = new List<string>();
             var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
@@ -123,33 +108,31 @@ namespace NetView.Class
                 }
             }
             var L = ModuleNameList.Distinct();
-            var ModuleInfoList = new List<ModuleInfoBase>();
+            var NameModleList = new List<ModuleNameModel>();
             foreach (var l in L)
             {
-                var name = l.Split('_')[1];
-                string insName = "NetView.Model.ModuleInfo.ModuleInfo_" + name;
-                Type type = Type.GetType(insName);
-                var mi = type.Assembly.CreateInstance(insName);
-                ModuleInfoBase obj = mi as ModuleInfoBase;
-                obj.Name = l;
-                obj.DeviceType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), name);
-                ModuleInfoList.Add(obj);
+                var list = l.Split('_');
+                NameModleList.Add(new ModuleNameModel() {
+                    TotolIndex = int.Parse(list[0]),
+                    PureName = list[1],
+                    LocalIndex = int.Parse(list[2])
+                });
             }
-            return ModuleInfoList;
+            return NameModleList;
         }
 
-        public void SaveFile(List<string> PureNameList, string FileName)
+        public void SaveFile(List<ModuleNameModel> NameModelList, string FileName)
         {
             var ModuleInfoList = new List<ModuleInfoBase>();
-            foreach (var it in PureNameList)
+            foreach (var it in NameModelList)
             {
                 //var name = it.Split('_')[1];
-                string insName = "NetView.Model.ModuleInfo.ModuleInfo_" + it;
+                string insName = "NetView.Model.ModuleInfo.ModuleInfo_" + it.PureName;
                 Type type = Type.GetType(insName);
                 var mi = type.Assembly.CreateInstance(insName);
                 ModuleInfoBase obj = mi as ModuleInfoBase;
-                obj.Name = it;
-                obj.DeviceType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), it);
+                obj.Name = it.PureName;
+                obj.DeviceType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), it.PureName);
                 ModuleInfoList.Add(obj);
             }
             var ListAdjust= AdjustName(ModuleInfoList);

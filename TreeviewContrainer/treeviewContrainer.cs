@@ -23,8 +23,12 @@ namespace TreeviewContrainer
                     if (it.Text.Equals("Ethercat"))
                     {
                         int i = 0;
+
                         foreach (TreeNode node in it.Nodes)
-                            NameList.Add($"{node.Text.Split('_')[0]}");
+                        {
+                            var L = node.Text.Split('_');
+                            NameList.Add($"{L[0]}");
+                        }
                         break;
                     }
                 }

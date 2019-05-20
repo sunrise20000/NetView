@@ -153,9 +153,7 @@ namespace NetView
                 List<string> L = new List<string>();
                 foreach (var it in ListDevice)
                 {
-                    var NameSubList = it.Name.Split('_');   //1_HL2001_1
-                    var Name = $"{NameSubList[1]}_{NameSubList[2]}";
-                    L.Add(Name);
+                    L.Add(it.PureName);
                 }
                 LeftControl.ReplaceNewList(L);
             }
@@ -175,7 +173,12 @@ namespace NetView
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 FileOpenPath = sfd.FileName;
-                EthercatMgr.SaveFile(LeftControl.PureNameList, FileOpenPath);
+                var NameModelList = new List<ModuleNameModel>();
+                foreach (var it in LeftControl.PureNameList)
+                    NameModelList.Add(new ModuleNameModel() {
+                         PureName=it,
+                    });
+                EthercatMgr.SaveFile(NameModelList, FileOpenPath);
             }
         }
 

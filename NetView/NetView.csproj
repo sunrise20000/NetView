@@ -94,6 +94,7 @@
     <Compile Include="Model\ModuleInfo\Module_16.cs" />
     <Compile Include="Model\ModuleInfo\Module_32.cs" />
     <Compile Include="Model\ModuleInfo\Module_8.cs" />
+    <Compile Include="Model\ModuleNameModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\UC_Output.xaml.cs">
