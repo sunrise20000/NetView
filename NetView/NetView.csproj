@@ -103,6 +103,7 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -132,9 +133,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EC_ControlLib\EC_ControlLib.csproj">
+    <ProjectReference Include="..\EC_ControlLib\EC_ControlerLib.csproj">
       <Project>{43d5816d-de56-46b9-a217-676615301425}</Project>
-      <Name>EC_ControlLib</Name>
+      <Name>EC_ControlerLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\SubBusContrainer\SubBusContrainer.csproj">
       <Project>{01a6a00b-3da7-40cc-9f3d-fbb830662d4d}</Project>
