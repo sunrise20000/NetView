@@ -12,6 +12,9 @@ using SubBusContrainer;
 using TreeviewContrainer;
 using NetView.Class;
 using System.IO;
+using System.Windows.Forms.Integration;
+using NetView.View;
+using DevExpress.XtraBars.Docking;
 
 namespace NetView
 {
@@ -22,6 +25,7 @@ namespace NetView
         EthercatSettingMgr EthercatMgr = new EthercatSettingMgr();
         ProductContrainer MiddleControl = null;
         treeviewContrainer LeftControl = null;
+        DataTable DTVarMonitor = new DataTable();
         const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
         public Form1()
         {
@@ -108,7 +112,13 @@ namespace NetView
             LeftControl.Dock = DockStyle.Fill;
             this.dockPanelLeft.Controls.Add(LeftControl);
             LeftControl.ProductContrainer = MiddleControl;
-            
+
+            //监视变量窗口
+            string[] Header = new string[] {"Index","ModuleName","DisplayFormat","Value","ModifyValue" };
+            foreach (var it in Header)
+                DTVarMonitor.Columns.Add(it);
+            this.dataGridViewVarMonitor.DataSource = DTVarMonitor;
+
 
         }
 
@@ -243,10 +253,12 @@ namespace NetView
 
         private void barButtonItemArrangWindow_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            this.dockPanelLeft.Show();
-            this.dockPanelMiddle.Show();
-            this.dockPanelRight.Show();
-            this.dockPanelDown.Show();
+            //this.dockPanelLeft.Show();
+            //this.dockPanelMiddle.Show();
+            //this.dockPanelRight.Show();
+            //this.dockPanelDown.Show();
+            foreach (DockPanel it in this.dockManager1.Panels)
+                it.Show();
         }
     }
 }

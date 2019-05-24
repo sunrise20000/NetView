@@ -11,11 +11,19 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
-                        <Image Name="ImageIOType" Width="20"/>
-                        <TextBlock Name="ModuleName" Width="100" Text="{Binding SubModelName}"/>
-                        <TextBlock Name="DisplayFormat" Width="100" Text="{Binding DisplayFormat}"/>
-                        <TextBlock Name="CurValue" Width="200"/>
-                        <TextBlock Name="ModifyValue" Width="200"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.Column="0" Name="ImageIOType" Width="20"/>
+                        <TextBlock Grid.Column="1" Name="ModuleName" Width="200" Text="{Binding SubModelName}"/>
+                        <TextBlock Grid.Column="2" Name="DisplayFormat" Width="200" Text="{Binding DisplayFormat}"/>
+                        <TextBlock Grid.Column="3" Name="CurValue" Width="400"/>
+                        <TextBlock Grid.Column="4" Name="ModifyValue" Width="400"/>
                         <Image/>
                     </Grid>
                 </DataTemplate>

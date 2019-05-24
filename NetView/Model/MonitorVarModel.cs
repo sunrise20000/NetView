@@ -18,6 +18,9 @@ namespace NetView.Model
         public bool IsInput { get; set; }
         public string SubModelName { get; set; }
 
+        /// <summary>
+        /// Hex/Dec/Float
+        /// </summary>
         public string DisplayFormat { get; set; }
 
         public string StatusValue { get; set; }
