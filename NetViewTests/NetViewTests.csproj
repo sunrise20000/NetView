@@ -66,9 +66,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EC_ControlLib\EC_ControlerLib.csproj">
+    <ProjectReference Include="..\EC_ControlLib\ControllerLib.csproj">
       <Project>{43d5816d-de56-46b9-a217-676615301425}</Project>
-      <Name>EC_ControlerLib</Name>
+      <Name>ControllerLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\NetView\NetView.csproj">
       <Project>{362471BD-506A-4C0C-B6EF-6C3586BF7044}</Project>

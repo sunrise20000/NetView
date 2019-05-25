@@ -27,7 +27,6 @@ namespace NetView.View
             InitializeComponent();
             VarCollect.Add(new MonitorVarModel() { });
         } 
-
         public ObservableCollection<MonitorVarModel> VarCollect { get; set; } = new ObservableCollection<MonitorVarModel>();
     }
 }

@@ -11,12 +11,13 @@ namespace NetView.Model
     {
         public MonitorVarModel()
         {
-            IsInput = true;
-            SubModelName = "Just for Test";
+            IoType = EnumModuleIOType.IN;
+            SubModelName = "HL1001";
             DisplayFormat = EnumDisplayFormat.Dec;
-            StatusValue = "123";
+            CurValue = "CurValue";
+            ModifyValue = "ModifyValue";
         }
-        public bool IsInput { get; set; }
+        public EnumModuleIOType IoType { get; set; }
 
         public string SubModelName { get; set; }
 
@@ -25,7 +26,7 @@ namespace NetView.Model
         /// </summary>
         public EnumDisplayFormat DisplayFormat { get; set; }
 
-        public string StatusValue { get; set; }
+        public string CurValue { get; set; }
 
         public string ModifyValue { get; set; }
 

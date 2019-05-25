@@ -70,8 +70,11 @@
     <Compile Include="Class\XmlParse.cs" />
     <Compile Include="Config\ConfigMgr.cs" />
     <Compile Include="Config\DeviceConfigEntry.cs" />
+    <Compile Include="Converts\EnumFormat2Text.cs" />
     <Compile Include="Converts\DateTime2Text.cs" />
+    <Compile Include="Converts\IOType2Bool.cs" />
     <Compile Include="Converts\MsgType2Brush.cs" />
+    <Compile Include="Converts\IOType2Image.cs" />
     <Compile Include="Converts\MsgType2Image.cs" />
     <Compile Include="Definations\Definations.cs" />
     <Compile Include="Form1.cs">
@@ -143,9 +146,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EC_ControlLib\EC_ControlerLib.csproj">
+    <ProjectReference Include="..\EC_ControlLib\ControllerLib.csproj">
       <Project>{43d5816d-de56-46b9-a217-676615301425}</Project>
-      <Name>EC_ControlerLib</Name>
+      <Name>ControllerLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\SubBusContrainer\SubBusContrainer.csproj">
       <Project>{01a6a00b-3da7-40cc-9f3d-fbb830662d4d}</Project>
@@ -157,6 +160,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="NewFolder1\" />
     <Folder Include="ViewModel\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

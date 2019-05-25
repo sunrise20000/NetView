@@ -4,28 +4,40 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NetView.View"
+             xmlns:Convert="clr-namespace:NetView.Converts"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Convert:IOType2Image x:Key="IOType2Image"/>
+        <Convert:EnumFormat2Text x:Key="EnumFormat2Text"/>
+        <Convert:IOType2Bool x:Key="IOType2Bool"/>
+    </UserControl.Resources>
     <Grid>
-        <ListBox ItemsSource="{Binding VarCollect, RelativeSource={RelativeSource  Mode=FindAncestor, AncestorType=UserControl}}">
+        <ListBox ItemsSource="{Binding VarCollect, RelativeSource={RelativeSource  Mode=FindAncestor, AncestorType=UserControl}}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
+                    <Border BorderThickness="0.1" BorderBrush="Black" CornerRadius="5" Width="3000">
+                        <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="200"/>
                             <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="400"/>
-                            <ColumnDefinition Width="400"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="100"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" Name="ImageIOType" Width="20"/>
-                        <TextBlock Grid.Column="1" Name="ModuleName" Width="200" Text="{Binding SubModelName}"/>
-                        <TextBlock Grid.Column="2" Name="DisplayFormat" Width="200" Text="{Binding DisplayFormat}"/>
-                        <TextBlock Grid.Column="3" Name="CurValue" Width="400"/>
-                        <TextBlock Grid.Column="4" Name="ModifyValue" Width="400"/>
-                        <Image/>
-                    </Grid>
+                            <Image Grid.Column="0" Name="ImageIOType" Width="20" Source="{Binding IoType, Converter={StaticResource IOType2Image}}"/>
+                            <TextBlock Grid.Column="1" Name="ModuleName" Width="200" VerticalAlignment="Center" Text="{Binding SubModelName}"/>
+                            <ComboBox Grid.Column="2" Margin="10,5" Name="DisplayFormat" Text="{Binding DisplayFormat, Converter={StaticResource EnumFormat2Text}}"
+                                      Background="Transparent" SelectedIndex="0">
+                                <ComboBoxItem Content="Hex"/>
+                                <ComboBoxItem Content="Dec"/>
+                                <ComboBoxItem Content="Float"/>
+                            </ComboBox>
+                            <TextBlock Grid.Column="3" Margin="10,0" Name="CurValue" Width="400" VerticalAlignment="Center" Text="{Binding CurValue, Mode=OneWay}"/>
+                            <TextBox Grid.Column="4" Name="ModifyValue" Width="400" VerticalAlignment="Center" Text="{Binding ModifyValue}" IsReadOnly="{Binding IoType, Converter={StaticResource IOType2Bool}}"/>
+                        </Grid>
+                   </Border>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

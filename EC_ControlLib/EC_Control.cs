@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib
+namespace ControllerLib
 {
-    public class EC_Controler
+    public class EC_Controler : ControllerBase
     {
         #region Field
         SerialPort Comport = new SerialPort();
@@ -69,8 +69,6 @@ namespace EC_ControlLib
         {
             Comport.Close();
         }
-
-
 
         public bool IsOpen()
         {
@@ -179,30 +177,34 @@ namespace EC_ControlLib
             ascii1 = (byte)strData[0];
         }
 
-        /// <summary>
-        /// 不需要返回值的时候的读取
-        /// </summary>
-        /// <returns></returns>
         bool ReadConnectAck()
         {
             var StartTime = DateTime.Now.Ticks;
             int i = 0;
             List<byte> Recv = new List<byte>();
+            bool IsHeaderFound = false;
+            int Length = 0;
             while (true)
             {
-                if (Comport.BytesToRead > 0)
+                byte bt = (byte)Comport.ReadByte();
+                if (bt == 0x68)
                 {
-                    var ch = (byte)Comport.ReadByte();
-                    Recv.Add(ch);
-                    i++;
-                    if (i == 7)
+                    IsHeaderFound = true;
+                    Recv.Add(bt);
+                }
+                if (IsHeaderFound)
+                {
+                    Recv.Add(bt);
+                    if (Recv.Count == 2)                   
+                        Length = Recv[1];
+                    if (Length == Recv.Count - 2)
                     {
-                        var CrcCal = CRC16(Recv.ToArray(), 0, 5);
-                        if (CrcCal[0] == Recv[6] && CrcCal[1] == Recv[5])
+                        var CrcCal = CRC16(Recv.ToArray(), 0, Length);
+                        if (CrcCal[0] == Recv[Length+1] && CrcCal[1] == Recv[Length])
                             return true;
                         else
-                            return true;
-                    }
+                            throw new Exception("CRC check error");
+                    }                  
                 }
                 if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > 1000)
                     throw new Exception("通信超时");

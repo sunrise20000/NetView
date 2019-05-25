@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ControllerLib
 {
-    enum EnumControllerType
+    public class ControllerBase
     {
-        EtherCatController=0x05,
+
     }
 }
