@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetView.Definations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,16 +13,17 @@ namespace NetView.Model
         {
             IsInput = true;
             SubModelName = "Just for Test";
-            DisplayFormat = "Hex";
+            DisplayFormat = EnumDisplayFormat.Dec;
             StatusValue = "123";
         }
         public bool IsInput { get; set; }
+
         public string SubModelName { get; set; }
 
         /// <summary>
         /// Hex/Dec/Float
         /// </summary>
-        public string DisplayFormat { get; set; }
+        public EnumDisplayFormat DisplayFormat { get; set; }
 
         public string StatusValue { get; set; }
 

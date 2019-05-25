@@ -1,4 +1,5 @@
-﻿using NetView.Model;
+﻿using NetView.Definations;
+using NetView.Model;
 using NetView.Model.ModuleInfo;
 using System;
 using System.Collections.Generic;

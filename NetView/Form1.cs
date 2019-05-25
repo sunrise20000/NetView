@@ -113,39 +113,12 @@ namespace NetView
             this.dockPanelLeft.Controls.Add(LeftControl);
             LeftControl.ProductContrainer = MiddleControl;
 
-            //监视变量窗口
-            //string[] Header = new string[] { "Index", "ModuleName", "DisplayFormat", "Value", "ModifyValue" };
-
-            //foreach (var it in Header)
-            //{
-            //    DTVarMonitor.Columns.Add(it);
-
-            //}
-            //this.dataGridViewVarMonitor.DataSource = DTVarMonitor;
+  
+            //VarMonitor
             UC_VarMonitor ucMonitor = new UC_VarMonitor();
             elementHost2.Child = ucMonitor;
+            this.elementHost1.BackColorTransparent = true;
             this.elementHost2.BackColorTransparent = true;
-
-
-
-
-            //dataGridViewVarMonitor.Columns.Add("Index","Index");
-            //dataGridViewVarMonitor.Columns.Add("ModuleName", "ModuleName");
-            //DataGridViewComboBoxColumn dgvb = new DataGridViewComboBoxColumn();
-            //dgvb.HeaderText = "DisplayFormat";
-            //dgvb.Items.Add("Hex");
-            //dgvb.Items.Add("Dec");
-            //dgvb.Items.Add("Float");
-
-            //dgvb.FlatStyle = FlatStyle.Flat;
-            ////dgvb.
-            //dataGridViewVarMonitor.Columns.Add(dgvb);
-            //dataGridViewVarMonitor.Columns.Add("Value", "Value");
-            //dataGridViewVarMonitor.Columns.Add("ModifyValue", "ModifyValue");
-
-            //dataGridViewVarMonitor.Columns[0].ReadOnly = true;
-            //dataGridViewVarMonitor.Columns[1].ReadOnly = true;
-
 
 
         }

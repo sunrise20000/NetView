@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NetView.Definations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,17 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetView.Model.ModuleInfo
 {
-    public enum EnumModuleIOType
-    {
-        IN=1,
-        OUT,
-    }
-    public enum EnumType
-    {
-        USINT = 8,
-        UINT = 16,
-        UDINT = 32,
-    }
+   
 
     public class ModuleBase
     {
