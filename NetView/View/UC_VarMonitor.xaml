@@ -3,17 +3,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:NetView.View"
              xmlns:Convert="clr-namespace:NetView.Converts"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <Convert:IOType2Image x:Key="IOType2Image"/>
         <Convert:EnumFormat2Text x:Key="EnumFormat2Text"/>
-        <Convert:IOType2Bool x:Key="IOType2Bool"/>
+        <Convert:IOType2bool x:Key="IOType2Bool"/>
+        <Convert:IOType2Brush x:Key="IOType2Brush"/>
     </UserControl.Resources>
-    <Grid>
-        <ListBox ItemsSource="{Binding VarCollect, RelativeSource={RelativeSource  Mode=FindAncestor, AncestorType=UserControl}}" >
+    <Grid Name="root">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ToolBar>
+     
+            <Button Name="StartMonitor" ToolTip="Start monitor" Click="StartMonitor_Click">
+                <Image Source="../Images/start.png" Stretch="Fill"/>
+            </Button>
+            <Separator/>
+            <Button Name="StopMonitor" ToolTip="Stop monitor" Click="StopMonitor_Click">
+                <Image Source="../Images/stop.png" Stretch="Fill"/>
+            </Button>
+            <Separator/>
+            <Button Name="ModifyValue" ToolTip="Modify value" Click="ModifyValue_Click">
+                <Image Source="../Images/modify.png" Stretch="Fill"/>
+            </Button>
+
+        </ToolBar>
+        <ListBox Grid.Row="1" ItemsSource="{Binding VarCollect, RelativeSource={RelativeSource  Mode=FindAncestor, AncestorType=UserControl}}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderThickness="0.1" BorderBrush="Black" CornerRadius="5" Width="3000">
@@ -23,9 +42,8 @@
                             <ColumnDefinition Width="200"/>
                             <ColumnDefinition Width="200"/>
                             <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="100"/>
-                        </Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="250"/>
+                            </Grid.ColumnDefinitions>
                             <Image Grid.Column="0" Name="ImageIOType" Width="20" Source="{Binding IoType, Converter={StaticResource IOType2Image}}"/>
                             <TextBlock Grid.Column="1" Name="ModuleName" Width="200" VerticalAlignment="Center" Text="{Binding SubModelName}"/>
                             <ComboBox Grid.Column="2" Margin="10,5" Name="DisplayFormat" Text="{Binding DisplayFormat, Converter={StaticResource EnumFormat2Text}}"
@@ -35,7 +53,8 @@
                                 <ComboBoxItem Content="Float"/>
                             </ComboBox>
                             <TextBlock Grid.Column="3" Margin="10,0" Name="CurValue" Width="400" VerticalAlignment="Center" Text="{Binding CurValue, Mode=OneWay}"/>
-                            <TextBox Grid.Column="4" Name="ModifyValue" Width="400" VerticalAlignment="Center" Text="{Binding ModifyValue}" IsReadOnly="{Binding IoType, Converter={StaticResource IOType2Bool}}"/>
+                            <TextBox Grid.Column="4" Name="ModifyValue" Width="200" VerticalAlignment="Center" Text="{Binding ModifyValue}" IsEnabled="{Binding IoType, Converter={StaticResource IOType2Bool}}"
+                                     Background="{Binding IoType, Converter={StaticResource IOType2Brush}}"/>
                         </Grid>
                    </Border>
                 </DataTemplate>

@@ -73,6 +73,7 @@
     <Compile Include="Converts\EnumFormat2Text.cs" />
     <Compile Include="Converts\DateTime2Text.cs" />
     <Compile Include="Converts\IOType2Bool.cs" />
+    <Compile Include="Converts\IOType2Brush.cs" />
     <Compile Include="Converts\MsgType2Brush.cs" />
     <Compile Include="Converts\IOType2Image.cs" />
     <Compile Include="Converts\MsgType2Image.cs" />
@@ -84,6 +85,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\AvilableDeviceModel.cs" />
+    <Compile Include="Model\ComportSettingModel.cs" />
     <Compile Include="Model\MessageModel.cs" />
     <Compile Include="Model\ModuleInfo\ModuleBase.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfoBase.cs" />
@@ -110,6 +112,12 @@
     <Compile Include="View\UC_VarMonitor.xaml.cs">
       <DependentUpon>UC_VarMonitor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Window_ComSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Window_ComSetting.Designer.cs">
+      <DependentUpon>Window_ComSetting.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -123,6 +131,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="View\Window_ComSetting.resx">
+      <DependentUpon>Window_ComSetting.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -160,8 +171,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="NewFolder1\" />
     <Folder Include="ViewModel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\modify.png" />
+    <Content Include="Images\start.png" />
+    <Content Include="Images\stop.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

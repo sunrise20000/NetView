@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="ControllerBase.cs" />
     <Compile Include="Defination.cs" />
-    <Compile Include="EC_Control.cs" />
+    <Compile Include="EC_Controller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

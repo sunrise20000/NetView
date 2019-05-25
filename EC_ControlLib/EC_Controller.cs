@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ControllerLib
 {
-    public class EC_Controler : ControllerBase
+    public class EC_Controller : ControllerBase
     {
         #region Field
         SerialPort Comport = new SerialPort();
@@ -15,7 +15,7 @@ namespace ControllerLib
         #endregion
 
         #region UserAPI
-        public bool Open(int Port)
+        public override bool Open(string Port)
         {
             Comport.PortName = $"COM{Port}";
             Comport.BaudRate = 9600;
@@ -33,7 +33,7 @@ namespace ControllerLib
             Comport.DiscardOutBuffer();
             return Comport.IsOpen;
         }
-        public void Connect()
+        public override void Connect()
         {
             byte[] Cmd = new byte[] { 68, 01, 02, 68, 05 };
             var Crc = CRC16(Cmd, 0, Cmd.Length);
@@ -43,36 +43,70 @@ namespace ControllerLib
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                ReadConnectAck();
+                ReadVoidAck();
             }
         }
 
-        public List<string> GetModuleList()
+        public override List<string> GetModuleList()
         {
-            return null;
-        }
-        public bool SendModuleList(List<string> ModuleNameList)
-        {
-            return true;
-        }
-
-        public List<int> GetModuleValue()
-        {
-            return null;
-        }
-
-        public void SetModuleValue(int Value)
-        {
+            //68 08 01 02 68 05 69 96 CRC
+            byte[] Cmd = new byte[] { 68, 08, 01, 02, 68, 05, 69, 96 };
+            var Crc = CRC16(Cmd, 0, Cmd.Length);
+            List<byte> FinalCmd = new List<byte>(Cmd);
+            FinalCmd.Add(Crc[1]);
+            FinalCmd.Add(Crc[0]);
+            lock (ComportLock)
+            {
+                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+                return ReadModuleListAck();
+            }
 
         }
-        public void CLose()
+
+        /// <summary>
+        /// PureNameList
+        /// </summary>
+        /// <param name="ModuleNameList"></param>
+        /// <returns></returns>
+        public override bool SendModuleList(List<string> ModuleNameList)
         {
-            Comport.Close();
+            //68 N 01 02 68 05 96 69
+            byte[] Cmd = new byte[] { 68, 08, 01, 02, 68, 05, 96, 69 };
+            var Crc = CRC16(Cmd, 0, Cmd.Length);
+            List<byte> FinalCmd = new List<byte>(Cmd);
+            FinalCmd.Add(Crc[1]);
+            FinalCmd.Add(Crc[0]);
+            lock (ComportLock)
+            {
+                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+                return ReadVoidAck();
+            }
         }
 
-        public bool IsOpen()
+        public override void GetModuleValue(out List<int> InputValueList, out List<int> OutputValueList)
         {
-            return Comport.IsOpen;
+            InputValueList = new List<int>();
+            OutputValueList = new List<int>();
+        }
+
+        public override void SetModuleValue(List<int> OutputValueList)
+        {
+
+        }
+        public override void CLose()
+        {
+            lock (ComportLock)
+            {
+                Comport.Close();
+            }
+        }
+
+        public override bool IsOpen()
+        {
+            lock (ComportLock)
+            {
+                return Comport.IsOpen;
+            }
         }
 
         #endregion
@@ -177,10 +211,9 @@ namespace ControllerLib
             ascii1 = (byte)strData[0];
         }
 
-        bool ReadConnectAck()
+        bool ReadVoidAck()
         {
             var StartTime = DateTime.Now.Ticks;
-            int i = 0;
             List<byte> Recv = new List<byte>();
             bool IsHeaderFound = false;
             int Length = 0;
@@ -207,10 +240,62 @@ namespace ControllerLib
                     }                  
                 }
                 if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > 1000)
-                    throw new Exception("通信超时");
+                    throw new Exception("Timeout to connect controller");
             }
         }
 
+        /// <summary>
+        /// PureName
+        /// </summary>
+        /// <returns></returns>
+        List<string> ReadModuleListAck()
+        {
+            List<string> ModuleList = new List<string>();
+            var StartTime = DateTime.Now.Ticks;
+            List<byte> Recv = new List<byte>();
+            bool IsHeaderFound = false;
+            int Length = 0;
+            while (true)
+            {
+                byte bt = (byte)Comport.ReadByte();
+                if (bt == 0x68)
+                {
+                    IsHeaderFound = true;
+                    Recv.Add(bt);
+                }
+                if (IsHeaderFound)
+                {
+                    Recv.Add(bt);
+                    if (Recv.Count == 2)
+                        Length = Recv[1];
+                    if (Length == Recv.Count - 2)   //接受完毕
+                    {
+                        var CrcCal = CRC16(Recv.ToArray(), 0, Length);
+                        if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
+                        {
+                            for (int i = 2; i < Recv.Count-2; i++)
+                            {
+                                ModuleList.Add(GetModuleFromByte(Recv[i]));
+                            }
+                            return ModuleList;
+                        }
+                        else
+                            throw new Exception("CRC check error");
+                    }
+                }
+                if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > 1000)
+                    throw new Exception("Timeout to GetModuleList");
+            }
+        }
+
+
+
+
+        string GetModuleFromByte (byte Bt)
+        {
+            var strByte = string.Format("{0:X2}",Bt);
+            return $"{strByte[0]}00{strByte[1]}";
+        }
         #endregion
     }
 }

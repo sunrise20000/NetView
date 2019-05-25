@@ -15,7 +15,7 @@ using System.IO;
 using System.Windows.Forms.Integration;
 using NetView.View;
 using DevExpress.XtraBars.Docking;
-
+using ControllerLib;
 namespace NetView
 {
     public partial class Form1 : DevExpress.XtraEditors.XtraForm
@@ -26,6 +26,8 @@ namespace NetView
         ProductContrainer MiddleControl = null;
         treeviewContrainer LeftControl = null;
         DataTable DTVarMonitor = new DataTable();
+        ControllerBase BusController = null;
+
         const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
         public Form1()
         {
@@ -117,10 +119,29 @@ namespace NetView
             //VarMonitor
             UC_VarMonitor ucMonitor = new UC_VarMonitor();
             elementHost2.Child = ucMonitor;
+            ucMonitor.OnStartMonitorEventHandler += UcMonitor_OnStartMonitorEventHandler;
+            ucMonitor.OnStopMonitorEventHandler += UcMonitor_OnStopMonitorEventHandler;
+            ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
+
             this.elementHost1.BackColorTransparent = true;
             this.elementHost2.BackColorTransparent = true;
 
 
+        }
+
+        private void UcMonitor_OnModifyValueEventHandler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void UcMonitor_OnStopMonitorEventHandler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void UcMonitor_OnStartMonitorEventHandler(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void TreeViewDevice_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
@@ -209,7 +230,8 @@ namespace NetView
 
         private void barButtonItemSetting_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-
+            Window_ComSetting window = new Window_ComSetting();
+            window.ShowDialog();
         }
 
         private void barButtonItemConnect_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -224,6 +246,8 @@ namespace NetView
 
         private void barButtonItemStart_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            if (BusController != null)
+                BusController = new EC_Controller();
 
         }
 
@@ -244,7 +268,9 @@ namespace NetView
 
         private void barButtonItemMonitor_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-
+            dockPanelVarMonitor.Visibility = dockPanelVarMonitor.Visibility == DockVisibility.Visible ? DockVisibility.Hidden : DockVisibility.Visible;
+            if (dockPanelVarMonitor.Visibility == DockVisibility.Visible)
+                dockManager1.ActivePanel = dockPanelVarMonitor;
         }
 
         private void MenuSaveAs_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
