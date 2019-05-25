@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ControllerLib
+namespace ControllerLib.Ethercat
 {
     public class EC_Controller : ControllerBase
     {
@@ -15,6 +15,10 @@ namespace ControllerLib
         #endregion
 
         #region UserAPI
+        public EC_Controller() {
+            IsConnected = false;       
+        }
+        public override bool IsConnected { get; protected set; }
         public override bool Open(string Port)
         {
             Comport.PortName = $"COM{Port}";
@@ -31,11 +35,12 @@ namespace ControllerLib
             Comport.Open();
             Comport.DiscardInBuffer();
             Comport.DiscardOutBuffer();
-            return Comport.IsOpen;
+            return IsConnected;
         }
-        public override void Connect()
+
+        public override bool Connect()
         {
-            byte[] Cmd = new byte[] { 68, 01, 02, 68, 05 };
+            byte[] Cmd = new byte[] { 0x68, 0x01, 0x02, 0x68, 0x05 };
             var Crc = CRC16(Cmd, 0, Cmd.Length);
             List<byte> FinalCmd = new List<byte>(Cmd);
             FinalCmd.Add(Crc[1]);
@@ -43,14 +48,37 @@ namespace ControllerLib
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                ReadVoidAck();
+                return IsConnected=ReadVoidAck(0x68, 0x06, 0x01 ,0x02 ,0x68 ,0x05);
             }
         }
+
+        public override bool DisConnect()
+        {
+            //68 06 01 FF 68 05 CRC
+            byte[] Cmd = new byte[] { 0x68, 0x06, 0x01, 0xFF, 0x68, 0x05, };
+            var Crc = CRC16(Cmd, 0, Cmd.Length);
+            List<byte> FinalCmd = new List<byte>(Cmd);
+            FinalCmd.Add(Crc[1]);
+            FinalCmd.Add(Crc[0]);
+            lock (ComportLock)
+            {
+                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+                IsConnected = false;
+                if (ReadVoidAck(0x68, 0x06, 0x01, 0x02, 0x68, 0x05))
+                {
+                    IsConnected = false;
+                    return true;
+                }
+                else
+                    return false;
+            }
+        }
+
 
         public override List<string> GetModuleList()
         {
             //68 08 01 02 68 05 69 96 CRC
-            byte[] Cmd = new byte[] { 68, 08, 01, 02, 68, 05, 69, 96 };
+            byte[] Cmd = new byte[] { 0x68, 0x08, 0x01,0x02, 0x68, 0x05, 0x69, 0x96 };
             var Crc = CRC16(Cmd, 0, Cmd.Length);
             List<byte> FinalCmd = new List<byte>(Cmd);
             FinalCmd.Add(Crc[1]);
@@ -60,7 +88,6 @@ namespace ControllerLib
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
                 return ReadModuleListAck();
             }
-
         }
 
         /// <summary>
@@ -71,7 +98,7 @@ namespace ControllerLib
         public override bool SendModuleList(List<string> ModuleNameList)
         {
             //68 N 01 02 68 05 96 69
-            byte[] Cmd = new byte[] { 68, 08, 01, 02, 68, 05, 96, 69 };
+            byte[] Cmd = new byte[] { 0x68, 0x08, 0x01, 0x02, 0x68, 0x05, 0x96, 0x69 };
             var Crc = CRC16(Cmd, 0, Cmd.Length);
             List<byte> FinalCmd = new List<byte>(Cmd);
             FinalCmd.Add(Crc[1]);
@@ -98,17 +125,11 @@ namespace ControllerLib
             lock (ComportLock)
             {
                 Comport.Close();
+                IsConnected = Comport.IsOpen;
             }
         }
 
-        public override bool IsOpen()
-        {
-            lock (ComportLock)
-            {
-                return Comport.IsOpen;
-            }
-        }
-
+     
         #endregion
 
         #region Private Method
@@ -144,74 +165,9 @@ namespace ControllerLib
             return new byte[] { 0, 0 };
         }
 
-      
+     
 
-        /// <summary>
-        /// 将16进制字符串转为10进制数
-        /// </summary>
-        /// <param name="szHexData"></param>
-        /// <param name="nStartPos"></param>
-        /// <param name="nEndPos"></param>
-        /// <returns></returns>
-        Int32 HexStr2Dec(string szHexData, int nStartPos, int nEndPos)   //仅支持大写字母
-        {
-            Int32 dwRet = 0;
-            for (int i = nStartPos; i < nEndPos; i++)
-            {
-                int x = HexCh2Dec(szHexData[i]);
-                var y = Math.Pow(16.0f, nEndPos - nStartPos - i - 1);
-                dwRet += (Int32)((double)x * y);
-            }
-            return dwRet;
-        }
-
-        /// <summary>
-        /// 将Hex字符转为10进制形式
-        /// </summary>
-        /// <param name="ch"></param>
-        /// <returns></returns>
-        byte HexCh2Dec(char ch)
-        {
-            switch (ch)
-            {
-                case 'A':
-                case 'a':
-                    return 10;
-                case 'B':
-                case 'b':
-                    return 11;
-                case 'C':
-                case 'c':
-                    return 12;
-                case 'D':
-                case 'd':
-                    return 13;
-                case 'E':
-                case 'e':
-                    return 14;
-                case 'F':
-                case 'f':
-                    return 15;
-                default:
-                    return byte.Parse(ch.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 将10进制的数字，表示为16进制的字符串标示
-        /// 比如10=“0A”
-        /// </summary>
-        /// <param name="nData"></param>
-        /// <param name="ascii0"></param>
-        /// <param name="ascii1"></param>
-        void Dec2Ascii(byte nData, out byte ascii0, out byte ascii1)
-        {
-            var strData = string.Format("{0:X2}", nData);
-            ascii0 = (byte)strData[1];
-            ascii1 = (byte)strData[0];
-        }
-
-        bool ReadVoidAck()
+        bool ReadVoidAck(params byte[] ExpectAckByteList)
         {
             var StartTime = DateTime.Now.Ticks;
             List<byte> Recv = new List<byte>();
@@ -232,11 +188,17 @@ namespace ControllerLib
                         Length = Recv[1];
                     if (Length == Recv.Count - 2)
                     {
-                        var CrcCal = CRC16(Recv.ToArray(), 0, Length);
-                        if (CrcCal[0] == Recv[Length+1] && CrcCal[1] == Recv[Length])
-                            return true;
-                        else
-                            throw new Exception("CRC check error");
+                        if (Length == ExpectAckByteList.Length)
+                        {
+                            if (CompareList(Recv.ToArray(), 0, ExpectAckByteList, 0, Length))
+                            {
+                                var CrcCal = CRC16(Recv.ToArray(), 0, Length);
+                                if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
+                                    return true;
+                                else
+                                    throw new Exception("CRC check error");
+                            }
+                        }
                     }                  
                 }
                 if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > 1000)
@@ -295,6 +257,17 @@ namespace ControllerLib
         {
             var strByte = string.Format("{0:X2}",Bt);
             return $"{strByte[0]}00{strByte[1]}";
+        }
+        bool CompareList(byte[] BtList1, int offset1, byte[] BtList2, int offset2, int length)
+        {
+            if (BtList1.Count() < offset1 + length || BtList2.Count() < offset2 + length)
+                return false;
+            bool bRet = true;
+            for (int i = 0; i < length; i++)
+            {
+                bRet &= (BtList1[offset1 + i] == BtList2[offset2 + i]);
+            }
+            return bRet;
         }
         #endregion
     }

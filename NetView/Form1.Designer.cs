@@ -29,16 +29,23 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            DevExpress.Utils.Animation.PushTransition pushTransition2 = new DevExpress.Utils.Animation.PushTransition();
+            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer2 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            DevExpress.Utils.Animation.PushTransition pushTransition1 = new DevExpress.Utils.Animation.PushTransition();
-            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
             this.documentGroup1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup(this.components);
-            this.document3 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
             this.document1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
+            this.document3 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
             this.barManager1 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar1 = new DevExpress.XtraBars.Bar();
-            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItemNew = new DevExpress.XtraBars.BarButtonItem();
+            this.barLargeButtonItem1 = new DevExpress.XtraBars.BarLargeButtonItem();
+            this.popupMenu1 = new DevExpress.XtraBars.PopupMenu(this.components);
+            this.barButtonItem24 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem25 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem26 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem27 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem28 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem30 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem31 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemOpen = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemSave = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem4 = new DevExpress.XtraBars.BarButtonItem();
@@ -49,9 +56,6 @@
             this.barButtonItemSetting = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem6 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemConnect = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItemCheck = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItemStart = new DevExpress.XtraBars.BarButtonItem();
-            this.barButtonItemStop = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemUpload = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemDownLoad = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemMonitor = new DevExpress.XtraBars.BarButtonItem();
@@ -63,42 +67,17 @@
             this.barDockControlLeft = new DevExpress.XtraBars.BarDockControl();
             this.barDockControlRight = new DevExpress.XtraBars.BarDockControl();
             this.dockManager1 = new DevExpress.XtraBars.Docking.DockManager(this.components);
-            this.dockPanelLeft = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.dockPanelRight = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.treeViewDevice = new System.Windows.Forms.TreeView();
-            this.dockPanelDown = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.uC_Output1 = new NetView.View.UC_Output();
-            this.dockPanelMiddle = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.dockPanelVarMonitor = new DevExpress.XtraBars.Docking.DockPanel();
-            this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.elementHost2 = new System.Windows.Forms.Integration.ElementHost();
-            this.dataGridViewVarMonitor = new System.Windows.Forms.DataGridView();
-            this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem3 = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem4 = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem5 = new DevExpress.XtraBars.BarSubItem();
-            this.barHeaderItem1 = new DevExpress.XtraBars.BarHeaderItem();
-            this.barHeaderItem2 = new DevExpress.XtraBars.BarHeaderItem();
-            this.barHeaderItem3 = new DevExpress.XtraBars.BarHeaderItem();
-            this.barSubItem6 = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem7 = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem8 = new DevExpress.XtraBars.BarSubItem();
-            this.barSubItem9 = new DevExpress.XtraBars.BarSubItem();
-            this.barDockingMenuItem1 = new DevExpress.XtraBars.BarDockingMenuItem();
-            this.barStaticItem1 = new DevExpress.XtraBars.BarStaticItem();
-            this.barStaticItem2 = new DevExpress.XtraBars.BarStaticItem();
-            this.barStaticItem3 = new DevExpress.XtraBars.BarStaticItem();
-            this.barHeaderItem4 = new DevExpress.XtraBars.BarHeaderItem();
             this.barManager2 = new DevExpress.XtraBars.BarManager(this.components);
             this.bar6 = new DevExpress.XtraBars.Bar();
             this.barSubItemFile = new DevExpress.XtraBars.BarSubItem();
-            this.MenuNew = new DevExpress.XtraBars.BarButtonItem();
+            this.barSubItemNew = new DevExpress.XtraBars.BarSubItem();
+            this.barButtonItemNewProject = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem34 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem35 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem36 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem37 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem38 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem39 = new DevExpress.XtraBars.BarButtonItem();
             this.MenuOpen = new DevExpress.XtraBars.BarButtonItem();
             this.MenuSave = new DevExpress.XtraBars.BarButtonItem();
             this.MenuSaveAs = new DevExpress.XtraBars.BarButtonItem();
@@ -127,9 +106,6 @@
             this.MenuCommunicationSetting = new DevExpress.XtraBars.BarButtonItem();
             this.MenuDownLoad = new DevExpress.XtraBars.BarButtonItem();
             this.DownUpLoad = new DevExpress.XtraBars.BarButtonItem();
-            this.MenuStart = new DevExpress.XtraBars.BarButtonItem();
-            this.MenuStop = new DevExpress.XtraBars.BarButtonItem();
-            this.MenuSetup = new DevExpress.XtraBars.BarButtonItem();
             this.MenuMonitor = new DevExpress.XtraBars.BarButtonItem();
             this.barSubItem14 = new DevExpress.XtraBars.BarSubItem();
             this.MenuUpdateFirmware = new DevExpress.XtraBars.BarButtonItem();
@@ -143,23 +119,74 @@
             this.barWorkspaceMenuItem1 = new DevExpress.XtraBars.BarWorkspaceMenuItem();
             this.workspaceManager1 = new DevExpress.Utils.WorkspaceManager();
             this.barWorkspaceMenuItem2 = new DevExpress.XtraBars.BarWorkspaceMenuItem();
+            this.MenuNew = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem10 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem11 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem16 = new DevExpress.XtraBars.BarButtonItem();
             this.barCheckItem1 = new DevExpress.XtraBars.BarCheckItem();
+            this.MenuSetup = new DevExpress.XtraBars.BarButtonItem();
+            this.MenuStart = new DevExpress.XtraBars.BarButtonItem();
+            this.MenuStop = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem29 = new DevExpress.XtraBars.BarButtonItem();
             this.barListItem1 = new DevExpress.XtraBars.BarListItem();
             this.barListItem2 = new DevExpress.XtraBars.BarListItem();
             this.barButtonItem2 = new DevExpress.XtraBars.BarButtonItem();
             this.barStaticItem6 = new DevExpress.XtraBars.BarStaticItem();
             this.barButtonItem5 = new DevExpress.XtraBars.BarButtonItem();
+            this.barListItem3 = new DevExpress.XtraBars.BarListItem();
+            this.barButtonItem32 = new DevExpress.XtraBars.BarButtonItem();
+            this.dockPanelLeft = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.dockPanelRight = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.treeViewDevice = new System.Windows.Forms.TreeView();
+            this.dockPanelDown = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.uC_Output1 = new NetView.View.UC_Output();
+            this.dockPanelMiddle = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.dockPanelVarMonitor = new DevExpress.XtraBars.Docking.DockPanel();
+            this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
+            this.elementHost2 = new System.Windows.Forms.Integration.ElementHost();
+            this.dataGridViewVarMonitor = new System.Windows.Forms.DataGridView();
+            this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem3 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem4 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem5 = new DevExpress.XtraBars.BarSubItem();
+            this.barHeaderItem1 = new DevExpress.XtraBars.BarHeaderItem();
+            this.barHeaderItem2 = new DevExpress.XtraBars.BarHeaderItem();
+            this.barHeaderItem3 = new DevExpress.XtraBars.BarHeaderItem();
+            this.barSubItem6 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem7 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem8 = new DevExpress.XtraBars.BarSubItem();
+            this.barSubItem9 = new DevExpress.XtraBars.BarSubItem();
+            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
+            this.barDockingMenuItem1 = new DevExpress.XtraBars.BarDockingMenuItem();
+            this.barStaticItem1 = new DevExpress.XtraBars.BarStaticItem();
+            this.barStaticItem2 = new DevExpress.XtraBars.BarStaticItem();
+            this.barButtonItemCheck = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItemStart = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItemStop = new DevExpress.XtraBars.BarButtonItem();
+            this.barStaticItem3 = new DevExpress.XtraBars.BarStaticItem();
+            this.barHeaderItem4 = new DevExpress.XtraBars.BarHeaderItem();
+            this.barButtonItem17 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem18 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem19 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem20 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem21 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem22 = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem23 = new DevExpress.XtraBars.BarButtonItem();
             this.documentManager1 = new DevExpress.XtraBars.Docking2010.DocumentManager(this.components);
             this.tabbedView1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.TabbedView(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.documentGroup1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.document3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.document1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.document3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager2)).BeginInit();
             this.dockPanelLeft.SuspendLayout();
             this.dockPanelRight.SuspendLayout();
             this.dockPanel2_Container.SuspendLayout();
@@ -169,7 +196,6 @@
             this.dockPanelVarMonitor.SuspendLayout();
             this.controlContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVarMonitor)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barManager2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
             this.SuspendLayout();
@@ -180,16 +206,6 @@
             this.document1,
             this.document3});
             // 
-            // document3
-            // 
-            this.document3.Caption = "VarMonitor";
-            this.document3.ControlName = "dockPanelVarMonitor";
-            this.document3.FloatLocation = new System.Drawing.Point(1102, 566);
-            this.document3.FloatSize = new System.Drawing.Size(200, 200);
-            this.document3.Properties.AllowClose = DevExpress.Utils.DefaultBoolean.True;
-            this.document3.Properties.AllowFloat = DevExpress.Utils.DefaultBoolean.True;
-            this.document3.Properties.AllowFloatOnDoubleClick = DevExpress.Utils.DefaultBoolean.True;
-            // 
             // document1
             // 
             this.document1.Caption = "NetView";
@@ -199,6 +215,16 @@
             this.document1.Properties.AllowClose = DevExpress.Utils.DefaultBoolean.True;
             this.document1.Properties.AllowFloat = DevExpress.Utils.DefaultBoolean.True;
             this.document1.Properties.AllowFloatOnDoubleClick = DevExpress.Utils.DefaultBoolean.True;
+            // 
+            // document3
+            // 
+            this.document3.Caption = "VarMonitor";
+            this.document3.ControlName = "dockPanelVarMonitor";
+            this.document3.FloatLocation = new System.Drawing.Point(1102, 566);
+            this.document3.FloatSize = new System.Drawing.Size(200, 200);
+            this.document3.Properties.AllowClose = DevExpress.Utils.DefaultBoolean.True;
+            this.document3.Properties.AllowFloat = DevExpress.Utils.DefaultBoolean.True;
+            this.document3.Properties.AllowFloatOnDoubleClick = DevExpress.Utils.DefaultBoolean.True;
             // 
             // barManager1
             // 
@@ -222,7 +248,6 @@
             this.barSubItem8,
             this.barSubItem9,
             this.barButtonItem1,
-            this.barButtonItemNew,
             this.barButtonItemOpen,
             this.barButtonItemSave,
             this.barButtonItem4,
@@ -248,8 +273,23 @@
             this.barHeaderItem3,
             this.barHeaderItem4,
             this.barStaticItem4,
-            this.barStaticItem5});
-            this.barManager1.MaxItemId = 39;
+            this.barStaticItem5,
+            this.barButtonItem17,
+            this.barButtonItem18,
+            this.barButtonItem19,
+            this.barButtonItem20,
+            this.barButtonItem21,
+            this.barButtonItem22,
+            this.barButtonItem23,
+            this.barLargeButtonItem1,
+            this.barButtonItem24,
+            this.barButtonItem25,
+            this.barButtonItem26,
+            this.barButtonItem27,
+            this.barButtonItem28,
+            this.barButtonItem30,
+            this.barButtonItem31});
+            this.barManager1.MaxItemId = 60;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -258,10 +298,9 @@
             this.bar1.DockCol = 0;
             this.bar1.DockRow = 0;
             this.bar1.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
-            this.bar1.FloatLocation = new System.Drawing.Point(66, 147);
+            this.bar1.FloatLocation = new System.Drawing.Point(176, 431);
             this.bar1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem1),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemNew),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barLargeButtonItem1),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemOpen),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemSave),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem4),
@@ -272,26 +311,81 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemSetting),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem6),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemConnect),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemCheck),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemStart),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemStop),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemUpload),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemDownLoad),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemMonitor)});
-            this.bar1.Offset = 1;
             this.bar1.Text = "Tools";
             // 
-            // barButtonItem1
+            // barLargeButtonItem1
             // 
-            this.barButtonItem1.Id = 9;
-            this.barButtonItem1.Name = "barButtonItem1";
+            this.barLargeButtonItem1.ActAsDropDown = true;
+            this.barLargeButtonItem1.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.DropDown;
+            this.barLargeButtonItem1.DropDownControl = this.popupMenu1;
+            this.barLargeButtonItem1.Id = 52;
+            this.barLargeButtonItem1.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barLargeButtonItem1.ImageOptions.Image")));
+            this.barLargeButtonItem1.Name = "barLargeButtonItem1";
             // 
-            // barButtonItemNew
+            // popupMenu1
             // 
-            this.barButtonItemNew.Id = 10;
-            this.barButtonItemNew.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItemNew.ImageOptions.Image")));
-            this.barButtonItemNew.Name = "barButtonItemNew";
-            this.barButtonItemNew.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNew_ItemClick);
+            this.popupMenu1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem24),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem25),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem26),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem27),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem28),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem30),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem31)});
+            this.popupMenu1.Manager = this.barManager1;
+            this.popupMenu1.Name = "popupMenu1";
+            // 
+            // barButtonItem24
+            // 
+            this.barButtonItem24.Caption = "ModbusRTU";
+            this.barButtonItem24.Id = 53;
+            this.barButtonItem24.Name = "barButtonItem24";
+            this.barButtonItem24.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem25
+            // 
+            this.barButtonItem25.Caption = "PROFIBUS-DP";
+            this.barButtonItem25.Id = 54;
+            this.barButtonItem25.Name = "barButtonItem25";
+            this.barButtonItem25.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem26
+            // 
+            this.barButtonItem26.Caption = "PROFIBUS-IO";
+            this.barButtonItem26.Id = 55;
+            this.barButtonItem26.Name = "barButtonItem26";
+            this.barButtonItem26.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem27
+            // 
+            this.barButtonItem27.Caption = "ModbusTCP";
+            this.barButtonItem27.Id = 56;
+            this.barButtonItem27.Name = "barButtonItem27";
+            this.barButtonItem27.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem28
+            // 
+            this.barButtonItem28.Caption = "EtherCAT";
+            this.barButtonItem28.Id = 57;
+            this.barButtonItem28.Name = "barButtonItem28";
+            this.barButtonItem28.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem30
+            // 
+            this.barButtonItem30.Caption = "CANopen";
+            this.barButtonItem30.Id = 58;
+            this.barButtonItem30.Name = "barButtonItem30";
+            this.barButtonItem30.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem31
+            // 
+            this.barButtonItem31.Caption = "DeviceNet";
+            this.barButtonItem31.Id = 59;
+            this.barButtonItem31.Name = "barButtonItem31";
+            this.barButtonItem31.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
             // 
             // barButtonItemOpen
             // 
@@ -357,27 +451,6 @@
             this.barButtonItemConnect.Name = "barButtonItemConnect";
             this.barButtonItemConnect.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemConnect_ItemClick);
             // 
-            // barButtonItemCheck
-            // 
-            this.barButtonItemCheck.Id = 24;
-            this.barButtonItemCheck.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItemCheck.ImageOptions.Image")));
-            this.barButtonItemCheck.Name = "barButtonItemCheck";
-            this.barButtonItemCheck.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemCheck_ItemClick);
-            // 
-            // barButtonItemStart
-            // 
-            this.barButtonItemStart.Id = 25;
-            this.barButtonItemStart.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItemStart.ImageOptions.Image")));
-            this.barButtonItemStart.Name = "barButtonItemStart";
-            this.barButtonItemStart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemStart_ItemClick);
-            // 
-            // barButtonItemStop
-            // 
-            this.barButtonItemStop.Id = 27;
-            this.barButtonItemStop.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItemStop.ImageOptions.Image")));
-            this.barButtonItemStop.Name = "barButtonItemStop";
-            this.barButtonItemStop.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemStop_ItemClick);
-            // 
             // barButtonItemUpload
             // 
             this.barButtonItemUpload.Id = 26;
@@ -431,42 +504,42 @@
             // 
             this.barDockControlTop.CausesValidation = false;
             this.barDockControlTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.barDockControlTop.Location = new System.Drawing.Point(0, 31);
+            this.barDockControlTop.Location = new System.Drawing.Point(0, 0);
             this.barDockControlTop.Manager = this.barManager1;
             this.barDockControlTop.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
-            this.barDockControlTop.Size = new System.Drawing.Size(1908, 47);
+            this.barDockControlTop.Size = new System.Drawing.Size(1898, 47);
             // 
             // barDockControlBottom
             // 
             this.barDockControlBottom.CausesValidation = false;
             this.barDockControlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControlBottom.Location = new System.Drawing.Point(0, 921);
+            this.barDockControlBottom.Location = new System.Drawing.Point(0, 903);
             this.barDockControlBottom.Manager = this.barManager1;
             this.barDockControlBottom.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
-            this.barDockControlBottom.Size = new System.Drawing.Size(1908, 27);
+            this.barDockControlBottom.Size = new System.Drawing.Size(1898, 27);
             // 
             // barDockControlLeft
             // 
             this.barDockControlLeft.CausesValidation = false;
             this.barDockControlLeft.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControlLeft.Location = new System.Drawing.Point(0, 78);
+            this.barDockControlLeft.Location = new System.Drawing.Point(0, 47);
             this.barDockControlLeft.Manager = this.barManager1;
             this.barDockControlLeft.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
-            this.barDockControlLeft.Size = new System.Drawing.Size(0, 843);
+            this.barDockControlLeft.Size = new System.Drawing.Size(0, 856);
             // 
             // barDockControlRight
             // 
             this.barDockControlRight.CausesValidation = false;
             this.barDockControlRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControlRight.Location = new System.Drawing.Point(1908, 78);
+            this.barDockControlRight.Location = new System.Drawing.Point(1898, 47);
             this.barDockControlRight.Manager = this.barManager1;
             this.barDockControlRight.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
-            this.barDockControlRight.Size = new System.Drawing.Size(0, 843);
+            this.barDockControlRight.Size = new System.Drawing.Size(0, 856);
             // 
             // dockManager1
             // 
             this.dockManager1.Form = this;
-            this.dockManager1.MenuManager = this.barManager2;
+            this.dockManager1.MenuManager = this.barManager1;
             this.dockManager1.RootPanels.AddRange(new DevExpress.XtraBars.Docking.DockPanel[] {
             this.dockPanelLeft,
             this.dockPanelRight,
@@ -484,259 +557,6 @@
             "DevExpress.XtraBars.Navigation.OfficeNavigationBar",
             "DevExpress.XtraBars.Navigation.TileNavPane",
             "DevExpress.XtraBars.TabFormControl"});
-            // 
-            // dockPanelLeft
-            // 
-            this.dockPanelLeft.Controls.Add(this.dockPanel1_Container);
-            this.dockPanelLeft.Dock = DevExpress.XtraBars.Docking.DockingStyle.Left;
-            this.dockPanelLeft.ID = new System.Guid("172b364e-7297-419f-af7c-b11f0917a7b1");
-            this.dockPanelLeft.Location = new System.Drawing.Point(0, 78);
-            this.dockPanelLeft.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.dockPanelLeft.Name = "dockPanelLeft";
-            this.dockPanelLeft.OriginalSize = new System.Drawing.Size(203, 200);
-            this.dockPanelLeft.Size = new System.Drawing.Size(203, 843);
-            this.dockPanelLeft.Text = "NetManager";
-            // 
-            // dockPanel1_Container
-            // 
-            this.dockPanel1_Container.Location = new System.Drawing.Point(4, 23);
-            this.dockPanel1_Container.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.dockPanel1_Container.Name = "dockPanel1_Container";
-            this.dockPanel1_Container.Size = new System.Drawing.Size(194, 816);
-            this.dockPanel1_Container.TabIndex = 0;
-            // 
-            // dockPanelRight
-            // 
-            this.dockPanelRight.Controls.Add(this.dockPanel2_Container);
-            this.dockPanelRight.Dock = DevExpress.XtraBars.Docking.DockingStyle.Right;
-            this.dockPanelRight.ID = new System.Guid("fb13275a-1e35-48b3-89de-94e94a6beeb7");
-            this.dockPanelRight.Location = new System.Drawing.Point(1572, 78);
-            this.dockPanelRight.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.dockPanelRight.Name = "dockPanelRight";
-            this.dockPanelRight.OriginalSize = new System.Drawing.Size(336, 200);
-            this.dockPanelRight.Size = new System.Drawing.Size(336, 843);
-            this.dockPanelRight.Text = "DeviceManager";
-            // 
-            // dockPanel2_Container
-            // 
-            this.dockPanel2_Container.Controls.Add(this.treeViewDevice);
-            this.dockPanel2_Container.Location = new System.Drawing.Point(5, 23);
-            this.dockPanel2_Container.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.dockPanel2_Container.Name = "dockPanel2_Container";
-            this.dockPanel2_Container.Size = new System.Drawing.Size(327, 816);
-            this.dockPanel2_Container.TabIndex = 0;
-            // 
-            // treeViewDevice
-            // 
-            this.treeViewDevice.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeViewDevice.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.treeViewDevice.Location = new System.Drawing.Point(0, 0);
-            this.treeViewDevice.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.treeViewDevice.Name = "treeViewDevice";
-            this.treeViewDevice.Size = new System.Drawing.Size(327, 816);
-            this.treeViewDevice.TabIndex = 0;
-            // 
-            // dockPanelDown
-            // 
-            this.dockPanelDown.Controls.Add(this.dockPanel3_Container);
-            this.dockPanelDown.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
-            this.dockPanelDown.ID = new System.Guid("5bfb6fc5-6130-4f60-8771-bd5b77e35cc0");
-            this.dockPanelDown.Location = new System.Drawing.Point(203, 764);
-            this.dockPanelDown.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.dockPanelDown.Name = "dockPanelDown";
-            this.dockPanelDown.OriginalSize = new System.Drawing.Size(200, 157);
-            this.dockPanelDown.Size = new System.Drawing.Size(1369, 157);
-            this.dockPanelDown.Text = "Output";
-            // 
-            // dockPanel3_Container
-            // 
-            this.dockPanel3_Container.Controls.Add(this.elementHost1);
-            this.dockPanel3_Container.Location = new System.Drawing.Point(4, 24);
-            this.dockPanel3_Container.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.dockPanel3_Container.Name = "dockPanel3_Container";
-            this.dockPanel3_Container.Size = new System.Drawing.Size(1361, 129);
-            this.dockPanel3_Container.TabIndex = 0;
-            // 
-            // elementHost1
-            // 
-            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.elementHost1.Location = new System.Drawing.Point(0, 0);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(1361, 129);
-            this.elementHost1.TabIndex = 0;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.uC_Output1;
-            // 
-            // dockPanelMiddle
-            // 
-            this.dockPanelMiddle.Controls.Add(this.dockPanel4_Container);
-            this.dockPanelMiddle.DockedAsTabbedDocument = true;
-            this.dockPanelMiddle.FloatLocation = new System.Drawing.Point(1079, 569);
-            this.dockPanelMiddle.ID = new System.Guid("1a39db8b-79b0-4a03-ae3f-71328cd67611");
-            this.dockPanelMiddle.Name = "dockPanelMiddle";
-            this.dockPanelMiddle.OriginalSize = new System.Drawing.Size(200, 200);
-            this.dockPanelMiddle.SavedIndex = 3;
-            this.dockPanelMiddle.SavedMdiDocument = true;
-            this.dockPanelMiddle.Text = "NetView";
-            // 
-            // dockPanel4_Container
-            // 
-            this.dockPanel4_Container.Location = new System.Drawing.Point(0, 0);
-            this.dockPanel4_Container.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
-            this.dockPanel4_Container.Name = "dockPanel4_Container";
-            this.dockPanel4_Container.Size = new System.Drawing.Size(1363, 657);
-            this.dockPanel4_Container.TabIndex = 0;
-            // 
-            // dockPanelVarMonitor
-            // 
-            this.dockPanelVarMonitor.Controls.Add(this.controlContainer1);
-            this.dockPanelVarMonitor.DockedAsTabbedDocument = true;
-            this.dockPanelVarMonitor.FloatLocation = new System.Drawing.Point(1102, 566);
-            this.dockPanelVarMonitor.ID = new System.Guid("c8af52a7-8e05-4baa-9e28-ff24fc0a57d5");
-            this.dockPanelVarMonitor.Name = "dockPanelVarMonitor";
-            this.dockPanelVarMonitor.OriginalSize = new System.Drawing.Size(200, 200);
-            this.dockPanelVarMonitor.SavedIndex = 4;
-            this.dockPanelVarMonitor.SavedMdiDocument = true;
-            this.dockPanelVarMonitor.Text = "VarMonitor";
-            // 
-            // controlContainer1
-            // 
-            this.controlContainer1.Controls.Add(this.elementHost2);
-            this.controlContainer1.Controls.Add(this.dataGridViewVarMonitor);
-            this.controlContainer1.Location = new System.Drawing.Point(0, 0);
-            this.controlContainer1.Name = "controlContainer1";
-            this.controlContainer1.Size = new System.Drawing.Size(1363, 657);
-            this.controlContainer1.TabIndex = 0;
-            // 
-            // elementHost2
-            // 
-            this.elementHost2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.elementHost2.Location = new System.Drawing.Point(0, 0);
-            this.elementHost2.Name = "elementHost2";
-            this.elementHost2.Size = new System.Drawing.Size(1363, 657);
-            this.elementHost2.TabIndex = 1;
-            this.elementHost2.Text = "elementHost2";
-            this.elementHost2.Child = null;
-            // 
-            // dataGridViewVarMonitor
-            // 
-            this.dataGridViewVarMonitor.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewVarMonitor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewVarMonitor.Location = new System.Drawing.Point(0, 0);
-            this.dataGridViewVarMonitor.Name = "dataGridViewVarMonitor";
-            this.dataGridViewVarMonitor.RowTemplate.Height = 23;
-            this.dataGridViewVarMonitor.Size = new System.Drawing.Size(1363, 657);
-            this.dataGridViewVarMonitor.TabIndex = 0;
-            // 
-            // barSubItem1
-            // 
-            this.barSubItem1.Caption = "File";
-            this.barSubItem1.Id = 0;
-            this.barSubItem1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.PaintStyle, this.barSubItem2, DevExpress.XtraBars.BarItemPaintStyle.CaptionInMenu),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem3),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem4)});
-            this.barSubItem1.Name = "barSubItem1";
-            // 
-            // barSubItem2
-            // 
-            this.barSubItem2.Caption = "New";
-            this.barSubItem2.Id = 1;
-            this.barSubItem2.Name = "barSubItem2";
-            // 
-            // barSubItem3
-            // 
-            this.barSubItem3.Caption = "Open";
-            this.barSubItem3.Id = 2;
-            this.barSubItem3.Name = "barSubItem3";
-            // 
-            // barSubItem4
-            // 
-            this.barSubItem4.Caption = "Save";
-            this.barSubItem4.Id = 3;
-            this.barSubItem4.Name = "barSubItem4";
-            // 
-            // barSubItem5
-            // 
-            this.barSubItem5.Caption = "Edit";
-            this.barSubItem5.Id = 4;
-            this.barSubItem5.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.barHeaderItem1),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barHeaderItem2),
-            new DevExpress.XtraBars.LinkPersistInfo(this.barHeaderItem3)});
-            this.barSubItem5.Name = "barSubItem5";
-            // 
-            // barHeaderItem1
-            // 
-            this.barHeaderItem1.Caption = "Cut";
-            this.barHeaderItem1.Id = 31;
-            this.barHeaderItem1.ImageOptions.AllowStubGlyph = DevExpress.Utils.DefaultBoolean.True;
-            this.barHeaderItem1.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barHeaderItem1.ImageOptions.Image")));
-            this.barHeaderItem1.Name = "barHeaderItem1";
-            // 
-            // barHeaderItem2
-            // 
-            this.barHeaderItem2.Caption = "Copy";
-            this.barHeaderItem2.Id = 32;
-            this.barHeaderItem2.Name = "barHeaderItem2";
-            // 
-            // barHeaderItem3
-            // 
-            this.barHeaderItem3.Caption = "Paste";
-            this.barHeaderItem3.Id = 33;
-            this.barHeaderItem3.Name = "barHeaderItem3";
-            // 
-            // barSubItem6
-            // 
-            this.barSubItem6.Caption = "View";
-            this.barSubItem6.Id = 5;
-            this.barSubItem6.Name = "barSubItem6";
-            // 
-            // barSubItem7
-            // 
-            this.barSubItem7.Caption = "OnLine";
-            this.barSubItem7.Id = 6;
-            this.barSubItem7.Name = "barSubItem7";
-            // 
-            // barSubItem8
-            // 
-            this.barSubItem8.Caption = "Tool";
-            this.barSubItem8.Id = 7;
-            this.barSubItem8.Name = "barSubItem8";
-            // 
-            // barSubItem9
-            // 
-            this.barSubItem9.Caption = "Help";
-            this.barSubItem9.Id = 8;
-            this.barSubItem9.Name = "barSubItem9";
-            // 
-            // barDockingMenuItem1
-            // 
-            this.barDockingMenuItem1.Caption = "barDockingMenuItem1";
-            this.barDockingMenuItem1.Id = 14;
-            this.barDockingMenuItem1.Name = "barDockingMenuItem1";
-            // 
-            // barStaticItem1
-            // 
-            this.barStaticItem1.Id = 18;
-            this.barStaticItem1.Name = "barStaticItem1";
-            // 
-            // barStaticItem2
-            // 
-            this.barStaticItem2.Id = 23;
-            this.barStaticItem2.Name = "barStaticItem2";
-            // 
-            // barStaticItem3
-            // 
-            this.barStaticItem3.Caption = "barStaticItem3";
-            this.barStaticItem3.Id = 30;
-            this.barStaticItem3.Name = "barStaticItem3";
-            // 
-            // barHeaderItem4
-            // 
-            this.barHeaderItem4.Caption = "SelectAll";
-            this.barHeaderItem4.Id = 35;
-            this.barHeaderItem4.Name = "barHeaderItem4";
             // 
             // barManager2
             // 
@@ -799,8 +619,18 @@
             this.barButtonItem12,
             this.barButtonItem13,
             this.barButtonItem14,
-            this.barButtonItem15});
-            this.barManager2.MaxItemId = 51;
+            this.barButtonItem15,
+            this.barListItem3,
+            this.barSubItemNew,
+            this.barButtonItem32,
+            this.barButtonItemNewProject,
+            this.barButtonItem34,
+            this.barButtonItem35,
+            this.barButtonItem36,
+            this.barButtonItem37,
+            this.barButtonItem38,
+            this.barButtonItem39});
+            this.barManager2.MaxItemId = 64;
             // 
             // bar6
             // 
@@ -808,7 +638,7 @@
             this.bar6.DockCol = 0;
             this.bar6.DockRow = 0;
             this.bar6.DockStyle = DevExpress.XtraBars.BarDockStyle.Top;
-            this.bar6.FloatLocation = new System.Drawing.Point(49, 152);
+            this.bar6.FloatLocation = new System.Drawing.Point(324, 189);
             this.bar6.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItemFile),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem10),
@@ -816,7 +646,7 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem13),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem14),
             new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem12)});
-            this.bar6.Offset = 1;
+            this.bar6.Offset = 4;
             this.bar6.Text = "Custom 5";
             // 
             // barSubItemFile
@@ -824,7 +654,7 @@
             this.barSubItemFile.Caption = "File";
             this.barSubItemFile.Id = 1;
             this.barSubItemFile.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
-            new DevExpress.XtraBars.LinkPersistInfo(this.MenuNew),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItemNew),
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuOpen),
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuSave),
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuSaveAs),
@@ -833,12 +663,69 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuExit)});
             this.barSubItemFile.Name = "barSubItemFile";
             // 
-            // MenuNew
+            // barSubItemNew
             // 
-            this.MenuNew.Caption = "New";
-            this.MenuNew.Id = 4;
-            this.MenuNew.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuNew.ImageOptions.Image")));
-            this.MenuNew.Name = "MenuNew";
+            this.barSubItemNew.Caption = "New";
+            this.barSubItemNew.Id = 55;
+            this.barSubItemNew.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barSubItemNew.ImageOptions.Image")));
+            this.barSubItemNew.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemNewProject),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem34),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem35),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem36),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem37),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem38),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem39)});
+            this.barSubItemNew.Name = "barSubItemNew";
+            // 
+            // barButtonItemNewProject
+            // 
+            this.barButtonItemNewProject.Caption = "ModbusRTU";
+            this.barButtonItemNewProject.Id = 57;
+            this.barButtonItemNewProject.Name = "barButtonItemNewProject";
+            this.barButtonItemNewProject.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem34
+            // 
+            this.barButtonItem34.Caption = "PROFIBUS-DP";
+            this.barButtonItem34.Id = 58;
+            this.barButtonItem34.Name = "barButtonItem34";
+            this.barButtonItem34.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem35
+            // 
+            this.barButtonItem35.Caption = "PROFIBUS-IO";
+            this.barButtonItem35.Id = 59;
+            this.barButtonItem35.Name = "barButtonItem35";
+            this.barButtonItem35.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem36
+            // 
+            this.barButtonItem36.Caption = "ModbusTCP";
+            this.barButtonItem36.Id = 60;
+            this.barButtonItem36.Name = "barButtonItem36";
+            this.barButtonItem36.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem37
+            // 
+            this.barButtonItem37.Caption = "EtherCAT";
+            this.barButtonItem37.Id = 61;
+            this.barButtonItem37.Name = "barButtonItem37";
+            this.barButtonItem37.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem38
+            // 
+            this.barButtonItem38.Caption = "CANopen";
+            this.barButtonItem38.Id = 62;
+            this.barButtonItem38.Name = "barButtonItem38";
+            this.barButtonItem38.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
+            // 
+            // barButtonItem39
+            // 
+            this.barButtonItem39.Caption = "DeviceNet";
+            this.barButtonItem39.Id = 63;
+            this.barButtonItem39.Name = "barButtonItem39";
+            this.barButtonItem39.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemNewProject_ItemClick);
             // 
             // MenuOpen
             // 
@@ -1012,9 +899,6 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuCommunicationSetting),
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuDownLoad),
             new DevExpress.XtraBars.LinkPersistInfo(this.DownUpLoad),
-            new DevExpress.XtraBars.LinkPersistInfo(this.MenuStart),
-            new DevExpress.XtraBars.LinkPersistInfo(this.MenuStop),
-            new DevExpress.XtraBars.LinkPersistInfo(this.MenuSetup),
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuMonitor)});
             this.barSubItem13.Name = "barSubItem13";
             // 
@@ -1057,30 +941,6 @@
             this.DownUpLoad.Name = "DownUpLoad";
             this.DownUpLoad.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemUpload_ItemClick);
             // 
-            // MenuStart
-            // 
-            this.MenuStart.Caption = "Start";
-            this.MenuStart.Id = 28;
-            this.MenuStart.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuStart.ImageOptions.Image")));
-            this.MenuStart.Name = "MenuStart";
-            this.MenuStart.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemStart_ItemClick);
-            // 
-            // MenuStop
-            // 
-            this.MenuStop.Caption = "Stop";
-            this.MenuStop.Id = 29;
-            this.MenuStop.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuStop.ImageOptions.Image")));
-            this.MenuStop.Name = "MenuStop";
-            this.MenuStop.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemStop_ItemClick);
-            // 
-            // MenuSetup
-            // 
-            this.MenuSetup.Caption = "Modify";
-            this.MenuSetup.Id = 25;
-            this.MenuSetup.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuSetup.ImageOptions.Image")));
-            this.MenuSetup.Name = "MenuSetup";
-            this.MenuSetup.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemCheck_ItemClick);
-            // 
             // MenuMonitor
             // 
             this.MenuMonitor.Caption = "Monitor";
@@ -1120,33 +980,33 @@
             // 
             this.barDockControl1.CausesValidation = false;
             this.barDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.barDockControl1.Location = new System.Drawing.Point(0, 0);
+            this.barDockControl1.Location = new System.Drawing.Point(0, 47);
             this.barDockControl1.Manager = this.barManager2;
-            this.barDockControl1.Size = new System.Drawing.Size(1908, 31);
+            this.barDockControl1.Size = new System.Drawing.Size(1898, 31);
             // 
             // barDockControl2
             // 
             this.barDockControl2.CausesValidation = false;
             this.barDockControl2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.barDockControl2.Location = new System.Drawing.Point(0, 948);
+            this.barDockControl2.Location = new System.Drawing.Point(0, 903);
             this.barDockControl2.Manager = this.barManager2;
-            this.barDockControl2.Size = new System.Drawing.Size(1908, 0);
+            this.barDockControl2.Size = new System.Drawing.Size(1898, 0);
             // 
             // barDockControl3
             // 
             this.barDockControl3.CausesValidation = false;
             this.barDockControl3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.barDockControl3.Location = new System.Drawing.Point(0, 31);
+            this.barDockControl3.Location = new System.Drawing.Point(0, 78);
             this.barDockControl3.Manager = this.barManager2;
-            this.barDockControl3.Size = new System.Drawing.Size(0, 917);
+            this.barDockControl3.Size = new System.Drawing.Size(0, 825);
             // 
             // barDockControl4
             // 
             this.barDockControl4.CausesValidation = false;
             this.barDockControl4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.barDockControl4.Location = new System.Drawing.Point(1908, 31);
+            this.barDockControl4.Location = new System.Drawing.Point(1898, 78);
             this.barDockControl4.Manager = this.barManager2;
-            this.barDockControl4.Size = new System.Drawing.Size(0, 917);
+            this.barDockControl4.Size = new System.Drawing.Size(0, 825);
             // 
             // skinBarSubItem1
             // 
@@ -1164,7 +1024,7 @@
             // workspaceManager1
             // 
             this.workspaceManager1.TargetControl = this;
-            this.workspaceManager1.TransitionType = pushTransition1;
+            this.workspaceManager1.TransitionType = pushTransition2;
             // 
             // barWorkspaceMenuItem2
             // 
@@ -1172,6 +1032,13 @@
             this.barWorkspaceMenuItem2.Id = 3;
             this.barWorkspaceMenuItem2.Name = "barWorkspaceMenuItem2";
             this.barWorkspaceMenuItem2.WorkspaceManager = this.workspaceManager1;
+            // 
+            // MenuNew
+            // 
+            this.MenuNew.Caption = "New";
+            this.MenuNew.Id = 4;
+            this.MenuNew.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuNew.ImageOptions.Image")));
+            this.MenuNew.Name = "MenuNew";
             // 
             // barButtonItem10
             // 
@@ -1196,6 +1063,21 @@
             this.barCheckItem1.Caption = "barCheckItem1";
             this.barCheckItem1.Id = 23;
             this.barCheckItem1.Name = "barCheckItem1";
+            // 
+            // MenuSetup
+            // 
+            this.MenuSetup.Id = 51;
+            this.MenuSetup.Name = "MenuSetup";
+            // 
+            // MenuStart
+            // 
+            this.MenuStart.Id = 52;
+            this.MenuStart.Name = "MenuStart";
+            // 
+            // MenuStop
+            // 
+            this.MenuStop.Id = 53;
+            this.MenuStop.Name = "MenuStop";
             // 
             // barButtonItem29
             // 
@@ -1235,6 +1117,335 @@
             this.barButtonItem5.Id = 43;
             this.barButtonItem5.Name = "barButtonItem5";
             // 
+            // barListItem3
+            // 
+            this.barListItem3.Caption = "New";
+            this.barListItem3.Id = 54;
+            this.barListItem3.Name = "barListItem3";
+            // 
+            // barButtonItem32
+            // 
+            this.barButtonItem32.Caption = "ModbusRTU";
+            this.barButtonItem32.Id = 56;
+            this.barButtonItem32.Name = "barButtonItem32";
+            // 
+            // dockPanelLeft
+            // 
+            this.dockPanelLeft.Controls.Add(this.dockPanel1_Container);
+            this.dockPanelLeft.Dock = DevExpress.XtraBars.Docking.DockingStyle.Left;
+            this.dockPanelLeft.ID = new System.Guid("172b364e-7297-419f-af7c-b11f0917a7b1");
+            this.dockPanelLeft.Location = new System.Drawing.Point(0, 78);
+            this.dockPanelLeft.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.dockPanelLeft.Name = "dockPanelLeft";
+            this.dockPanelLeft.OriginalSize = new System.Drawing.Size(203, 200);
+            this.dockPanelLeft.Size = new System.Drawing.Size(203, 825);
+            this.dockPanelLeft.Text = "NetManager";
+            // 
+            // dockPanel1_Container
+            // 
+            this.dockPanel1_Container.Location = new System.Drawing.Point(4, 23);
+            this.dockPanel1_Container.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.dockPanel1_Container.Name = "dockPanel1_Container";
+            this.dockPanel1_Container.Size = new System.Drawing.Size(194, 798);
+            this.dockPanel1_Container.TabIndex = 0;
+            // 
+            // dockPanelRight
+            // 
+            this.dockPanelRight.Controls.Add(this.dockPanel2_Container);
+            this.dockPanelRight.Dock = DevExpress.XtraBars.Docking.DockingStyle.Right;
+            this.dockPanelRight.ID = new System.Guid("fb13275a-1e35-48b3-89de-94e94a6beeb7");
+            this.dockPanelRight.Location = new System.Drawing.Point(1562, 78);
+            this.dockPanelRight.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.dockPanelRight.Name = "dockPanelRight";
+            this.dockPanelRight.OriginalSize = new System.Drawing.Size(336, 200);
+            this.dockPanelRight.Size = new System.Drawing.Size(336, 825);
+            this.dockPanelRight.Text = "DeviceManager";
+            // 
+            // dockPanel2_Container
+            // 
+            this.dockPanel2_Container.Controls.Add(this.treeViewDevice);
+            this.dockPanel2_Container.Location = new System.Drawing.Point(5, 23);
+            this.dockPanel2_Container.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.dockPanel2_Container.Name = "dockPanel2_Container";
+            this.dockPanel2_Container.Size = new System.Drawing.Size(327, 798);
+            this.dockPanel2_Container.TabIndex = 0;
+            // 
+            // treeViewDevice
+            // 
+            this.treeViewDevice.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeViewDevice.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.treeViewDevice.Location = new System.Drawing.Point(0, 0);
+            this.treeViewDevice.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.treeViewDevice.Name = "treeViewDevice";
+            this.treeViewDevice.Size = new System.Drawing.Size(327, 798);
+            this.treeViewDevice.TabIndex = 0;
+            // 
+            // dockPanelDown
+            // 
+            this.dockPanelDown.Controls.Add(this.dockPanel3_Container);
+            this.dockPanelDown.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
+            this.dockPanelDown.ID = new System.Guid("5bfb6fc5-6130-4f60-8771-bd5b77e35cc0");
+            this.dockPanelDown.Location = new System.Drawing.Point(203, 746);
+            this.dockPanelDown.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.dockPanelDown.Name = "dockPanelDown";
+            this.dockPanelDown.OriginalSize = new System.Drawing.Size(200, 157);
+            this.dockPanelDown.Size = new System.Drawing.Size(1359, 157);
+            this.dockPanelDown.Text = "Output";
+            // 
+            // dockPanel3_Container
+            // 
+            this.dockPanel3_Container.Controls.Add(this.elementHost1);
+            this.dockPanel3_Container.Location = new System.Drawing.Point(4, 24);
+            this.dockPanel3_Container.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.dockPanel3_Container.Name = "dockPanel3_Container";
+            this.dockPanel3_Container.Size = new System.Drawing.Size(1351, 129);
+            this.dockPanel3_Container.TabIndex = 0;
+            // 
+            // elementHost1
+            // 
+            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.elementHost1.Location = new System.Drawing.Point(0, 0);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(1351, 129);
+            this.elementHost1.TabIndex = 0;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = this.uC_Output1;
+            // 
+            // dockPanelMiddle
+            // 
+            this.dockPanelMiddle.Controls.Add(this.dockPanel4_Container);
+            this.dockPanelMiddle.DockedAsTabbedDocument = true;
+            this.dockPanelMiddle.FloatLocation = new System.Drawing.Point(1079, 569);
+            this.dockPanelMiddle.ID = new System.Guid("1a39db8b-79b0-4a03-ae3f-71328cd67611");
+            this.dockPanelMiddle.Name = "dockPanelMiddle";
+            this.dockPanelMiddle.OriginalSize = new System.Drawing.Size(200, 200);
+            this.dockPanelMiddle.SavedIndex = 3;
+            this.dockPanelMiddle.SavedMdiDocument = true;
+            this.dockPanelMiddle.Text = "NetView";
+            // 
+            // dockPanel4_Container
+            // 
+            this.dockPanel4_Container.Location = new System.Drawing.Point(0, 0);
+            this.dockPanel4_Container.Margin = new System.Windows.Forms.Padding(7, 6, 7, 6);
+            this.dockPanel4_Container.Name = "dockPanel4_Container";
+            this.dockPanel4_Container.Size = new System.Drawing.Size(1353, 639);
+            this.dockPanel4_Container.TabIndex = 0;
+            // 
+            // dockPanelVarMonitor
+            // 
+            this.dockPanelVarMonitor.Controls.Add(this.controlContainer1);
+            this.dockPanelVarMonitor.DockedAsTabbedDocument = true;
+            this.dockPanelVarMonitor.FloatLocation = new System.Drawing.Point(1102, 566);
+            this.dockPanelVarMonitor.ID = new System.Guid("c8af52a7-8e05-4baa-9e28-ff24fc0a57d5");
+            this.dockPanelVarMonitor.Name = "dockPanelVarMonitor";
+            this.dockPanelVarMonitor.OriginalSize = new System.Drawing.Size(200, 200);
+            this.dockPanelVarMonitor.SavedIndex = 4;
+            this.dockPanelVarMonitor.SavedMdiDocument = true;
+            this.dockPanelVarMonitor.Text = "VarMonitor";
+            // 
+            // controlContainer1
+            // 
+            this.controlContainer1.Controls.Add(this.elementHost2);
+            this.controlContainer1.Controls.Add(this.dataGridViewVarMonitor);
+            this.controlContainer1.Location = new System.Drawing.Point(0, 0);
+            this.controlContainer1.Name = "controlContainer1";
+            this.controlContainer1.Size = new System.Drawing.Size(1353, 639);
+            this.controlContainer1.TabIndex = 0;
+            // 
+            // elementHost2
+            // 
+            this.elementHost2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.elementHost2.Location = new System.Drawing.Point(0, 0);
+            this.elementHost2.Name = "elementHost2";
+            this.elementHost2.Size = new System.Drawing.Size(1353, 639);
+            this.elementHost2.TabIndex = 1;
+            this.elementHost2.Text = "elementHost2";
+            this.elementHost2.Child = null;
+            // 
+            // dataGridViewVarMonitor
+            // 
+            this.dataGridViewVarMonitor.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewVarMonitor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewVarMonitor.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewVarMonitor.Name = "dataGridViewVarMonitor";
+            this.dataGridViewVarMonitor.RowTemplate.Height = 23;
+            this.dataGridViewVarMonitor.Size = new System.Drawing.Size(1353, 639);
+            this.dataGridViewVarMonitor.TabIndex = 0;
+            // 
+            // barSubItem1
+            // 
+            this.barSubItem1.Caption = "File";
+            this.barSubItem1.Id = 0;
+            this.barSubItem1.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(DevExpress.XtraBars.BarLinkUserDefines.PaintStyle, this.barSubItem2, DevExpress.XtraBars.BarItemPaintStyle.CaptionInMenu),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem3),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barSubItem4)});
+            this.barSubItem1.Name = "barSubItem1";
+            // 
+            // barSubItem2
+            // 
+            this.barSubItem2.Caption = "New";
+            this.barSubItem2.Id = 1;
+            this.barSubItem2.Name = "barSubItem2";
+            // 
+            // barSubItem3
+            // 
+            this.barSubItem3.Caption = "Open";
+            this.barSubItem3.Id = 2;
+            this.barSubItem3.Name = "barSubItem3";
+            // 
+            // barSubItem4
+            // 
+            this.barSubItem4.Caption = "Save";
+            this.barSubItem4.Id = 3;
+            this.barSubItem4.Name = "barSubItem4";
+            // 
+            // barSubItem5
+            // 
+            this.barSubItem5.Caption = "Edit";
+            this.barSubItem5.Id = 4;
+            this.barSubItem5.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+            new DevExpress.XtraBars.LinkPersistInfo(this.barHeaderItem1),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barHeaderItem2),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barHeaderItem3)});
+            this.barSubItem5.Name = "barSubItem5";
+            // 
+            // barHeaderItem1
+            // 
+            this.barHeaderItem1.Caption = "Cut";
+            this.barHeaderItem1.Id = 31;
+            this.barHeaderItem1.ImageOptions.AllowStubGlyph = DevExpress.Utils.DefaultBoolean.True;
+            this.barHeaderItem1.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barHeaderItem1.ImageOptions.Image")));
+            this.barHeaderItem1.Name = "barHeaderItem1";
+            // 
+            // barHeaderItem2
+            // 
+            this.barHeaderItem2.Caption = "Copy";
+            this.barHeaderItem2.Id = 32;
+            this.barHeaderItem2.Name = "barHeaderItem2";
+            // 
+            // barHeaderItem3
+            // 
+            this.barHeaderItem3.Caption = "Paste";
+            this.barHeaderItem3.Id = 33;
+            this.barHeaderItem3.Name = "barHeaderItem3";
+            // 
+            // barSubItem6
+            // 
+            this.barSubItem6.Caption = "View";
+            this.barSubItem6.Id = 5;
+            this.barSubItem6.Name = "barSubItem6";
+            // 
+            // barSubItem7
+            // 
+            this.barSubItem7.Caption = "OnLine";
+            this.barSubItem7.Id = 6;
+            this.barSubItem7.Name = "barSubItem7";
+            // 
+            // barSubItem8
+            // 
+            this.barSubItem8.Caption = "Tool";
+            this.barSubItem8.Id = 7;
+            this.barSubItem8.Name = "barSubItem8";
+            // 
+            // barSubItem9
+            // 
+            this.barSubItem9.Caption = "Help";
+            this.barSubItem9.Id = 8;
+            this.barSubItem9.Name = "barSubItem9";
+            // 
+            // barButtonItem1
+            // 
+            this.barButtonItem1.ActAsDropDown = true;
+            this.barButtonItem1.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.DropDown;
+            this.barButtonItem1.Id = 9;
+            this.barButtonItem1.Name = "barButtonItem1";
+            // 
+            // barDockingMenuItem1
+            // 
+            this.barDockingMenuItem1.Caption = "barDockingMenuItem1";
+            this.barDockingMenuItem1.Id = 14;
+            this.barDockingMenuItem1.Name = "barDockingMenuItem1";
+            // 
+            // barStaticItem1
+            // 
+            this.barStaticItem1.Id = 18;
+            this.barStaticItem1.Name = "barStaticItem1";
+            // 
+            // barStaticItem2
+            // 
+            this.barStaticItem2.Id = 23;
+            this.barStaticItem2.Name = "barStaticItem2";
+            // 
+            // barButtonItemCheck
+            // 
+            this.barButtonItemCheck.Id = 39;
+            this.barButtonItemCheck.Name = "barButtonItemCheck";
+            // 
+            // barButtonItemStart
+            // 
+            this.barButtonItemStart.Id = 40;
+            this.barButtonItemStart.Name = "barButtonItemStart";
+            // 
+            // barButtonItemStop
+            // 
+            this.barButtonItemStop.Id = 41;
+            this.barButtonItemStop.Name = "barButtonItemStop";
+            // 
+            // barStaticItem3
+            // 
+            this.barStaticItem3.Caption = "barStaticItem3";
+            this.barStaticItem3.Id = 30;
+            this.barStaticItem3.Name = "barStaticItem3";
+            // 
+            // barHeaderItem4
+            // 
+            this.barHeaderItem4.Caption = "SelectAll";
+            this.barHeaderItem4.Id = 35;
+            this.barHeaderItem4.Name = "barHeaderItem4";
+            // 
+            // barButtonItem17
+            // 
+            this.barButtonItem17.Caption = "ModbusRTU";
+            this.barButtonItem17.Id = 43;
+            this.barButtonItem17.Name = "barButtonItem17";
+            // 
+            // barButtonItem18
+            // 
+            this.barButtonItem18.Caption = "PROFIBUS-DP";
+            this.barButtonItem18.Id = 44;
+            this.barButtonItem18.Name = "barButtonItem18";
+            // 
+            // barButtonItem19
+            // 
+            this.barButtonItem19.Caption = "PROFIBUS-IO";
+            this.barButtonItem19.Id = 45;
+            this.barButtonItem19.Name = "barButtonItem19";
+            // 
+            // barButtonItem20
+            // 
+            this.barButtonItem20.Caption = "ModbusTCP";
+            this.barButtonItem20.Id = 46;
+            this.barButtonItem20.Name = "barButtonItem20";
+            // 
+            // barButtonItem21
+            // 
+            this.barButtonItem21.Caption = "EtherCAT";
+            this.barButtonItem21.Id = 47;
+            this.barButtonItem21.Name = "barButtonItem21";
+            // 
+            // barButtonItem22
+            // 
+            this.barButtonItem22.Caption = "CANopen";
+            this.barButtonItem22.Id = 48;
+            this.barButtonItem22.Name = "barButtonItem22";
+            // 
+            // barButtonItem23
+            // 
+            this.barButtonItem23.Caption = "DeviceNet";
+            this.barButtonItem23.Id = 49;
+            this.barButtonItem23.Name = "barButtonItem23";
+            // 
             // documentManager1
             // 
             this.documentManager1.ContainerControl = this;
@@ -1251,37 +1462,39 @@
             this.document3,
             this.document1});
             this.tabbedView1.RootContainer.Element = null;
-            dockingContainer1.Element = this.documentGroup1;
+            dockingContainer2.Element = this.documentGroup1;
             this.tabbedView1.RootContainer.Nodes.AddRange(new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer[] {
-            dockingContainer1});
+            dockingContainer2});
             // 
             // Form1
             // 
             this.Appearance.Options.UseFont = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 27F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1908, 948);
+            this.ClientSize = new System.Drawing.Size(1898, 930);
             this.Controls.Add(this.dockPanelLeft);
             this.Controls.Add(this.dockPanelDown);
             this.Controls.Add(this.dockPanelRight);
-            this.Controls.Add(this.barDockControlLeft);
-            this.Controls.Add(this.barDockControlRight);
-            this.Controls.Add(this.barDockControlBottom);
-            this.Controls.Add(this.barDockControlTop);
             this.Controls.Add(this.barDockControl3);
             this.Controls.Add(this.barDockControl4);
             this.Controls.Add(this.barDockControl2);
             this.Controls.Add(this.barDockControl1);
+            this.Controls.Add(this.barDockControlLeft);
+            this.Controls.Add(this.barDockControlRight);
+            this.Controls.Add(this.barDockControlBottom);
+            this.Controls.Add(this.barDockControlTop);
             this.Font = new System.Drawing.Font("Tahoma", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(7, 8, 7, 8);
             this.Name = "Form1";
             this.Text = "Hurry Configurator";
             ((System.ComponentModel.ISupportInitialize)(this.documentGroup1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.document3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.document1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.document3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.barManager1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.popupMenu1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.barManager2)).EndInit();
             this.dockPanelLeft.ResumeLayout(false);
             this.dockPanelRight.ResumeLayout(false);
             this.dockPanel2_Container.ResumeLayout(false);
@@ -1291,7 +1504,6 @@
             this.dockPanelVarMonitor.ResumeLayout(false);
             this.controlContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVarMonitor)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.barManager2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).EndInit();
             this.ResumeLayout(false);
@@ -1330,7 +1542,7 @@
         private DevExpress.XtraBars.BarSubItem barSubItem8;
         private DevExpress.XtraBars.BarSubItem barSubItem9;
         private DevExpress.XtraBars.BarButtonItem barButtonItem1;
-        private DevExpress.XtraBars.BarButtonItem barButtonItemNew;
+       
         private DevExpress.XtraBars.BarButtonItem barButtonItemOpen;
         private DevExpress.XtraBars.BarButtonItem barButtonItemSave;
         private DevExpress.XtraBars.BarButtonItem barButtonItem4;
@@ -1424,6 +1636,33 @@
         private System.Windows.Forms.DataGridView dataGridViewVarMonitor;
         private View.UC_Output uC_Output1;
         private System.Windows.Forms.Integration.ElementHost elementHost2;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem17;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem18;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem19;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem20;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem21;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem22;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem23;
+        //private DevExpress.XtraBars.BarLargeButtonItem barLargeButtonItemNew;
+        private DevExpress.XtraBars.PopupMenu popupMenu1;
+        private DevExpress.XtraBars.BarLargeButtonItem barLargeButtonItem1;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem24;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem25;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem26;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem27;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem28;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem30;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem31;
+        private DevExpress.XtraBars.BarSubItem barSubItemNew;
+        private DevExpress.XtraBars.BarListItem barListItem3;
+        private DevExpress.XtraBars.BarButtonItem barButtonItemNewProject;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem34;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem35;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem36;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem37;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem38;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem39;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem32;
     }
 }
 

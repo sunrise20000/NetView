@@ -43,11 +43,11 @@
   <ItemGroup>
     <Compile Include="ControllerBase.cs" />
     <Compile Include="Defination.cs" />
-    <Compile Include="EC_Controller.cs" />
+    <Compile Include="Ethercat\EC_Controller.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfigModleBase.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL1001.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Cmd\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

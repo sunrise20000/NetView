@@ -8,12 +8,14 @@ namespace ControllerLib
 {
     public abstract class ControllerBase
     {
+        public abstract bool IsConnected { get; protected set; }
         public abstract bool Open(string Port);
 
-        public abstract void Connect();
+        public abstract bool Connect();
+
+        public abstract bool DisConnect();
 
         public abstract List<string> GetModuleList();
-
 
         /// <summary>
         /// PureNameList
@@ -29,8 +31,5 @@ namespace ControllerLib
 
         public abstract void CLose();
 
-
-        public abstract bool IsOpen();
-        
     }
 }

@@ -28,11 +28,11 @@ namespace NetView.View
         public UC_VarMonitor()
         {
             InitializeComponent();
-            VarCollect.Add(new MonitorVarModel());
-            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-            VarCollect.Add(new MonitorVarModel() {  IoType=Definations.EnumModuleIOType.OUT});
-            VarCollect.Add(new MonitorVarModel());
-            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            //VarCollect.Add(new MonitorVarModel());
+            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            //VarCollect.Add(new MonitorVarModel() {  IoType=Definations.EnumModuleIOType.OUT});
+            //VarCollect.Add(new MonitorVarModel());
+            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
             //root.Background
         } 
         public ObservableCollection<MonitorVarModel> VarCollect { get; set; } = new ObservableCollection<MonitorVarModel>();

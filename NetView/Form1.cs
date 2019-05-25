@@ -16,6 +16,9 @@ using System.Windows.Forms.Integration;
 using NetView.View;
 using DevExpress.XtraBars.Docking;
 using ControllerLib;
+using ControllerLib.Ethercat;
+using DevExpress.XtraBars;
+
 namespace NetView
 {
     public partial class Form1 : DevExpress.XtraEditors.XtraForm
@@ -26,15 +29,17 @@ namespace NetView
         ProductContrainer MiddleControl = null;
         treeviewContrainer LeftControl = null;
         DataTable DTVarMonitor = new DataTable();
-        ControllerBase BusController = null;
-
+        ControllerBase BusController = new EC_Controller();
+        
         const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
+
         public Form1()
         {
             InitializeComponent();
             LoadCfg();
             InitCtrl();
             EthercatMgr.LoadXmlFile(FILE_DEMO_XML_FILE);
+           
         }
         private void LoadCfg()
         {
@@ -122,27 +127,28 @@ namespace NetView
             ucMonitor.OnStartMonitorEventHandler += UcMonitor_OnStartMonitorEventHandler;
             ucMonitor.OnStopMonitorEventHandler += UcMonitor_OnStopMonitorEventHandler;
             ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
+            var VarCollect = ucMonitor.VarCollect;
+            for (int i = 0; i < 3; i++)
+            {
+                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+            }
 
             this.elementHost1.BackColorTransparent = true;
             this.elementHost2.BackColorTransparent = true;
 
+           
 
         }
 
-        private void UcMonitor_OnModifyValueEventHandler(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void UcMonitor_OnStopMonitorEventHandler(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void UcMonitor_OnStartMonitorEventHandler(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+      
 
         private void TreeViewDevice_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -159,15 +165,7 @@ namespace NetView
             }
         }
 
-        /// <summary>
-        /// New
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void barButtonItemNew_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            EthercatMgr.LoadXmlFile(FILE_DEMO_XML_FILE);
-        }
+   
 
         private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -236,24 +234,10 @@ namespace NetView
 
         private void barButtonItemConnect_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-
-        }
-
-        private void barButtonItemCheck_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-
-        }
-
-        private void barButtonItemStart_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if (BusController != null)
-                BusController = new EC_Controller();
-
-        }
-
-        private void barButtonItemStop_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-
+            if (!BusController.IsConnected)
+                BusController.Open("1");
+            else
+                BusController.CLose();
         }
 
         private void barButtonItemUpload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -271,6 +255,7 @@ namespace NetView
             dockPanelVarMonitor.Visibility = dockPanelVarMonitor.Visibility == DockVisibility.Visible ? DockVisibility.Hidden : DockVisibility.Visible;
             if (dockPanelVarMonitor.Visibility == DockVisibility.Visible)
                 dockManager1.ActivePanel = dockPanelVarMonitor;
+           
         }
 
         private void MenuSaveAs_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -280,12 +265,38 @@ namespace NetView
 
         private void barButtonItemArrangWindow_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            //this.dockPanelLeft.Show();
-            //this.dockPanelMiddle.Show();
-            //this.dockPanelRight.Show();
-            //this.dockPanelDown.Show();
-            foreach (DockPanel it in this.dockManager1.Panels)
-                it.Show();
+            this.dockPanelLeft.Show();
+            this.dockPanelMiddle.Show();
+            this.dockPanelRight.Show();
+            this.dockPanelDown.Show();
+            //foreach (DockPanel it in this.dockManager1.Panels)
+            //    it.Show();
+        }
+
+        #region VarMonitor
+
+        private void UcMonitor_OnModifyValueEventHandler(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void UcMonitor_OnStopMonitorEventHandler(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void UcMonitor_OnStartMonitorEventHandler(object sender, EventArgs e)
+        {
+           
+        }
+
+
+        #endregion
+
+        private void barButtonItemNewProject_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+    
+            Console.WriteLine((e.Item as BarButtonItem).Caption);
         }
     }
 }
