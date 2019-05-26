@@ -45,6 +45,15 @@
     <Compile Include="Defination.cs" />
     <Compile Include="Ethercat\EC_Controller.cs" />
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfigModleBase.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL5002.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL5001.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL4002.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL4001.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL3002.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL3001.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2003.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2002.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2001.cs" />
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL1001.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
