@@ -16,9 +16,9 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
                         "DI1~5 as Alarm","DI1~6 as Alarm","DI1~7 as Alarm","DI1~8 as Alarm"};
         Dictionary<byte, string> TypeDic = new Dictionary<byte, string>();
 
+        protected override int GuiStringListNumber { get; } = 4;
         public ModuleConfig_HL1001()
         {
-            GuiStringListNumber = 4;
             DeviceName = EnumDeviceName.HL1001;
             for (int i = 0; i < TypeList.Count(); i++)
                 TypeDic.Add(TypeList[i], TypeStringList[i]);
@@ -36,6 +36,9 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
             var L1 = GuiStringList[0].Split('_');
             //Name
+            Enum.TryParse(L1[0], out EnumDeviceName Dn);
+            DeviceName = Dn;
+
             //LocalIndex
             LocalIndex = int.Parse(L1[1]);
 
@@ -72,7 +75,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         }
         protected ModuleConfig_HL1001(SerializationInfo info, StreamingContext context) : base(info,context)
         {
-
+          
         }
     }
 }

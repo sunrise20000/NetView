@@ -15,7 +15,7 @@ namespace NetView.Class
 {
     public class ProjectController
     {
-        private string FileFullPathName = "C:";
+        private string FileFullPathName =@"..\";
         public BusConfigBase BusCfg { get; set; }
 
         public List<ModuleConfigModleBase> ModuleConfigList { get; set; } = new List<ModuleConfigModleBase>();
@@ -48,12 +48,14 @@ namespace NetView.Class
 
                 IFormatter formatter = new BinaryFormatter();
                 FileStream s = new FileStream(FileFullPathName, FileMode.Open);
-                BusCfg = (BusConfigBase)formatter.Deserialize(s);
-                var obj= formatter.Deserialize(s) as ModuleConfigModleBase;
-                while (obj != null)
+                if (s.Position <s.Length)
                 {
-                    ModuleConfigList.Add(obj);
-                    obj = formatter.Deserialize(s) as ModuleConfigModleBase;
+                    BusCfg = (BusConfigBase)formatter.Deserialize(s);
+                    while (s.Position < s.Length)
+                    {
+                        ModuleConfigList.Add(formatter.Deserialize(s) as ModuleConfigModleBase);
+                    }
+                    s.Close();
                 }
             }
         }

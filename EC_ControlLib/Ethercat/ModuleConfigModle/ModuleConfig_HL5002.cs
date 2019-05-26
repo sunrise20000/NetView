@@ -15,9 +15,9 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         Dictionary<byte, string> ResolutionDic = new Dictionary<byte, string>();
         Dictionary<byte, string> RevolutionDic = new Dictionary<byte, string>();
 
+        protected override int GuiStringListNumber { get; } = 10;
         public ModuleConfig_HL5002()
         {
-            GuiStringListNumber = 10;
             DeviceName = EnumDeviceName.HL5002;
             ResolutionDic.Add(0, "Normal");
             RevolutionDic.Add(0, "Normal");
@@ -46,6 +46,10 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
             var L1 = GuiStringList[0].Split('_');
             //Name
+            Enum.TryParse(L1[0], out EnumDeviceName Dn);
+            DeviceName = Dn;
+
+
             //LocalIndex
             LocalIndex = int.Parse(L1[1]);
 

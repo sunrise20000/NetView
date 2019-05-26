@@ -11,10 +11,9 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
     [Serializable()]
     public class ModuleConfig_HL2003 : ModuleConfigModleBase
     {
-       
+        protected override int GuiStringListNumber { get; } = 3;
         public ModuleConfig_HL2003()
         {
-            GuiStringListNumber = 3;
             DeviceName = EnumDeviceName.HL2003;
         }
   
@@ -25,6 +24,9 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
             var L1 = GuiStringList[0].Split('_');
             //Name
+            Enum.TryParse(L1[0], out EnumDeviceName Dn);
+            DeviceName = Dn;
+
             //LocalIndex
             LocalIndex = int.Parse(L1[1]);
 

@@ -7,13 +7,23 @@ using System.Threading.Tasks;
 
 namespace EC_ControlLib.BusConfigModle
 {
+    [Serializable()]
+   
     public class BusConfig_ModbusRTU : BusConfigBase
     {
+        public override string ShortName { get; protected set; } = "HL6801";
+
+        /// <summary>
+        /// 默认文件名
+        /// </summary>
+        public override string Name { get; set; } = "ModbusRTU Coupler V1.0";
+
+        /// <summary>
+        /// 是什么类型的总线
+        /// </summary>
+        public override string Type { get; set; } = "MB excel";
         public BusConfig_ModbusRTU()
         {
-            this.Name = "HL6801";
-            this.Type = "ModbusRTU Coupler V1.0";
-            this.ShortName = "MB excel";
         }
         protected BusConfig_ModbusRTU(SerializationInfo info, StreamingContext context) : base(info, context)
         {

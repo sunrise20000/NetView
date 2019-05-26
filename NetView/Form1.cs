@@ -150,6 +150,10 @@ namespace NetView
 
             ProjController.BusCfg =BusCfgBase ;
             ProjController.BusFileMgr = BusFileMgr;
+            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2002() { GlobalIndex = 1, LocalIndex = 1 });
+            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2003() { GlobalIndex = 2, LocalIndex = 1 });
+            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2002() { GlobalIndex = 3, LocalIndex = 2 });
+            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2003() { GlobalIndex = 4, LocalIndex = 2 });
             //ProjController.ModuleConfigList
 
         }
@@ -185,6 +189,7 @@ namespace NetView
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            
             ProjController.SaveProject();
         }
 

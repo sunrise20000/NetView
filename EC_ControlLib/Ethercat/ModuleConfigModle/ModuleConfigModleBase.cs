@@ -11,9 +11,13 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
     [Serializable()]
     public class ModuleConfigModleBase : ISerializable
     {
-        protected int GuiStringListNumber = 0;
+        protected virtual int GuiStringListNumber { get; }=0;
+
         protected List<string> GuiStringList = new List<string>();
+
         protected List<byte> BtArr = new List<byte>();
+
+
         public EnumDeviceName DeviceName { get; protected set; }
 
         public int LocalIndex { get; set; }
@@ -42,14 +46,17 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            ToStringList();
             for (int i = 0; i < GuiStringListNumber; i++)
                 info.AddValue($"L{i}", GuiStringList[i]);
         }
 
         protected ModuleConfigModleBase(SerializationInfo info, StreamingContext context)
         {
+            GuiStringList.Clear();
             for (int i = 0; i < GuiStringListNumber; i++)
-                info.GetString($"L{i}");
+                GuiStringList.Add(info.GetString($"L{i}"));
+            FromString(GuiStringList.ToArray());
         }
         public ModuleConfigModleBase() { }
     }

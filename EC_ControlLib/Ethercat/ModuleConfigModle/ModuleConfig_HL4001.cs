@@ -13,9 +13,10 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
     {
         private Dictionary<byte, string> OutputTypeDic = new Dictionary<byte, string>();
         private Dictionary<byte, string> AccuracyDic = new Dictionary<byte, string>();
+
+        protected override int GuiStringListNumber { get; } = 11;
         public ModuleConfig_HL4001()
         {
-            GuiStringListNumber = 11;
             DeviceName = EnumDeviceName.HL4001;
             OutputTypeDic.Add(0x00, "Normal");
             OutputTypeDic.Add(0x01, "0-10V");
@@ -37,6 +38,10 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
             var L1 = GuiStringList[0].Split('_');
             //Name
+            Enum.TryParse(L1[0], out EnumDeviceName Dn);
+            DeviceName = Dn;
+
+
             //LocalIndex
             LocalIndex = int.Parse(L1[1]);
 
