@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EC_ControlLib.Ethercat.ModuleConfigModle
 {
+    [Serializable()]
     public class ModuleConfig_HL3002 : ModuleConfigModleBase
     {
         private Dictionary<byte, string> InputTypeDic = new Dictionary<byte, string>();
@@ -14,6 +16,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
 
         public ModuleConfig_HL3002()
         {
+            GuiStringListNumber = 11;
             DeviceName = EnumDeviceName.HL3002;
             InputTypeDic.Add(0x00, "Normal");
             InputTypeDic.Add(0x01, "4-20mA");
@@ -25,8 +28,6 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             AccuracyDic.Add(0x0C, "12bits sampling");
             AccuracyDic.Add(0x10, "16bits sampling");
         }
-
-        public byte Function { get; private set; } = 0x32;
 
         public byte[] ChInputTypeArr { get; private set; } = new byte[4];
         public byte[] ChAccuracyArr { get; private set; } = new byte[4];
@@ -82,6 +83,9 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             }
             return BtArr;
         }
+        protected ModuleConfig_HL3002(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
 
+        }
     }
 }

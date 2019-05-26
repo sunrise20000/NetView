@@ -2,18 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EC_ControlLib.Ethercat.ModuleConfigModle
 {
+    [Serializable()]
     public class ModuleConfig_HL5002 : ModuleConfigModleBase
     {
+        
         Dictionary<byte, string> ResolutionDic = new Dictionary<byte, string>();
         Dictionary<byte, string> RevolutionDic = new Dictionary<byte, string>();
 
         public ModuleConfig_HL5002()
         {
+            GuiStringListNumber = 10;
             DeviceName = EnumDeviceName.HL5002;
             ResolutionDic.Add(0, "Normal");
             RevolutionDic.Add(0, "Normal");
@@ -26,8 +30,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
 
         }
 
-        public byte Function { get; private set; } = 0x52;
-
+   
         public byte Resolution { get; set; }
 
         public byte Revolution { get; set; }
@@ -46,7 +49,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             //LocalIndex
             LocalIndex = int.Parse(L1[1]);
 
-            //Function = 0x11
+            Function = 0x52;
 
             //GlobalIndex
             GlobalIndex = int.Parse(GuiStringList[2]);
@@ -101,6 +104,10 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
 
 
             return BtArr;
+        }
+        protected ModuleConfig_HL5002(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
         }
     }
 }

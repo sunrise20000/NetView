@@ -27,12 +27,17 @@ namespace NetView
     {
         AvilableDeviceModel[] DeviceCfg = null;
         string FileOpenPath = @"C:\";
-        EthercatSettingMgr EthercatMgr = new EthercatSettingMgr();
+      
         ProductContrainer MiddleControl = null;
         treeviewContrainer LeftControl = null;
         DataTable DTVarMonitor = new DataTable();
+
+        BusFileMgBase BusFileMgr = new EthercatFileMgr();
         ControllerBase BusController = new EC_Controller();
         BusConfigBase BusCfgBase = new BusConfig_EtherCAT();
+
+        ProjectController ProjController = new ProjectController();
+
         const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
 
         public Form1()
@@ -40,8 +45,6 @@ namespace NetView
             InitializeComponent();
             LoadCfg();
             InitCtrl();
-            EthercatMgr.LoadXmlFile(FILE_DEMO_XML_FILE);
-           
         }
         private void LoadCfg()
         {
@@ -145,9 +148,10 @@ namespace NetView
             this.elementHost2.BackColorTransparent = true;
 
 
+            ProjController.BusCfg =BusCfgBase ;
+            ProjController.BusFileMgr = BusFileMgr;
+            //ProjController.ModuleConfigList
 
-            //Menu相关操作
-            this.barSubIteExportFile.Popup += BarSubIteExportFile_Popup;
         }
 
         private void BarSubIteExportFile_Popup(object sender, EventArgs e)
@@ -173,51 +177,15 @@ namespace NetView
                 treeViewDevice.DoDragDrop(list[0], DragDropEffects.Copy);
             }
         }
-
-   
-
+  
         private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            var strFilter = $"{EthercatSettingMgr.ExtString} File(*.{EthercatSettingMgr.ExtString})|*.{EthercatSettingMgr.ExtString}";
-            ofd.Filter = strFilter;
-            ofd.ValidateNames = true; // 验证用户输入是否是一个有效的Windows文件名
-            ofd.CheckFileExists = true; //验证路径的有效性
-            ofd.CheckPathExists = true;//验证路径的有效性
-            ofd.InitialDirectory = FileOpenPath;
-            if (ofd.ShowDialog() == DialogResult.OK) //用户点击确认按钮，发送确认消息
-            {
-                FileOpenPath = ofd.FileName;//获取在文件对话框中选定的路径或者字符串
-                EthercatMgr.LoadXmlFile(FileOpenPath);
-                var ListDevice = EthercatMgr.GetDeviceList();
-                List<string> L = new List<string>();
-                foreach (var it in ListDevice)
-                {
-                    L.Add($"{it.PureName}_{it.LocalIndex}");
-                }
-               LeftControl.ReplaceNewList(L); 
-            }                   
+            ProjController.OpenProject();
         }
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            var strFilter = $"{EthercatSettingMgr.ExtString} File(*.{EthercatSettingMgr.ExtString})|*.{EthercatSettingMgr.ExtString}";
-            sfd.Filter = strFilter;
-            sfd.FilterIndex = 2;
-            sfd.RestoreDirectory = true;
-            sfd.InitialDirectory = FileOpenPath;
-            sfd.FileName = "Untitled.xml";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                FileOpenPath = sfd.FileName;
-                var NameModelList = new List<ModuleNameModel>();
-                foreach (var it in LeftControl.PureNameList)
-                    NameModelList.Add(new ModuleNameModel() {
-                         PureName=it,
-                    });
-                EthercatMgr.SaveFile(NameModelList, FileOpenPath);
-            }
+            ProjController.SaveProject();
         }
 
         private void barButtonItemCut_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -314,7 +282,24 @@ namespace NetView
         /// <param name="e"></param>
         private void barButtonItemExportFile_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            
+            SaveFileDialog sfd = new SaveFileDialog();
+            var strFilter = $"{BusFileMgr.ExtString} File(*.{BusFileMgr.ExtString})|*.{BusFileMgr.ExtString}";
+            sfd.Filter = strFilter;
+            sfd.FilterIndex = 2;
+            sfd.RestoreDirectory = true;
+            sfd.InitialDirectory = FileOpenPath;
+            sfd.FileName = $"Untitled.{BusFileMgr.ExtString}";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                FileOpenPath = sfd.FileName;
+                var NameModelList = new List<ModuleNameModel>();
+                foreach (var it in LeftControl.PureNameList)
+                    NameModelList.Add(new ModuleNameModel()
+                    {
+                        PureName = it,
+                    });
+                BusFileMgr.SaveFile(NameModelList, FileOpenPath);
+            }
         }
 
         private void ShowMessage(EnumMsgType MsgType,string Msg)

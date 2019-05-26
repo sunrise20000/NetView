@@ -2,13 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EC_ControlLib.Ethercat.ModuleConfigModle
 {
-    public class ModuleConfigModleBase
+    [Serializable()]
+    public class ModuleConfigModleBase : ISerializable
     {
+        protected int GuiStringListNumber = 0;
         protected List<string> GuiStringList = new List<string>();
         protected List<byte> BtArr = new List<byte>();
         public EnumDeviceName DeviceName { get; protected set; }
@@ -31,13 +34,23 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         public virtual List<byte> ToByteArr()
         {
             BtArr.Clear();
-
             BtArr.Add(Function);
             BtArr.Add((byte)LocalIndex);
             BtArr.Add((byte)GlobalIndex);
-
             return BtArr;
         }
 
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            for (int i = 0; i < GuiStringListNumber; i++)
+                info.AddValue($"L{i}", GuiStringList[i]);
+        }
+
+        protected ModuleConfigModleBase(SerializationInfo info, StreamingContext context)
+        {
+            for (int i = 0; i < GuiStringListNumber; i++)
+                info.GetString($"L{i}");
+        }
+        public ModuleConfigModleBase() { }
     }
 }

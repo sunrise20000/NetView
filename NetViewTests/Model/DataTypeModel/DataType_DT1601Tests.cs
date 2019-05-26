@@ -14,8 +14,8 @@ namespace NetView.Model.DataTypeModel.Tests
         [TestMethod()]
         public void GetCurrentModuleListTest()
         {
-            EthercatSettingMgr Mgr = new EthercatSettingMgr();
-            Mgr.LoadXmlFile(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
+            EthercatFileMgr Mgr = new EthercatFileMgr();
+            Mgr.LoadFile(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
             var L = Mgr.GetDeviceList();
             foreach (var it in L)
                 Console.WriteLine(it.PureName);
@@ -25,8 +25,8 @@ namespace NetView.Model.DataTypeModel.Tests
         [TestMethod()]
         public void SaveListTest()
         {
-            EthercatSettingMgr Mgr = new EthercatSettingMgr();
-            Mgr.LoadXmlFile(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
+            EthercatFileMgr Mgr = new EthercatFileMgr();
+            Mgr.LoadFile(@"C:\Users\Public\projs\NetView\NetView\Document\HL6805.xml");
             //Mgr.SaveFile(new List<ModuleInfo.ModuleInfoBase>() {
             //    new ModuleInfo.ModuleInfo_HL2001(),
             //    new ModuleInfo.ModuleInfo_HL4002(),

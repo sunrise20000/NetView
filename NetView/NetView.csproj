@@ -65,7 +65,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class\EthercatSettingMgr.cs" />
+    <Compile Include="Class\BusFileMgBase.cs" />
+    <Compile Include="Class\EthercatFileMgr.cs" />
+    <Compile Include="Class\ProjectController.cs" />
     <Compile Include="Class\Singleton.cs" />
     <Compile Include="Class\XmlParse.cs" />
     <Compile Include="Config\ConfigMgr.cs" />

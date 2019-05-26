@@ -2,20 +2,21 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EC_ControlLib.Ethercat.ModuleConfigModle
 {
+    [Serializable()]
     public class ModuleConfig_HL5001 : ModuleConfigModleBase
     {
        
         public ModuleConfig_HL5001()
         {
+            GuiStringListNumber = 11;
             DeviceName = EnumDeviceName.HL5001;
         }
-
-        public byte Function { get; private set; } = 0x51;
 
         public byte CounterLimitH { get; set; }
 
@@ -32,7 +33,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             //LocalIndex
             LocalIndex = int.Parse(L1[1]);
 
-            //Function = 0x11
+            Function = 0x51;
 
             //GlobalIndex
             GlobalIndex = int.Parse(GuiStringList[2]);
@@ -78,6 +79,10 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             for (int i = 0; i < 6; i++)
                 BtArr.Add(ResParaArr[i]);
             return BtArr;
+        }
+        protected ModuleConfig_HL5001(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
         }
     }
 }

@@ -772,6 +772,7 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem14),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem15)});
             this.barSubIteExportFile.Name = "barSubIteExportFile";
+            barSubIteExportFile.Popup += this.BarSubIteExportFile_Popup;
             // 
             // barButtonItem7
             // 

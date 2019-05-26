@@ -2,16 +2,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EC_ControlLib.Ethercat.ModuleConfigModle
 {
+    [Serializable()]
     public class ModuleConfig_HL2002 : ModuleConfigModleBase
     {
        
         public ModuleConfig_HL2002()
         {
+            GuiStringListNumber = 3;
             DeviceName = EnumDeviceName.HL2002;
         }
   
@@ -46,6 +49,11 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         public override List<byte> ToByteArr()
         {
             return base.ToByteArr();
+        }
+
+        protected ModuleConfig_HL2002(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
         }
     }
 }

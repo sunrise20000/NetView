@@ -2,17 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EC_ControlLib.Ethercat.ModuleConfigModle
 {
+    [Serializable()]
     public class ModuleConfig_HL4001 : ModuleConfigModleBase
     {
         private Dictionary<byte, string> OutputTypeDic = new Dictionary<byte, string>();
         private Dictionary<byte, string> AccuracyDic = new Dictionary<byte, string>();
         public ModuleConfig_HL4001()
         {
+            GuiStringListNumber = 11;
             DeviceName = EnumDeviceName.HL4001;
             OutputTypeDic.Add(0x00, "Normal");
             OutputTypeDic.Add(0x01, "0-10V");
@@ -24,9 +27,6 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             AccuracyDic.Add(0x0C, "12bits sampling");
             AccuracyDic.Add(0x10, "16bits sampling");
         }
-
-        public byte Function { get; private set; } = 0x41;
-
         public byte[] ChOutputTypeArr { get; private set; } = new byte[4];
         public byte[] ChAccuracyArr { get; private set; } = new byte[4];
 
@@ -81,6 +81,9 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             }
             return BtArr;
         }
+        protected ModuleConfig_HL4001(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
 
+        }
     }
 }

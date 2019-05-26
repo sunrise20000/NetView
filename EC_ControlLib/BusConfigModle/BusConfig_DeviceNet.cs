@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,6 +14,10 @@ namespace EC_ControlLib.BusConfigModle
             this.Name = "HL6807";
             this.Type = "DeviceNet Coupler V1.0";
             this.ShortName = "DE EDS";
+        }
+        protected BusConfig_DeviceNet(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+
         }
     }
 }

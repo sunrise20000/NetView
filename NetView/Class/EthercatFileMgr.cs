@@ -9,20 +9,24 @@ using System.Threading.Tasks;
 
 namespace NetView.Class
 {
-    public class EthercatSettingMgr
+    public class EthercatFileMgr : BusFileMgBase
     {
-        public static string ExtString { get; } = "xml";
+     
         private List<ModuleInfoBase> ModuleInfoList  = new List<ModuleInfoBase>();
         private  XmlParse Xml = new XmlParse();
         private string FileName="";
+        public EthercatFileMgr()
+        {
+            ExtString = "xml";
+        }
 
-        public void LoadXmlFile(string FileName)
+        public override void LoadFile(string FileName)
         {
             this.FileName = FileName;
             Xml.LoadXml(FileName);
         }
 
-        public List<ModuleNameModel> GetDeviceList()
+        public override List<ModuleNameModel> GetDeviceList()
         {
            
             var Output= GetDeviceListOutput();
@@ -47,87 +51,11 @@ namespace NetView.Class
             return NameModleList;
         }
 
-        private List<ModuleNameModel> GetDeviceListInput()
-        {
-            List<string> ModuleNameList = new List<string>();
-            var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
-            var es = Xml.GetMutifyElement(n, "DataType");
-            var Dic = new Dictionary<string, string>();
-            Dic.Add("Name", "DT6001");
-            var v = Xml.GetElementFromMutiElement(es, Dic);
-            var ss = Xml.GetMutifyElement(v, "SubItem");
-            foreach (var e in ss)
-            {
-                //去掉第一个无用项
-                if (!Xml.GetSubElementValue(e, "SubIdx").Equals("0"))
-                {
-                    var Name = Xml.GetSubElementValue(e, "Name");
-                    var list = Name.Split('_');
-                    int nLen = list.Length;
-                    if (nLen > 2)
-                    {
-                        ModuleNameList.Add($"{list[nLen - 3]}_{list[nLen - 2]}_{list[nLen - 1]}");
-                    }
-                }
-            }
-            var L = ModuleNameList.Distinct();
-            var NameModleList = new List<ModuleNameModel>();
-            foreach (var l in L)
-            {
-                var list = l.Split('_');
-                NameModleList.Add(new ModuleNameModel()
-                {
-                    TotolIndex = int.Parse(list[0]),
-                    PureName = list[1],
-                    LocalIndex = int.Parse(list[2])
-                });
-            }
-            return NameModleList;
-        }
-
-        private List<ModuleNameModel> GetDeviceListOutput()
-        {
-            List<string> ModuleNameList = new List<string>();
-            var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
-            var es = Xml.GetMutifyElement(n, "DataType");
-            var Dic = new Dictionary<string, string>();
-            Dic.Add("Name", "DT7010");
-            var v = Xml.GetElementFromMutiElement(es, Dic);
-            var ss = Xml.GetMutifyElement(v, "SubItem");
-            foreach (var e in ss)
-            {
-                //去掉第一个无用项
-                if (!Xml.GetSubElementValue(e, "SubIdx").Equals("0"))
-                {
-                    var Name = Xml.GetSubElementValue(e, "Name");
-                    var list = Name.Split('_');
-                    int nLen = list.Length;
-                    if (nLen > 2)
-                    {
-                        ModuleNameList.Add($"{list[nLen - 3]}_{list[nLen - 2]}_{list[nLen - 1]}");
-                    }
-                }
-            }
-            var L = ModuleNameList.Distinct();
-            var NameModleList = new List<ModuleNameModel>();
-            foreach (var l in L)
-            {
-                var list = l.Split('_');
-                NameModleList.Add(new ModuleNameModel() {
-                    TotolIndex = int.Parse(list[0]),
-                    PureName = list[1],
-                    LocalIndex = int.Parse(list[2])
-                });
-            }
-            return NameModleList;
-        }
-
-        public void SaveFile(List<ModuleNameModel> NameModelList, string FileName)
+        public override void SaveFile(List<ModuleNameModel> NameModelList, string FileName)
         {
             var ModuleInfoList = new List<ModuleInfoBase>();
             foreach (var it in NameModelList)
             {
-                //var name = it.Split('_')[1];
                 string insName = "NetView.Model.ModuleInfo.ModuleInfo_" + it.PureName;
                 Type type = Type.GetType(insName);
                 var mi = type.Assembly.CreateInstance(insName);
@@ -166,25 +94,7 @@ namespace NetView.Class
             Xml.Save(FileName);
         }
 
-        public void AddModule(ModuleInfoBase Device)
-        {
-
-        }
-        private List<ModuleInfoBase> AdjustName(List<ModuleInfoBase> ModuleList)
-        {
-            List<ModuleInfoBase> L = new List<ModuleInfoBase>();
-            int i = 0;
-            foreach (var it in ModuleList)
-            {
-                var ExistModule = L.Where(e => e.Name.Contains(it.Name));
-                if (ExistModule != null)
-                {
-                    it.Name = $"{++i}_{it.Name}_{ExistModule.Count() + 1}";
-                    L.Add(it);
-                }
-            }
-            return L;
-        }
+        
         #region Output
 
         /// <summary>
@@ -599,6 +509,96 @@ namespace NetView.Class
         #endregion
 
         #region Private Method
+        private List<ModuleNameModel> GetDeviceListInput()
+        {
+            List<string> ModuleNameList = new List<string>();
+            var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
+            var es = Xml.GetMutifyElement(n, "DataType");
+            var Dic = new Dictionary<string, string>();
+            Dic.Add("Name", "DT6001");
+            var v = Xml.GetElementFromMutiElement(es, Dic);
+            var ss = Xml.GetMutifyElement(v, "SubItem");
+            foreach (var e in ss)
+            {
+                //去掉第一个无用项
+                if (!Xml.GetSubElementValue(e, "SubIdx").Equals("0"))
+                {
+                    var Name = Xml.GetSubElementValue(e, "Name");
+                    var list = Name.Split('_');
+                    int nLen = list.Length;
+                    if (nLen > 2)
+                    {
+                        ModuleNameList.Add($"{list[nLen - 3]}_{list[nLen - 2]}_{list[nLen - 1]}");
+                    }
+                }
+            }
+            var L = ModuleNameList.Distinct();
+            var NameModleList = new List<ModuleNameModel>();
+            foreach (var l in L)
+            {
+                var list = l.Split('_');
+                NameModleList.Add(new ModuleNameModel()
+                {
+                    TotolIndex = int.Parse(list[0]),
+                    PureName = list[1],
+                    LocalIndex = int.Parse(list[2])
+                });
+            }
+            return NameModleList;
+        }
+
+        private List<ModuleNameModel> GetDeviceListOutput()
+        {
+            List<string> ModuleNameList = new List<string>();
+            var n = Xml.GetSingleElement(null, "EtherCATInfo", "Descriptions", "Devices", "Device", "Profile", "Dictionary", "DataTypes");
+            var es = Xml.GetMutifyElement(n, "DataType");
+            var Dic = new Dictionary<string, string>();
+            Dic.Add("Name", "DT7010");
+            var v = Xml.GetElementFromMutiElement(es, Dic);
+            var ss = Xml.GetMutifyElement(v, "SubItem");
+            foreach (var e in ss)
+            {
+                //去掉第一个无用项
+                if (!Xml.GetSubElementValue(e, "SubIdx").Equals("0"))
+                {
+                    var Name = Xml.GetSubElementValue(e, "Name");
+                    var list = Name.Split('_');
+                    int nLen = list.Length;
+                    if (nLen > 2)
+                    {
+                        ModuleNameList.Add($"{list[nLen - 3]}_{list[nLen - 2]}_{list[nLen - 1]}");
+                    }
+                }
+            }
+            var L = ModuleNameList.Distinct();
+            var NameModleList = new List<ModuleNameModel>();
+            foreach (var l in L)
+            {
+                var list = l.Split('_');
+                NameModleList.Add(new ModuleNameModel()
+                {
+                    TotolIndex = int.Parse(list[0]),
+                    PureName = list[1],
+                    LocalIndex = int.Parse(list[2])
+                });
+            }
+            return NameModleList;
+        }
+        private List<ModuleInfoBase> AdjustName(List<ModuleInfoBase> ModuleList)
+        {
+            List<ModuleInfoBase> L = new List<ModuleInfoBase>();
+            int i = 0;
+            foreach (var it in ModuleList)
+            {
+                var ExistModule = L.Where(e => e.Name.Contains(it.Name));
+                if (ExistModule != null)
+                {
+                    it.Name = $"{++i}_{it.Name}_{ExistModule.Count() + 1}";
+                    L.Add(it);
+                }
+            }
+            return L;
+        }
         private void SaveDT1(List<ModuleInfoBase> ListAdjust,EnumModuleIOType IOType)
         {
             int BitOffs = 16;
