@@ -12,6 +12,7 @@ namespace EC_ControlLib.BusConfigModle
         {
             this.Name = "HL6802";
             this.Type = "PROFIBUS_DP Coupler V1.0";
+            this.ShortName = "GSD";
         }
     }
 }

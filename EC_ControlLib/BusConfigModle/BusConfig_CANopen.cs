@@ -12,6 +12,7 @@ namespace EC_ControlLib.BusConfigModle
         {
             this.Name = "HL6806";
             this.Type = "CANopen Coupler V1.0";
+            this.ShortName = "CA EDS";
         }
     }
 }

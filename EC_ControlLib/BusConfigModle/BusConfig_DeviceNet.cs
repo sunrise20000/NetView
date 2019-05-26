@@ -12,6 +12,7 @@ namespace EC_ControlLib.BusConfigModle
         {
             this.Name = "HL6807";
             this.Type = "DeviceNet Coupler V1.0";
+            this.ShortName = "DE EDS";
         }
     }
 }

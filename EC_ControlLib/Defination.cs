@@ -9,7 +9,6 @@ namespace ControllerLib
     enum EnumControllerType
     {
         EtherCatController=0x05,
-
     }
 
     public enum EnumDeviceName

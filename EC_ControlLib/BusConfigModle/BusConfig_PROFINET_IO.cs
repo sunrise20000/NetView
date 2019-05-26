@@ -12,6 +12,7 @@ namespace EC_ControlLib.BusConfigModle
         {
             this.Name = "HL6803";
             this.Type = "PROFINET-IO Coupler V1.0";
+            this.ShortName = "PN xml";
         }
     }
 }

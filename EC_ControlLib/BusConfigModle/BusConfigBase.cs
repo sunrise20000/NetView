@@ -9,6 +9,7 @@ namespace EC_ControlLib.BusConfigModle
     public class BusConfigBase
     {
       
+        public string ShortName { get;protected set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string Function { get; private set; } = "HURRY RomoteIO Slaves";

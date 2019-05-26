@@ -19,6 +19,7 @@ namespace SubBusContrainer
         private Pen m_pen;
         private Panel _p;
         SubBusModel LastSubModel = null;
+        BusModel userControl1 = null;
         // private Image m_image;
         // private Graphics m_imageG;
         public event EventHandler<ProductAddedArgs> OnProductChangedEvent;
@@ -31,7 +32,7 @@ namespace SubBusContrainer
 
             // m_imageG = Graphics.FromImage(m_image);
 
-            BusModel userControl1 = new BusModel(new Point(100, 100));
+            userControl1 = new BusModel(new Point(100, 100));
             BusName = BusModelName;
             userControl1.Name = BusModelName;
             userControl1.ControlMoveEvent += RefushLine;
@@ -44,7 +45,18 @@ namespace SubBusContrainer
             //  this.panel_Product.VisibleChanged += Panel_Product_VisibleChanged;
         }
 
-        public string BusName { get; private set; }
+        public string BusName
+        {
+            get { return userControl1.Name; }
+            set {
+                if (userControl1.Name != value)
+                {
+                    userControl1.Name = value;
+                    m_g.Flush();
+                }
+
+            }
+        }
         /// <summary>
         /// 
         /// </summary>

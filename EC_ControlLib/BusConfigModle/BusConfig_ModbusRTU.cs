@@ -12,6 +12,7 @@ namespace EC_ControlLib.BusConfigModle
         {
             this.Name = "HL6801";
             this.Type = "ModbusRTU Coupler V1.0";
+            this.ShortName = "MB excel";
         }
     }
 }

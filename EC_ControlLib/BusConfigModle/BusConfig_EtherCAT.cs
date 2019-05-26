@@ -12,6 +12,7 @@ namespace EC_ControlLib.BusConfigModle
         {
             this.Name = "HL6805";
             this.Type = "EtherCAT Coupler V1.0";
+            this.ShortName = "EC xml";
         }
     }
 }

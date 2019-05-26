@@ -18,6 +18,8 @@ using DevExpress.XtraBars.Docking;
 using ControllerLib;
 using ControllerLib.Ethercat;
 using DevExpress.XtraBars;
+using NetView.Definations;
+using EC_ControlLib.BusConfigModle;
 
 namespace NetView
 {
@@ -30,7 +32,7 @@ namespace NetView
         treeviewContrainer LeftControl = null;
         DataTable DTVarMonitor = new DataTable();
         ControllerBase BusController = new EC_Controller();
-        
+        BusConfigBase BusCfgBase = new BusConfig_EtherCAT();
         const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
 
         public Form1()
@@ -104,11 +106,7 @@ namespace NetView
             treeViewDevice.NodeMouseDoubleClick += TreeViewDevice_NodeMouseDoubleClick;
 
 
-            this.uC_Output1.MsgCollect.Add(new MessageModel(Definations.EnumMsgType.Error,"Msg1"));
-            this.uC_Output1.MsgCollect.Add(new MessageModel(Definations.EnumMsgType.Info, "Msg1"));
-            this.uC_Output1.MsgCollect.Add(new MessageModel(Definations.EnumMsgType.Warning, "Msg1"));
-
-
+      
             //添加中间控件
             MiddleControl = new ProductContrainer("Ethercat");
             MiddleControl.Dock = DockStyle.Fill;
@@ -128,6 +126,8 @@ namespace NetView
             ucMonitor.OnStopMonitorEventHandler += UcMonitor_OnStopMonitorEventHandler;
             ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
             var VarCollect = ucMonitor.VarCollect;
+
+
             for (int i = 0; i < 3; i++)
             {
                 VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
@@ -144,16 +144,25 @@ namespace NetView
             this.elementHost1.BackColorTransparent = true;
             this.elementHost2.BackColorTransparent = true;
 
-           
 
+
+            //Menu相关操作
+            this.barSubIteExportFile.Popup += BarSubIteExportFile_Popup;
         }
 
-      
+        private void BarSubIteExportFile_Popup(object sender, EventArgs e)
+        {
+            var C = (sender as BarSubItem).LinksPersistInfo;
+            foreach (LinkPersistInfo it in C)
+                it.Item.Enabled = it.Item.Caption.Contains(BusCfgBase.ShortName);
+            
+        }
 
         private void TreeViewDevice_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             
         }
+
         private void TreeViewDevice_ItemDrag(object sender, ItemDragEventArgs e)
         {
             string ProductName= (e.Item as TreeNode).Text;
@@ -242,12 +251,12 @@ namespace NetView
 
         private void barButtonItemUpload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-
+            BusController.GetModuleList();
         }
 
         private void barButtonItemDownLoad_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-
+            BusController.SendModuleList(null);
         }
 
         private void barButtonItemMonitor_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -269,8 +278,6 @@ namespace NetView
             this.dockPanelMiddle.Show();
             this.dockPanelRight.Show();
             this.dockPanelDown.Show();
-            //foreach (DockPanel it in this.dockManager1.Panels)
-            //    it.Show();
         }
 
         #region VarMonitor
@@ -295,8 +302,24 @@ namespace NetView
 
         private void barButtonItemNewProject_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-    
-            Console.WriteLine((e.Item as BarButtonItem).Caption);
+            var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-","_")}";
+            MiddleControl.BusName = e.Item.Caption;
+            //BusConfigBase=new 
+        }
+
+        /// <summary>
+        /// 导出文件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void barButtonItemExportFile_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+        {
+            
+        }
+
+        private void ShowMessage(EnumMsgType MsgType,string Msg)
+        {
+            this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
         }
     }
 }

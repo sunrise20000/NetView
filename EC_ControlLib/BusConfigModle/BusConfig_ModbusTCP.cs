@@ -12,6 +12,8 @@ namespace EC_ControlLib.BusConfigModle
         {
             this.Name = "HL6804";
             this.Type = "ModbusTCP Coupler V1.0";
+            this.ShortName = "MT excel";
+            
         }
     }
 }
