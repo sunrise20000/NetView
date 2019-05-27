@@ -111,14 +111,14 @@ namespace NetView
 
       
             //添加中间控件
-            MiddleControl = new ProductContrainer("Ethercat");
-            MiddleControl.Dock = DockStyle.Fill;
+            MiddleControl = new ProductContrainer();
             this.dockPanelMiddle.Controls.Add(MiddleControl);
+            MiddleControl.Dock = DockStyle.Fill;
 
             //添加侧面控件
             LeftControl = new treeviewContrainer();
-            LeftControl.Dock = DockStyle.Fill;
             this.dockPanelLeft.Controls.Add(LeftControl);
+            LeftControl.Dock = DockStyle.Fill;
             LeftControl.ProductContrainer = MiddleControl;
 
   
@@ -173,13 +173,10 @@ namespace NetView
 
         private void TreeViewDevice_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            string ProductName= (e.Item as TreeNode).Text;
-            var list=ProductName.Split(' ');
+            string ProductName = (e.Item as TreeNode).Text;
+            var list = ProductName.Split(' ');
             var nLen = list.Length;
-            if (nLen > 1)
-            {
-                treeViewDevice.DoDragDrop(list[0], DragDropEffects.Copy);
-            }
+            treeViewDevice.DoDragDrop(list[0].Replace("-", "_"), DragDropEffects.Copy);  
         }
   
         private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

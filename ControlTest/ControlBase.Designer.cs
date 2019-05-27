@@ -44,7 +44,7 @@
             this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 64);
+            this.label1.Size = new System.Drawing.Size(142, 112);
             this.label1.TabIndex = 0;
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.label1_MouseDoubleClick);
@@ -83,7 +83,7 @@
             this.Controls.Add(this.label1);
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "ControlBase";
-            this.Size = new System.Drawing.Size(87, 64);
+            this.Size = new System.Drawing.Size(142, 112);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 

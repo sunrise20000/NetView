@@ -18,36 +18,46 @@ namespace SubBusContrainer
         private Graphics m_g;
         private Pen m_pen;
         private Panel _p;
+        private PictureBox _pb=new PictureBox();
+        private HorizontalCenterLine m_hcLine = null;
+
         SubBusModel LastSubModel = null;
-        BusModel userControl1 = null;
-        // private Image m_image;
-        // private Graphics m_imageG;
-        public event EventHandler<ProductAddedArgs> OnProductChangedEvent;
-        public ProductContrainer(string BusModelName)
+
+        BusModel BusModule = null;
+
+       
+        Bitmap bitmap;
+
+
+        public event EventHandler<ModuleAddedArgs> OnProductChangedEvent;
+
+
+        /// <summary>
+        /// Left——》Middle
+        /// </summary>
+        /// <param name="BusModelName"></param>
+        public ProductContrainer()
         {
             InitializeComponent();
-
             Init();
-            //  m_image = new Bitmap(this.Width, this.Height);
-
-            // m_imageG = Graphics.FromImage(m_image);
-
-            userControl1 = new BusModel(new Point(100, 100));
-            BusName = BusModelName;
-            userControl1.ControlMoveEvent += RefushLine;
-            this.Controls.Add(userControl1);
-            // DrawLine(userControl1);
-            m_g.Flush();
-            // this.BackgroundImage = m_image;
-
             this.SizeChanged += Panel_Product_SizeChanged;
-            //  this.panel_Product.VisibleChanged += Panel_Product_VisibleChanged;
         }
 
+           
         public string BusName
         {
-            get { return userControl1.Name; }
-            set { userControl1.Name = value; }
+            get
+            {
+                if(BusModule!=null)
+                    return BusModule.Name;
+                return "";
+            }
+            set
+            {
+                if(BusModule!=null && BusModule.Name!=value)
+                    BusModule.Name = value;
+
+            }
         }
         /// <summary>
         /// 
@@ -55,19 +65,24 @@ namespace SubBusContrainer
         private void Init()
         {
             this.AllowDrop = true;
-            _p = new Panel();
-            _p.Height = 4;
-            _p.Width = this.Width;
-            _p.Left = 0;
-            _p.Top = this.Height / 2 - 2;
-            _p.BackColor = Color.Green;
-            this.Controls.Add(_p);
+            _pb = new PictureBox();
+            this.Controls.Add(_pb);
+            _pb.Dock = DockStyle.Fill;
+            _pb.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
 
-
-            m_g = this.CreateGraphics();
+            _pb.SendToBack();
+            m_hcLine = new HorizontalCenterLine()
+            {
+                Height = 4,
+                Width = _pb.Width,
+                Left = 0,
+                Top = _pb.Height / 2 - 2,
+                PenColor = Color.Green,
+            };
+            bitmap = new Bitmap(_pb.Width, _pb.Height);
             m_pen = new Pen(Color.Green, 3);
-
-            //m_g.Flush();
+            _pb.Refresh();
+            this.SizeChanged += Panel_Product_SizeChanged;
         }
 
         /// <summary>
@@ -78,7 +93,6 @@ namespace SubBusContrainer
         private void panel_Product_DragDrop(object sender, DragEventArgs e)
         {
             Point point = this.PointToClient(new Point(e.X, e.Y));
-
             object info = e.Data.GetData(typeof(string));
             
             List<string> ControlNameList = new List<string>();
@@ -86,18 +100,54 @@ namespace SubBusContrainer
                 if ((it as SubBusModel) != null)
                     ControlNameList.Add((it as SubBusModel).Name);
 
-            var ExistControlName = ControlNameList.Where(c => c.Contains(info.ToString()));
-            enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType), info.ToString().Substring(0, 6));
-            SubBusModel userControl1 = new SubBusModel(point, subBusModelType);
-            userControl1.Name = $"{info.ToString()}_{ExistControlName.Count() + 1}";
-            userControl1.ControlMoveEvent += RefushLine;
-            userControl1.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
-            this.Controls.Add(userControl1);
+            if (BusModule !=null && info.ToString().Contains("HL")) //子模块
+            {     
+                var ExistControlName = ControlNameList.Where(c => c.Contains(info.ToString()));
+                enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType), info.ToString().Substring(0, 6));
+                SubBusModel SubBusModule = new SubBusModel(point, subBusModelType);
+                SubBusModule.Name = $"{info.ToString()}_{ExistControlName.Count() + 1}";
+                SubBusModule.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
+                this.Controls.Add(SubBusModule);
+                SubBusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
+                BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
 
-            DrawLine(userControl1);
+                DrawLine(SubBusModule);
+                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { ProductName = SubBusModule.Name, IsAdd = true, IsBusModule=false});
+            }
+            else  //总线
+            {
+                if (BusModule == null)
+                {
+                    BusModule = new BusModel(new Point(100, 100));
+                    this.Controls.Add(BusModule);
+                    BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
+                    BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
+                }
+
+                BusName = info.ToString();
+                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { ProductName = BusName, IsAdd = true, IsBusModule = true });
+            }
+  
+        }
+
+        private void BusModule_ControlMoveEvent(object sender, ControlMoveEventArgs e)
+        {
+            _pb.Image = bitmap;
+            m_g = Graphics.FromImage(bitmap);
+            m_g.Clear(this.BackColor);
+            m_g.DrawLine(new Pen(m_hcLine.PenColor, m_hcLine.LineWidth), new PointF(m_hcLine.Left, m_hcLine.Top), new PointF(m_hcLine.Left + m_hcLine.Width, m_hcLine.Top));
+
+            foreach (var member in Controls)
+            {
+                ControlBase control = member as ControlBase;
+                if (control != null)
+                {
+                    DrawLine(control);
+                }
+            }
             m_g.Flush();
-
-            OnProductChangedEvent?.Invoke(this, new ProductAddedArgs() { ProductName = userControl1.Name, IsAdd = true, });
+            m_g.Dispose();
+            _pb.Image = bitmap;       
         }
 
         /// <summary>
@@ -110,7 +160,7 @@ namespace SubBusContrainer
             if (sender is SubBusModel)
             {
                 SubBusModel SubBusModel = sender as SubBusModel;
-                OnProductChangedEvent?.Invoke(this, new ProductAddedArgs() { ProductName = SubBusModel.Name, IsAdd = false });
+                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { ProductName = SubBusModel.Name, IsAdd = false, IsBusModule=false });
             }
         }
 
@@ -124,96 +174,34 @@ namespace SubBusContrainer
         {
             e.Effect = DragDropEffects.All;
         }
-        private void Panel_Product_VisibleChanged(object sender, EventArgs e)
-        {
-            _p.Width = this.Width;
-            _p.Top = this.Height / 2 - 2;
-            m_g.Clear(this.BackColor);
-            m_g = this.CreateGraphics();
-            foreach (var member in this.Controls)
-            {
-                ControlBase control = member as ControlBase;
-                if (control != null)
-                {
-                    DrawLine(control);
-                }
-            }
-        }
 
         private void Panel_Product_SizeChanged(object sender, EventArgs e)
         {
-
-            _p.Width = this.Width;
-            _p.Top = this.Height / 2 - 2;
-            m_g = this.CreateGraphics();
-            m_g.Clear(this.BackColor);
-
-            foreach (var member in this.Controls)
+            m_hcLine= new HorizontalCenterLine()
             {
-                ControlBase control = member as ControlBase;
-                if (control != null)
-                {
-                    DrawLine(control);
-                }
-            }
+                Height = 4,
+                Width = _pb.Width,
+                Left = 0,
+                Top = _pb.Height / 2 - 2,
+                PenColor = Color.Green,
+            };
+
+            bitmap = new Bitmap(_pb.Width, _pb.Height);
 
         }
-        private void RefushLine(object sender, ControlMoveEventArgs e)
-        {
-            m_g.Clear(this.BackColor);
-            if (e.info == "LeftMouseDown")
-            {
-                foreach (var member in this.Controls)
-                {
-                    ControlBase control = member as ControlBase;
-                    if (control != null && control != (ControlBase)sender)
-                    {
-                        DrawLine(control);
-                    }
 
-                }
-
-            }
-            else if (e.info == "LeftMouseUp")
-            {
-                foreach (var member in this.Controls)
-                {
-                    ControlBase control = member as ControlBase;
-                    if (control != null)
-                    {
-                        DrawLine(control);
-                    }
-
-                }
-            }
-            m_g.Flush();
-        }
-        private void RefushLine()
-        {
-
-            m_g.Clear(this.BackColor);
-            foreach (var member in this.Controls)
-            {
-                ControlBase control = member as ControlBase;
-                if (control != null)
-                {
-                    DrawLine(control);
-                }
-            }
-            m_g.Flush();
-        }
         private void DrawLine(ControlBase control)
         {
 
             if (control.Top > this.Height / 2)
             {
                 m_g.DrawLine(m_pen, new Point(control.Left + control.Width / 2, control.Top), new Point(control.Left + control.Width / 2, this.Height / 2));
-                m_g.FillEllipse(new System.Drawing.SolidBrush(Color.Gray), new Rectangle(control.Left + control.Width / 2 - 5, this.Height / 2 - 5, 15, 15));
+                m_g.FillEllipse(new System.Drawing.SolidBrush(Color.Gray), new Rectangle(control.Left + control.Width / 2 - 4, this.Height / 2 - 7, 10, 10));
             }
             else
             {
                 m_g.DrawLine(m_pen, new Point(control.Left + control.Width / 2, control.Top + control.Height), new Point(control.Left + control.Width / 2, this.Height / 2));
-                m_g.FillEllipse(new System.Drawing.SolidBrush(Color.Gray), new Rectangle(control.Left + control.Width / 2 - 5, this.Height / 2 - 5, 15, 15));
+                m_g.FillEllipse(new System.Drawing.SolidBrush(Color.Gray), new Rectangle(control.Left + control.Width / 2 - 5, this.Height / 2 - 7, 10, 10));
             }
         }
 
@@ -242,13 +230,15 @@ namespace SubBusContrainer
 
             LastSubModel = new SubBusModel(point, subBusModelType);
             LastSubModel.Name = subproductname;
-            LastSubModel.ControlMoveEvent += RefushLine;
+
             LastSubModel.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
             this.Controls.Add(LastSubModel);
+            LastSubModel.ControlMoveEvent += BusModule_ControlMoveEvent;
+            BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
+
             LastSubModel.BringToFront();
             LastSubModel.Focus();
-            DrawLine(LastSubModel);
-            m_g.Flush();
+
         }
         private bool CheckExit(string subproductname)
         {
@@ -284,9 +274,27 @@ namespace SubBusContrainer
                     }
                 }
             }
-            RefushLine();
-        }
 
+        }
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            _pb.Image = bitmap;
+            m_g = Graphics.FromImage(bitmap);
+            m_g.Clear(this.BackColor);
+            m_g.DrawLine(new Pen(m_hcLine.PenColor, m_hcLine.LineWidth), new PointF(m_hcLine.Left, m_hcLine.Top), new PointF(m_hcLine.Left + m_hcLine.Width, m_hcLine.Top));
+
+            foreach (var member in Controls)
+            {
+                ControlBase control = member as ControlBase;
+                if (control != null)
+                {
+                    DrawLine(control);
+                }
+            }
+            m_g.Flush();
+            m_g.Dispose();
+            _pb.Image = bitmap;
+        }
         public void ReplaceNewList(List<string> NameListWithIndex)
         {
             List<SubBusModel> list = new List<SubBusModel>();
@@ -299,7 +307,7 @@ namespace SubBusContrainer
             }
             foreach (var it in list)
                 it.Dispose();
-            RefushLine();
+
             LastSubModel = null;
             foreach (var Name in NameListWithIndex)
             {
@@ -314,11 +322,11 @@ namespace SubBusContrainer
                     point.X = this.LastSubModel.Location.X + 100;
                     point.Y = this.LastSubModel.Location.Y;
                 }
-                enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType),Name.Substring(0, 6));
+                enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType), Name.Substring(0, 6));
 
                 LastSubModel = new SubBusModel(point, subBusModelType);
                 LastSubModel.Name = Name;
-                LastSubModel.ControlMoveEvent += RefushLine;
+
                 this.Controls.Add(LastSubModel);
                 LastSubModel.BringToFront();
                 LastSubModel.Focus();
@@ -356,22 +364,31 @@ namespace SubBusContrainer
         }
         public void ReName(List<string> NameList)
         {
-            List<Tuple<int,int, SubBusModel>> KpList =new List<Tuple<int, int, SubBusModel>>();
+            List<Tuple<int, int, SubBusModel>> KpList = new List<Tuple<int, int, SubBusModel>>();
             int i = 0;
             foreach (var member in this.Controls)
             {
                 SubBusModel SubBm = member as SubBusModel;
                 if (SubBm != null)
                 {
-                    KpList.Add(new Tuple<int, int, SubBusModel>( i++, SubBm.Location.X,SubBm));
+                    KpList.Add(new Tuple<int, int, SubBusModel>(i++, SubBm.Location.X, SubBm));
                 }
             }
             KpList.Sort((a, b) => a.Item2.CompareTo(b.Item2));
 
-            for (i=0;i<KpList.Count;i++)
+            for (i = 0; i < KpList.Count; i++)
             {
-                KpList.ElementAt(i).Item3.Name = NameList[i];            
+                KpList.ElementAt(i).Item3.Name = NameList[i];
             }
         }
+    }
+    public class HorizontalCenterLine
+    {
+        public int LineWidth { get; set; } = 4;
+        public Color PenColor { get; set; }
+        public int Left { get; set; }
+        public int Top { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
     }
 }

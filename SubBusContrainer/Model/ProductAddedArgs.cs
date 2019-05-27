@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SubBusContrainer.Model
 {
-    public class ProductAddedArgs
+    public class ModuleAddedArgs
     {
         public string ProductName { get; set; }
         public bool IsAdd { get; set; }
+        public bool IsBusModule { get; set; }
 
     }
 }

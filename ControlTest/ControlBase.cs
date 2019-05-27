@@ -50,11 +50,14 @@ namespace ControlTest
         #region 事件定义
         public event EventHandler<ControlMoveEventArgs> ControlMoveEvent;
         #endregion
-        public ControlBase(Point location)
+        public ControlBase(Point location,int Width, int Height)
         {
             InitializeComponent();
+            this.label1.Dock = DockStyle.Fill;
             this.ContextMenuStrip = contextMenuStrip1;          
             this.Location = location;
+            this.Width = Width;
+            this.Height = Height;
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             this.BackColor = Color.Transparent;         
             
@@ -76,7 +79,8 @@ namespace ControlTest
             if (IsAllowMove && m_leftMouseDownFlag)
             {
                 this.Left += e.Location.X - m_lastPoint.X;
-                this.Top += e.Location.Y - m_lastPoint.Y;                       
+                this.Top += e.Location.Y - m_lastPoint.Y;
+                OnControlMove(new ControlMoveEventArgs("LeftMouseDown"));
             }
         }
 
@@ -101,8 +105,8 @@ namespace ControlTest
         private void toolStripMenuItem_Delete_Click(object sender, EventArgs e)
         {
             OnControlMove(new ControlMoveEventArgs("LeftMouseDown"));
-            OnSubBusModleDelete?.Invoke(this, e);
             this.Dispose();
+            OnSubBusModleDelete?.Invoke(this, e);
         }  
 
         private void label1_MouseDoubleClick(object sender, MouseEventArgs e)

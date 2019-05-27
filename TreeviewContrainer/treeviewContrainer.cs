@@ -45,8 +45,11 @@ namespace TreeviewContrainer
                 if (value != null)
                 {
                     productContrainer = value;
-                    //string _name = DateTime.Now.ToString("hh_mm_ss");
-                    treeView_ProductInfo.Nodes.Add(productContrainer.BusName);
+                    //if (productContrainer.BusName != "")
+                    //{
+                    //    treeView_ProductInfo.Nodes.Add(productContrainer.BusName); 
+                    //}
+                    productContrainer.OnProductChangedEvent -= ProductContrainer_OnProductChangedHandler;
                     productContrainer.OnProductChangedEvent += ProductContrainer_OnProductChangedHandler;
 
                 }
@@ -58,35 +61,48 @@ namespace TreeviewContrainer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ProductContrainer_OnProductChangedHandler(object sender, SubBusContrainer.Model.ProductAddedArgs e)
+        private void ProductContrainer_OnProductChangedHandler(object sender, SubBusContrainer.Model.ModuleAddedArgs e)
         {
-            TreeNode DesNode = null;
-            //寻找根节点
-            foreach (TreeNode it in treeView_ProductInfo.Nodes)
+            if (e.IsBusModule == false)
             {
-                if (it.Text.Equals( productContrainer.BusName))
+                TreeNode DesNode = null;
+                foreach (TreeNode it in treeView_ProductInfo.Nodes)
                 {
-                    DesNode = it;
-                    Dictionary<int, string> NodeTextDic = new Dictionary<int, string>();
-                    int i = 0;
-                    foreach (TreeNode node in it.Nodes)
-                        NodeTextDic.Add(i++, node.Text);
-                    if (e.IsAdd)
+                    if (it.Text.Equals(productContrainer.BusName))
                     {
-                        it.Nodes.Add(e.ProductName, e.ProductName);
-                    }
-                    else
-                    {
-                        for(int j=0;j< NodeTextDic.Count;j++)
+                        DesNode = it;
+                        Dictionary<int, string> NodeTextDic = new Dictionary<int, string>();
+                        int i = 0;
+                        foreach (TreeNode node in it.Nodes)
+                            NodeTextDic.Add(i++, node.Text);
+                        if (e.IsAdd)
                         {
-                            if (NodeTextDic.ElementAt(j).Value.Equals(e.ProductName))
+                            it.Nodes.Add(e.ProductName, e.ProductName);
+                        }
+                        else
+                        {
+                            for (int j = 0; j < NodeTextDic.Count; j++)
                             {
-                                it.Nodes.RemoveAt(j);
-                                NodeTextDic.Remove(NodeTextDic.ElementAt(j).Key);
-                                break;
+                                if (NodeTextDic.ElementAt(j).Value.Equals(e.ProductName))
+                                {
+                                    it.Nodes.RemoveAt(j);
+                                    NodeTextDic.Remove(NodeTextDic.ElementAt(j).Key);
+                                    break;
+                                }
                             }
                         }
                     }
+                }
+            }
+            else
+            {
+                if (treeView_ProductInfo.Nodes.Count != 0)
+                {
+                    treeView_ProductInfo.Nodes[0].Text = e.ProductName;
+                }
+                else
+                {
+                    treeView_ProductInfo.Nodes.Add(new TreeNode(e.ProductName));
                 }
             }
             //RenameTreeNode();
@@ -116,6 +132,7 @@ namespace TreeviewContrainer
                 }
             }     
         }
+
         public void ReplaceNewList(List<string> NameListWithIndex)
         {
             foreach (TreeNode it in treeView_ProductInfo.Nodes)

@@ -149,7 +149,7 @@ namespace ControlTest
             set { m_presetValue = value; }
         }
         #endregion
-        public SubBusModel(Point location, enumSubBusModelType modelType) :base(location)
+        public SubBusModel(Point location, enumSubBusModelType modelType,int Width=100,int Height=60) :base(location,Width,Height)
         {
             InitializeComponent();
             this.modelType = modelType;
