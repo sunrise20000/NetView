@@ -47,6 +47,7 @@
     <Compile Include="BusModel.Designer.cs">
       <DependentUpon>BusModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="CommonFunc.cs" />
     <Compile Include="ControlBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -59,11 +60,66 @@
     <Compile Include="FormBusModelParam.Designer.cs">
       <DependentUpon>FormBusModelParam.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormSubBusModelParam.cs">
+    <Compile Include="HL3001 - 复制.Designer - 复制.cs">
+      <DependentUpon>HL4002.cs</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormSubBusModelParam.Designer.cs">
-      <DependentUpon>FormSubBusModelParam.cs</DependentUpon>
+    <Compile Include="HL5002.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL5002.Designer.cs">
+      <DependentUpon>HL5002.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HL5001.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL5001.Designer.cs">
+      <DependentUpon>HL5001.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HL4002.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL4001.Designer.cs">
+      <DependentUpon>HL4001.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HL4001.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL3002.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL3002.Designer.cs">
+      <DependentUpon>HL3002.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HL3001.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL3001.Designer.cs">
+      <DependentUpon>HL3001.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HL2003.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL2003.Designer.cs">
+      <DependentUpon>HL2003.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HL2002.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL2002.Designer.cs">
+      <DependentUpon>HL2002.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HL2001.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL2001.Designer.cs">
+      <DependentUpon>HL2001.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HL1001.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HL1001.Designer.cs">
+      <DependentUpon>HL1001.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubBusModel.cs">
@@ -81,8 +137,35 @@
     <EmbeddedResource Include="FormBusModelParam.resx">
       <DependentUpon>FormBusModelParam.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormSubBusModelParam.resx">
-      <DependentUpon>FormSubBusModelParam.cs</DependentUpon>
+    <EmbeddedResource Include="HL3001.resx">
+      <DependentUpon>HL3001.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HL2003.resx">
+      <DependentUpon>HL2003.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HL2002.resx">
+      <DependentUpon>HL2002.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HL2001.resx">
+      <DependentUpon>HL2001.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HL1001.resx">
+      <DependentUpon>HL1001.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HL5002.resx">
+      <DependentUpon>HL5002.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HL5001.resx">
+      <DependentUpon>HL5001.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HL4002.resx">
+      <DependentUpon>HL4002.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HL3002.resx">
+      <DependentUpon>HL3002.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HL4001.resx">
+      <DependentUpon>HL4001.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

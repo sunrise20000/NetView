@@ -34,7 +34,6 @@ namespace SubBusContrainer
 
             userControl1 = new BusModel(new Point(100, 100));
             BusName = BusModelName;
-            userControl1.Name = BusModelName;
             userControl1.ControlMoveEvent += RefushLine;
             this.Controls.Add(userControl1);
             // DrawLine(userControl1);
@@ -48,14 +47,7 @@ namespace SubBusContrainer
         public string BusName
         {
             get { return userControl1.Name; }
-            set {
-                if (userControl1.Name != value)
-                {
-                    userControl1.Name = value;
-                    m_g.Flush();
-                }
-
-            }
+            set { userControl1.Name = value; }
         }
         /// <summary>
         /// 
@@ -68,12 +60,12 @@ namespace SubBusContrainer
             _p.Width = this.Width;
             _p.Left = 0;
             _p.Top = this.Height / 2 - 2;
-            _p.BackColor = Color.Red;
+            _p.BackColor = Color.Green;
             this.Controls.Add(_p);
 
 
             m_g = this.CreateGraphics();
-            m_pen = new Pen(Color.Red, 3);
+            m_pen = new Pen(Color.Green, 3);
 
             //m_g.Flush();
         }
@@ -88,14 +80,15 @@ namespace SubBusContrainer
             Point point = this.PointToClient(new Point(e.X, e.Y));
 
             object info = e.Data.GetData(typeof(string));
-            SubBusModel userControl1 = new SubBusModel(point);
+            
             List<string> ControlNameList = new List<string>();
             foreach (Control it in this.Controls)
                 if ((it as SubBusModel) != null)
                     ControlNameList.Add((it as SubBusModel).Name);
 
             var ExistControlName = ControlNameList.Where(c => c.Contains(info.ToString()));
-
+            enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType), info.ToString().Substring(0, 6));
+            SubBusModel userControl1 = new SubBusModel(point, subBusModelType);
             userControl1.Name = $"{info.ToString()}_{ExistControlName.Count() + 1}";
             userControl1.ControlMoveEvent += RefushLine;
             userControl1.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
@@ -245,7 +238,9 @@ namespace SubBusContrainer
                 point.X = LastSubModel.Location.X + 100;
                 point.Y = LastSubModel.Location.Y;
             }
-            LastSubModel = new SubBusModel(point);
+            enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType), subproductname.Substring(0, 6));
+
+            LastSubModel = new SubBusModel(point, subBusModelType);
             LastSubModel.Name = subproductname;
             LastSubModel.ControlMoveEvent += RefushLine;
             LastSubModel.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
@@ -319,8 +314,9 @@ namespace SubBusContrainer
                     point.X = this.LastSubModel.Location.X + 100;
                     point.Y = this.LastSubModel.Location.Y;
                 }
+                enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType),Name.Substring(0, 6));
 
-                LastSubModel = new SubBusModel(point);
+                LastSubModel = new SubBusModel(point, subBusModelType);
                 LastSubModel.Name = Name;
                 LastSubModel.ControlMoveEvent += RefushLine;
                 this.Controls.Add(LastSubModel);

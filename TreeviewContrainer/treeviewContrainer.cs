@@ -22,6 +22,8 @@ namespace TreeviewContrainer
                 {
                     if (it.Text.Equals("Ethercat"))
                     {
+                        int i = 0;
+
                         foreach (TreeNode node in it.Nodes)
                         {
                             var L = node.Text.Split('_');

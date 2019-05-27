@@ -12,8 +12,9 @@ namespace ControlTest
     public partial class ControlBase: UserControl
     {
         #region 私有成员变量
-        private string  m_name;//名称
-       
+        protected string  m_name;//名称
+        protected int m_function;
+        protected int m_sequence;
         private bool m_leftMouseDownFlag;//鼠标左键按下标志
         private Point m_lastPoint;//控件上一时刻鼠标位置 
 
@@ -29,6 +30,21 @@ namespace ControlTest
                 this.label1.Text = m_name;
             }
         }
+        public int Function
+        {
+            get { return m_function; }
+         
+        }
+        public int Sequence
+        {
+            get { return m_sequence; }
+            set
+            {
+                m_sequence = value;
+            }
+        }
+
+
         public bool IsAllowMove { get; set; } = true;
         #endregion
         #region 事件定义
@@ -37,13 +53,14 @@ namespace ControlTest
         public ControlBase(Point location)
         {
             InitializeComponent();
-            this.ContextMenuStrip = contextMenuStrip1;
-           
+            this.ContextMenuStrip = contextMenuStrip1;          
             this.Location = location;
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
             this.BackColor = Color.Transparent;         
             
-        }   
+        }
+        public ControlBase()
+        { }
         private void label1_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)

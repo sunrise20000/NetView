@@ -15,7 +15,7 @@ namespace NetView.Class
 {
     public class ProjectController
     {
-        private string FileFullPathName =@"..\";
+        private string FileFullPathName =@".\";
         public BusConfigBase BusCfg { get; set; }
 
         public List<ModuleConfigModleBase> ModuleConfigList { get; set; } = new List<ModuleConfigModleBase>();
