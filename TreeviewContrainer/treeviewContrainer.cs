@@ -45,10 +45,6 @@ namespace TreeviewContrainer
                 if (value != null)
                 {
                     productContrainer = value;
-                    //if (productContrainer.BusName != "")
-                    //{
-                    //    treeView_ProductInfo.Nodes.Add(productContrainer.BusName); 
-                    //}
                     productContrainer.OnProductChangedEvent -= ProductContrainer_OnProductChangedHandler;
                     productContrainer.OnProductChangedEvent += ProductContrainer_OnProductChangedHandler;
 
@@ -133,6 +129,10 @@ namespace TreeviewContrainer
             }     
         }
 
+        /// <summary>
+        /// Left----->Middle
+        /// </summary>
+        /// <param name="NameListWithIndex"></param>
         public void ReplaceNewList(List<string> NameListWithIndex)
         {
             foreach (TreeNode it in treeView_ProductInfo.Nodes)

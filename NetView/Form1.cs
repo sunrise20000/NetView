@@ -182,6 +182,7 @@ namespace NetView
         private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ProjController.OpenProject();
+            
         }
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)

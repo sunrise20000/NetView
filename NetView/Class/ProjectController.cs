@@ -81,7 +81,19 @@ namespace NetView.Class
                 s.Close();               
             }
         }
-     
+
+        public string BusName { get {
+                return BusCfg.Name;
+            } }
+        public List<string> SubBusNameWithIndex
+        {
+            get {
+                List<string> L = new List<string>();
+                foreach (var it in ModuleConfigList)
+                    L.Add($"{it.DeviceName.ToString()}_{it.LocalIndex}");
+                return L;
+            }
+        }
 
     }
 }
