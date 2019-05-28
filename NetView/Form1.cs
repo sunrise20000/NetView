@@ -131,22 +131,24 @@ namespace NetView
             var VarCollect = ucMonitor.VarCollect;
 
 
-            for (int i = 0; i < 3; i++)
-            {
-                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-                VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            }
+            //for (int i = 0; i < 3; i++)
+            //{
+            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+            //}
 
             this.elementHost1.BackColorTransparent = true;
             this.elementHost2.BackColorTransparent = true;
-
+            dockManager1.ActivePanel = dockPanelMiddle;
+            
+            //dockManager1.RemovePanel(dockPanelVarMonitor);
 
             ProjController.BusCfg =BusCfgBase ;
             ProjController.BusFileMgr = BusFileMgr;
@@ -155,7 +157,7 @@ namespace NetView
             ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2002() { GlobalIndex = 3, LocalIndex = 2 });
             ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2003() { GlobalIndex = 4, LocalIndex = 2 });
             //ProjController.ModuleConfigList
-
+           
         }
 
         private void BarSubIteExportFile_Popup(object sender, EventArgs e)
@@ -182,7 +184,7 @@ namespace NetView
         private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ProjController.OpenProject();
-            
+            LeftControl.ReplaceNewList(ProjController.BusName, ProjController.SubBusNameWithIndexList);
         }
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -214,20 +216,41 @@ namespace NetView
 
         private void barButtonItemConnect_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            if (!BusController.IsConnected)
-                BusController.Open("1");
-            else
-                BusController.CLose();
-        }
+            try
+            {
+                if (!BusController.IsConnected)
+                    BusController.Open("1");
+                else
+                    BusController.CLose();
+            }            
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error when connect to controller:{ex.Message}","Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Error);
+            }
+}
 
         private void barButtonItemUpload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            BusController.GetModuleList();
+            try
+            {
+                BusController.GetModuleList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error when upload to controller:{ex.Message}","Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Error);
+            }
         }
 
         private void barButtonItemDownLoad_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            try
+            { 
             BusController.SendModuleList(null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error when download to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+            }
         }
 
         private void barButtonItemMonitor_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -235,7 +258,7 @@ namespace NetView
             dockPanelVarMonitor.Visibility = dockPanelVarMonitor.Visibility == DockVisibility.Visible ? DockVisibility.Hidden : DockVisibility.Visible;
             if (dockPanelVarMonitor.Visibility == DockVisibility.Visible)
                 dockManager1.ActivePanel = dockPanelVarMonitor;
-           
+                      
         }
 
         private void MenuSaveAs_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -308,6 +331,11 @@ namespace NetView
         private void ShowMessage(EnumMsgType MsgType,string Msg)
         {
             this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            //dockPanelVarMonitor.Visibility = DockVisibility.Hidden;
         }
     }
 }

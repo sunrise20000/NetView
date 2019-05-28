@@ -129,8 +129,11 @@
   <metadata name="barManager2.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>486, 17</value>
   </metadata>
+  <metadata name="workspaceManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>611, 17</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="barSubItemNew.ImageOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="MenuNew.ImageOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAALBJREFUOE9j
         GDxAcNrtI0B8ACeeeus8/4y7JlDlmEBo2u1VUCZWwDPptigIQ7mYAGYAkL4FxP/x4qm3b4I1IQOgxCqG
@@ -156,18 +159,6 @@
         IjT1dgNhfGstVgPIwTQwYOqt69hSHxS/Q9YMwhgGABXFQMMKAwAN34WsGYTBBgAlvsAEQAYITL0bBBR7
         CjQ4C6oXDHAaIDD9tgMwdL/BDABhCPtWKVQvGOA0ACJ5xwpkCMkGgHIjBuh7zMk75a4a3HS8gIEBALeb
         hvsouU4KAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <metadata name="workspaceManager1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>611, 17</value>
-  </metadata>
-  <data name="MenuNew.ImageOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAALBJREFUOE9j
-        GDxAcNrtI0B8ACeeeus8/4y7JlDlmEBo2u1VUCZWwDPptigIQ7mYAGYAkL4FxP/x4qm3b4I1IQOgxCqG
-        //8ZMRTjwFBtCAAUxG7A9Nv1QBsb0MWh2hAAKIjLBaFCU26HoYtDtSEAUBDVAKDNAtNvO8ACD8RGdglU
-        GwJQbsDUW3tACuEGIDBxXuCbcsscqwHEBiIYUBKNMABMtnewaUDFt25AlQ84YGAAAEAlKELFlCf4AAAA
-        AElFTkSuQmCC
 </value>
   </data>
   <data name="MenuCut.ImageOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
@@ -257,6 +248,15 @@
         EJp6u0Fw2u392LDA9PsKIIxNDoRBehmAjAMMWABIUmD6bQcQBivEAsB6Rw2AGCA07Xa/0PTb9chYcOqt
         8zADgGr2o8uD1YAMgEQVRCE6hloEVINdHqQXYsC02/bYMFQ/xAAs8mADwF4A+hEdg8RhNuFTQ51AhPJR
         wEgyACQJYmDDkDQCzs5Y5YWm3m4AANAcL2MlXrnDAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="barSubItemNew.ImageOptions.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAALBJREFUOE9j
+        GDxAcNrtI0B8ACeeeus8/4y7JlDlmEBo2u1VUCZWwDPptigIQ7mYAGYAkL4FxP/x4qm3b4I1IQOgxCqG
+        //8ZMRTjwFBtCAAUxG7A9Nv1QBsb0MWh2hAAKIjLBaFCU26HoYtDtSEAUBDVAKDNAtNvO8ACD8RGdglU
+        GwJQbsDUW3tACuEGIDBxXuCbcsscqwHEBiIYUBKNMABMtnewaUDFt25AlQ84YGAAAEAlKELFlCf4AAAA
+        AElFTkSuQmCC
 </value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

@@ -56,6 +56,7 @@ namespace NetView.Class
                         ModuleConfigList.Add(formatter.Deserialize(s) as ModuleConfigModleBase);
                     }
                     s.Close();
+
                 }
             }
         }
@@ -83,9 +84,9 @@ namespace NetView.Class
         }
 
         public string BusName { get {
-                return BusCfg.Name;
+                return BusCfg.Name.Split(' ')[0];
             } }
-        public List<string> SubBusNameWithIndex
+        public List<string> SubBusNameWithIndexList
         {
             get {
                 List<string> L = new List<string>();

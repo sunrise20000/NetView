@@ -22,6 +22,7 @@ namespace NetView
             BonusSkins.Register();
             SkinManager.EnableFormSkins();
             Application.Run(new Form1());
+
         }
     }
 }

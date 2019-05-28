@@ -133,11 +133,21 @@ namespace TreeviewContrainer
         /// Left----->Middle
         /// </summary>
         /// <param name="NameListWithIndex"></param>
-        public void ReplaceNewList(List<string> NameListWithIndex)
+        public void ReplaceNewList(string BusName,List<string> NameListWithIndex)
         {
+
+            if (treeView_ProductInfo.Nodes.Count == 0)
+            {
+                treeView_ProductInfo.Nodes.Add(new TreeNode(BusName));
+            }
+            else
+            {
+                treeView_ProductInfo.Nodes[0].Text = BusName;
+            }
+
             foreach (TreeNode it in treeView_ProductInfo.Nodes)
             {
-                if (it.Text.Equals("Ethercat"))
+                if (it.Text.Equals(BusName))
                 {
                     while (it.Nodes.Count > 0)
                         it.Nodes.RemoveAt(0);

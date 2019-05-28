@@ -192,7 +192,9 @@ namespace SubBusContrainer
 
         private void DrawLine(ControlBase control)
         {
-
+            _pb.Image = bitmap;
+            m_g = Graphics.FromImage(bitmap);
+            m_g.Clear(this.BackColor);
             if (control.Top > this.Height / 2)
             {
                 m_g.DrawLine(m_pen, new Point(control.Left + control.Width / 2, control.Top), new Point(control.Left + control.Width / 2, this.Height / 2));
