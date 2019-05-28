@@ -149,7 +149,7 @@ namespace ControlTest
             set { m_presetValue = value; }
         }
         #endregion
-        public SubBusModel(Point location, enumSubBusModelType modelType,int Width=100,int Height=60) :base(location,Width,Height)
+        public SubBusModel(Point location, enumSubBusModelType modelType,int Width=140,int Height=60) :base(location,Width,Height, Color.LightBlue)
         {
             InitializeComponent();
             this.modelType = modelType;
@@ -221,7 +221,7 @@ namespace ControlTest
             string revolution;
             string presetvaule;
             func = IntToHexString(m_function) + " ";
-            index = "0x" + int.Parse(m_name.Split('_').ElementAt(1)).ToString("X") + " ";
+            index = "0x" + int.Parse(Name.Split('_').ElementAt(1)).ToString("X") + " ";
             sequence = IntToHexString(m_sequence) + " ";
             switch (modelType)
             {

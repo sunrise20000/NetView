@@ -12,7 +12,6 @@ namespace ControlTest
     public partial class ControlBase: UserControl
     {
         #region 私有成员变量
-        protected string  m_name;//名称
         protected int m_function;
         protected int m_sequence;
         private bool m_leftMouseDownFlag;//鼠标左键按下标志
@@ -23,11 +22,10 @@ namespace ControlTest
         #region 属性定义
         public new  string Name
         {
-            get { return m_name; }
+            get { return this.label1.Text; }
             set
             {
-                m_name = value;
-                this.label1.Text = m_name;
+                this.label1.Text = value;
             }
         }
         public int Function
@@ -50,7 +48,7 @@ namespace ControlTest
         #region 事件定义
         public event EventHandler<ControlMoveEventArgs> ControlMoveEvent;
         #endregion
-        public ControlBase(Point location,int Width, int Height)
+        public ControlBase(Point location,int Width, int Height, Color clr)
         {
             InitializeComponent();
             this.label1.Dock = DockStyle.Fill;
@@ -59,7 +57,8 @@ namespace ControlTest
             this.Width = Width;
             this.Height = Height;
             this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);
-            this.BackColor = Color.Transparent;         
+            this.BackColor = clr;
+            label1.BackColor = clr;
             
         }
         public ControlBase()

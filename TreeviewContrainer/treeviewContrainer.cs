@@ -13,7 +13,7 @@ namespace TreeviewContrainer
     public partial class treeviewContrainer: UserControl
     {
         private ProductContrainer productContrainer;
-        public List<string> PureNameList
+        public List<string> PureNameList    //修改这个  srh
         {
             get
             {
@@ -22,8 +22,6 @@ namespace TreeviewContrainer
                 {
                     if (it.Text.Equals("Ethercat"))
                     {
-                        int i = 0;
-
                         foreach (TreeNode node in it.Nodes)
                         {
                             var L = node.Text.Split('_');
@@ -101,6 +99,7 @@ namespace TreeviewContrainer
                     treeView_ProductInfo.Nodes.Add(new TreeNode(e.ProductName));
                 }
             }
+            treeView_ProductInfo.ExpandAll();
             //RenameTreeNode();
         }
 
@@ -156,7 +155,8 @@ namespace TreeviewContrainer
                     break;
                 }       
             }
-            ProductContrainer.ReplaceNewList(NameListWithIndex);
+            treeView_ProductInfo.ExpandAll();
+            ProductContrainer.ReplaceNewList(BusName,NameListWithIndex);
         }
 
 

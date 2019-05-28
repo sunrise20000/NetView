@@ -20,6 +20,7 @@ using ControllerLib.Ethercat;
 using DevExpress.XtraBars;
 using NetView.Definations;
 using EC_ControlLib.BusConfigModle;
+using ControlTest;
 
 namespace NetView
 {
@@ -107,9 +108,9 @@ namespace NetView
             treeViewDevice.ExpandAll();
             treeViewDevice.ItemDrag += TreeViewDevice_ItemDrag;
             treeViewDevice.NodeMouseDoubleClick += TreeViewDevice_NodeMouseDoubleClick;
+            this.barSubIteExportFile.Popup += BarSubIteExportFile_Popup;
 
 
-      
             //添加中间控件
             MiddleControl = new ProductContrainer();
             this.dockPanelMiddle.Controls.Add(MiddleControl);
@@ -152,12 +153,6 @@ namespace NetView
 
             ProjController.BusCfg =BusCfgBase ;
             ProjController.BusFileMgr = BusFileMgr;
-            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2002() { GlobalIndex = 1, LocalIndex = 1 });
-            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2003() { GlobalIndex = 2, LocalIndex = 1 });
-            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2002() { GlobalIndex = 3, LocalIndex = 2 });
-            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2003() { GlobalIndex = 4, LocalIndex = 2 });
-            //ProjController.ModuleConfigList
-           
         }
 
         private void BarSubIteExportFile_Popup(object sender, EventArgs e)
@@ -189,7 +184,14 @@ namespace NetView
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            
+            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2002() { GlobalIndex = 1, LocalIndex = 1 });
+            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2003() { GlobalIndex = 2, LocalIndex = 1 });
+            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2002() { GlobalIndex = 3, LocalIndex = 2 });
+            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2003() { GlobalIndex = 4, LocalIndex = 2 });
+
+            var StrBusName =;
+  
+
             ProjController.SaveProject();
         }
 

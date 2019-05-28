@@ -47,7 +47,7 @@ namespace ControlTest
             get { return m_param7; }
             set { m_param7 = value; }
         }
-        public BusModel(Point location, int Width=150, int Height=150):base(location,Width,Height)
+        public BusModel(Point location, int Width=200, int Height=150):base(location,Width,Height,Color.Teal)
         {
             InitializeComponent();
         }

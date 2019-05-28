@@ -159,6 +159,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ControlTest\ControlTest.csproj">
+      <Project>{5DFD49D9-223B-4FCD-A0B7-800B003A2378}</Project>
+      <Name>ControlTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EC_ControlLib\ControllerLib.csproj">
       <Project>{43d5816d-de56-46b9-a217-676615301425}</Project>
       <Name>ControllerLib</Name>
