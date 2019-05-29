@@ -1,6 +1,8 @@
 ﻿
+using ControlTest.TypeConvertClass;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -11,85 +13,84 @@ namespace ControlTest.ModuleConfigModle
     [Serializable()]
     public class ModuleCfg_HL4002 : ModuleCfgModleBase
     {
-        private Dictionary<byte, string> OutputTypeDic = new Dictionary<byte, string>();
-        private Dictionary<byte, string> AccuracyDic = new Dictionary<byte, string>();
-
+       
         protected override int GuiStringListNumber { get; } = 11;
         public ModuleCfg_HL4002()
         {
             DeviceName = EnumDeviceName.HL4002;
-            OutputTypeDic.Add(0x00, "Normal");
-            OutputTypeDic.Add(0x01, "4-20mA");
-            OutputTypeDic.Add(0x02, "0-20mA");
-            for (byte i = 3; i < 11; i++)
-                OutputTypeDic.Add(i, $"Reserved{i}");
-
-            AccuracyDic.Add(0x0A, "10bits sampling");
-            AccuracyDic.Add(0x0C, "12bits sampling");
-            AccuracyDic.Add(0x10, "16bits sampling");
         }
 
-        public byte[] ChOutputTypeArr { get; private set; } = new byte[4];
-        public byte[] ChAccuracyArr { get; private set; } = new byte[4];
+        [TypeConverter(typeof(Tcv))]
+        public EnumHL4001Type Ch1_Output_Type { get; set; }
+        [TypeConverter(typeof(Tcv))]
+        public EnumHL4001Accuracy Ch1_Accuracy { get; set; }
+
+        [TypeConverter(typeof(Tcv))]
+        public EnumHL4001Type Ch2_Output_Type { get; set; }
+        [TypeConverter(typeof(Tcv))]
+        public EnumHL4001Accuracy Ch2_Accuracy { get; set; }
+
+        [TypeConverter(typeof(Tcv))]
+        public EnumHL4001Type Ch3_Output_Type { get; set; }
+        [TypeConverter(typeof(Tcv))]
+        public EnumHL4001Accuracy Ch3_Accuracy { get; set; }
+
+        [TypeConverter(typeof(Tcv))]
+        public EnumHL4001Type Ch4_Output_Type { get; set; }
+        [TypeConverter(typeof(Tcv))]
+        public EnumHL4001Accuracy Ch4_Accuracy { get; set; }
 
 
         public override void FromString(params string[] ParaList)
         {
-            if (ParaList.Length != 11)
+            EnumHL4001Type type;
+            EnumHL4001Accuracy acc;
+            if (ParaList.Length != GuiStringListNumber)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
-            var L1 = GuiStringList[0].Split('_');
-            //Name
-            Enum.TryParse(L1[0], out EnumDeviceName Dn);
-            DeviceName = Dn;
+            Name = GuiStringList[0];
+            Function = GuiStringList[1];
+            Plug_Sequence = GuiStringList[2];
+
+            Enum.TryParse(GuiStringList[3], out type);
+            Enum.TryParse(GuiStringList[4], out acc);
+            Ch1_Output_Type = type;
+            Ch1_Accuracy = acc;
+
+            Enum.TryParse(GuiStringList[5], out type);
+            Enum.TryParse(GuiStringList[6], out acc);
+            Ch2_Output_Type = type;
+            Ch2_Accuracy = acc;
 
 
-            //LocalIndex
-            LocalIndex = int.Parse(L1[1]);
+            Enum.TryParse(GuiStringList[7], out type);
+            Enum.TryParse(GuiStringList[8], out acc);
+            Ch3_Output_Type = type;
+            Ch3_Accuracy = acc;
 
-            Function = 0x42;
+            Enum.TryParse(GuiStringList[9], out type);
+            Enum.TryParse(GuiStringList[10], out acc);
+            Ch4_Output_Type = type;
+            Ch4_Accuracy = acc;
 
-            //GlobalIndex
-            GlobalIndex = int.Parse(GuiStringList[2]);
-
-            for (int i = 0; i < 4; i++)
-            {
-                ChOutputTypeArr[i] = OutputTypeDic.Where(a => a.Value.Equals(GuiStringList[2 * i + 3])).First().Key;
-                ChAccuracyArr[i] = AccuracyDic.Where(a => a.Value.Equals(GuiStringList[2 * i + 4])).First().Key;
-            }
         }
 
-        public override List<string> ToStringList()
+        protected override void SetProfile()
         {
             GuiStringList.Clear();
-            //Name_LocalIndex
-            GuiStringList.Add($"{DeviceName.ToString()}_{LocalIndex}");
-            //Function
-            GuiStringList.Add("AOx4Ch. 0-10V");
-            //GlobalIndex
-            GuiStringList.Add($"{GlobalIndex}");
+            GetListFromStr(GuiStringList,
+                Name, "AOx4Ch. 4-20mA",
+                Function,
+                Ch1_Output_Type.ToString(),
+                Ch1_Accuracy.ToString(),
 
-            for (int i = 0; i < 4; i++)
-            {
-                GuiStringList.Add($"{OutputTypeDic[ChOutputTypeArr[i]]}");
-                GuiStringList.Add($"{AccuracyDic[ChAccuracyArr[i]]}");
-            }
+                Ch2_Output_Type.ToString(),
+                Ch2_Accuracy.ToString(),
 
-            return GuiStringList;
-        }
+                Ch3_Output_Type.ToString(),
+                Ch3_Accuracy.ToString(),
 
-        public override List<byte> ToByteArr()
-        {
-            base.ToByteArr();
-
-            for (int i = 0; i < 4; i++)
-            {
-                BtArr.Add(ChOutputTypeArr[i]);
-                BtArr.Add(ChAccuracyArr[i]);
-            }
-            return BtArr;
-        }
-        protected ModuleCfg_HL4002(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
+                Ch4_Output_Type.ToString(),
+                Ch4_Accuracy.ToString());
 
         }
     }

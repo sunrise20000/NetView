@@ -80,6 +80,7 @@
     <Compile Include="SubBusModel.Designer.cs">
       <DependentUpon>SubBusModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="TypeConvertClass\TypeConverter.cs" />
     <Compile Include="Window_Property.cs">
       <SubType>Form</SubType>
     </Compile>

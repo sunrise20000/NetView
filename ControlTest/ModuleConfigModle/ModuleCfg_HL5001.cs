@@ -18,75 +18,34 @@ namespace ControlTest.ModuleConfigModle
             DeviceName = EnumDeviceName.HL5001;
         }
 
-        public byte CounterLimitH { get; set; }
+        public string CounterLimitH { get; set; }
 
-        public byte CounterLimitL { get; set; }
+        public string CounterLimitL { get; set; }
 
-        public byte[] ResParaArr { get; } = new byte[6];
+        public string ResPara1 { get; set; }
+        public string ResPara2 { get; set; }
+        public string ResPara3 { get; set; }
+        public string ResPara4 { get; set; }
+        public string ResPara5 { get; set; }
+        public string ResPara6 { get; set; }
 
         public override void FromString(params string[] ParaList)
         {
             if (ParaList.Length != 11)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
-            var L1 = GuiStringList[0].Split('_');
-            //Name
-            Enum.TryParse(L1[0], out EnumDeviceName Dn);
-            DeviceName = Dn;
-
-
-            //LocalIndex
-            LocalIndex = int.Parse(L1[1]);
-
-            Function = 0x51;
-
-            //GlobalIndex
-            GlobalIndex = int.Parse(GuiStringList[2]);
-
-            //CounterLimitH
-            CounterLimitH = byte.Parse(GuiStringList[3]);
-
-            //CounterLimitL
-            CounterLimitL= byte.Parse(GuiStringList[4]);
-
-            //ResPara
-            for (int i = 0; i < 6; i++)
-                ResParaArr[i] = byte.Parse(GuiStringList[i+5]);
-
+            GetListFromStr(GuiStringList, Name, Function, Plug_Sequence, CounterLimitH, CounterLimitL, ResPara1,
+                            ResPara2, ResPara3, ResPara4, ResPara5, ResPara6);
 
         }
 
-        public override List<string> ToStringList()
+        protected override void SetProfile()
         {
             GuiStringList.Clear();
-            //Name_LocalIndex
-            GuiStringList.Add($"{DeviceName.ToString()}_{LocalIndex}");
-            //Function
-            GuiStringList.Add("DI8xDC24V");
-            //GlobalIndex
-            GuiStringList.Add($"{GlobalIndex}");
-            //LimitH
-            GuiStringList.Add($"{CounterLimitH}");
-            //LimitL
-            GuiStringList.Add($"{CounterLimitL}");
-
-            for (int i = 0; i < 6; i++)
-                GuiStringList.Add($"{ResParaArr[i]}");
-
-            return GuiStringList;
-        }
-
-        public override List<byte> ToByteArr()
-        {
-            base.ToByteArr();
-            BtArr.Add(CounterLimitH);
-            BtArr.Add(CounterLimitL);
-            for (int i = 0; i < 6; i++)
-                BtArr.Add(ResParaArr[i]);
-            return BtArr;
-        }
-        protected ModuleCfg_HL5001(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
+           GetStringFromList(GuiStringList,Name, "Counter 6000", Plug_Sequence,CounterLimitH,CounterLimitL, ResPara1,
+                            ResPara2, ResPara3, ResPara4, ResPara5, ResPara6);
 
         }
+
+       
     }
 }

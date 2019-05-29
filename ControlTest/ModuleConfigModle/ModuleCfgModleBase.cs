@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -8,56 +9,51 @@ using System.Threading.Tasks;
 
 namespace ControlTest.ModuleConfigModle
 {
-    [Serializable()]
-    public class ModuleCfgModleBase : ISerializable
+    public class ModuleCfgModleBase
     {
         protected virtual int GuiStringListNumber { get; }=0;
 
         protected List<string> GuiStringList = new List<string>();
 
-        protected List<byte> BtArr = new List<byte>();
+        protected void GetStringFromList(List<string> L, params string[] Str)
+        {
+            if (L.Count != Str.Count())
+                throw new Exception("Can't GetStringFromList");
+            for (int i = 0; i < L.Count; i++)
+                Str[i] = L[i];
+        }
+        protected void GetListFromStr(List<string> L, params string[] Str)
+        {
+            if (L.Count != Str.Count())
+                throw new Exception("Can't GetStringFromList");
+            for (int i = 0; i < L.Count; i++)
+                L[i] = Str[i];
+        }
 
-
+        [Browsable(false)]
         public EnumDeviceName DeviceName { get; protected set; }
 
-        public int LocalIndex { get; set; }
+        public string Name { get; set; }
 
-        public byte Function { get; protected set; }
+        public string Function { get; protected set; }
 
-        public int GlobalIndex { get; set; }
+        public string Plug_Sequence { get; set; }
+
+
+        protected virtual void SetProfile()
+        {
+
+        }
 
         public virtual void FromString(params string[] ParaList)
         {
             throw new NotImplementedException();
         }
-        public virtual List<string> ToStringList()
+        public  List<string> ToStringList()
         {
-            throw new NotImplementedException();
+            SetProfile();
+            return GuiStringList;
         }
 
-        public virtual List<byte> ToByteArr()
-        {
-            BtArr.Clear();
-            BtArr.Add(Function);
-            BtArr.Add((byte)LocalIndex);
-            BtArr.Add((byte)GlobalIndex);
-            return BtArr;
-        }
-
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            ToStringList();
-            for (int i = 0; i < GuiStringListNumber; i++)
-                info.AddValue($"L{i}", GuiStringList[i]);
-        }
-
-        protected ModuleCfgModleBase(SerializationInfo info, StreamingContext context)
-        {
-            GuiStringList.Clear();
-            for (int i = 0; i < GuiStringListNumber; i++)
-                GuiStringList.Add(info.GetString($"L{i}"));
-            FromString(GuiStringList.ToArray());
-        }
-        public ModuleCfgModleBase() { }
     }
 }
