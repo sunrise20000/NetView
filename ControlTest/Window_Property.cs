@@ -14,6 +14,7 @@ namespace ControlTest
         public Window_Property()
         {
             InitializeComponent();
+            this.propertyGrid.PropertySort = PropertySort.NoSort;
         }
         public object SelectedObject {
             set { this.propertyGrid.SelectedObject = value; }
