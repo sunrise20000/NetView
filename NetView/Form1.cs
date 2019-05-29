@@ -21,6 +21,7 @@ using DevExpress.XtraBars;
 using NetView.Definations;
 using EC_ControlLib.BusConfigModle;
 using ControlTest;
+using EC_ControlLib.Ethercat.ModuleConfigModle;
 
 namespace NetView
 {
@@ -184,14 +185,24 @@ namespace NetView
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2002() { GlobalIndex = 1, LocalIndex = 1 });
-            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2003() { GlobalIndex = 2, LocalIndex = 1 });
-            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2002() { GlobalIndex = 3, LocalIndex = 2 });
-            ProjController.ModuleConfigList.Add(new EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_HL2003() { GlobalIndex = 4, LocalIndex = 2 });
-
-            var StrBusName =;
-  
-
+            foreach (var it in MiddleControl.Controls)
+            {
+                if (it is BusModel)
+                {
+                    
+                }
+                else if(it is SubBusModel)
+                {
+                    //var SB = it as SubBusModel;
+                    //var P=SB.GetPropertyInfo();
+                    //var SubBusClassName = $"EC_ControlLib.BusConfigModle.ModuleConfig_{SB.Name.Split('_')[0]}";
+                    //var T= Type.GetType(SubBusClassName);
+                    //dynamic obj = T.Assembly.CreateInstance(SubBusClassName);
+                    //ModuleConfigModleBase CfgBase = obj as ModuleConfigModleBase;
+                    //CfgBase.FromString(P.ToArray());
+                    //ProjController.ModuleConfigList.Add(CfgBase);
+                }
+            }
             ProjController.SaveProject();
         }
 

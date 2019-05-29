@@ -103,7 +103,7 @@ namespace SubBusContrainer
             if (BusModule !=null && info.ToString().Contains("HL")) //子模块
             {     
                 var ExistControlName = ControlNameList.Where(c => c.Contains(info.ToString()));
-                enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType), info.ToString().Substring(0, 6));
+                EnumDeviceName subBusModelType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), info.ToString().Substring(0, 6));
                 SubBusModel SubBusModule = new SubBusModel(point, subBusModelType);
                 SubBusModule.Name = $"{info.ToString()}_{ExistControlName.Count() + 1}";
                 SubBusModule.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
@@ -119,7 +119,8 @@ namespace SubBusContrainer
             {
                 if (BusModule == null)
                 {
-                    BusModule = new BusModel(new Point(100, this.Height/2+100));
+                    Enum.TryParse(info.ToString(), out EnumBusType BusType);
+                    BusModule = new BusModel(BusType,new Point(100, this.Height/2+100));
                     this.Controls.Add(BusModule);
                     BusModule.BringToFront();
                     BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
@@ -230,7 +231,7 @@ namespace SubBusContrainer
                 point.X = LastSubModel.Location.X + 30;
                 point.Y = LastSubModel.Location.Y+10;
             }
-            enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType), subproductname.Substring(0, 6));
+            EnumDeviceName subBusModelType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), subproductname.Substring(0, 6));
 
             LastSubModel = new SubBusModel(point, subBusModelType);
             LastSubModel.Name = subproductname;
@@ -316,7 +317,8 @@ namespace SubBusContrainer
 
             if (BusModule == null)
             {
-                BusModule = new BusModel(new Point(100, this.Height / 2 + 100));
+                Enum.TryParse(BusName, out EnumBusType BusType);
+                BusModule = new BusModel(BusType,new Point(100, this.Height / 2 + 100));
                 this.Controls.Add(BusModule);
                 BusModule.BringToFront();
                 BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
@@ -340,7 +342,7 @@ namespace SubBusContrainer
                     point.X = this.LastSubModel.Location.X + 30;
                     point.Y = this.LastSubModel.Location.Y+10;
                 }
-                enumSubBusModelType subBusModelType = (enumSubBusModelType)Enum.Parse(typeof(enumSubBusModelType), Name.Substring(0, 6));
+                EnumDeviceName subBusModelType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), Name.Substring(0, 6));
 
                 LastSubModel = new SubBusModel(point, subBusModelType);
                 LastSubModel.Name = Name;

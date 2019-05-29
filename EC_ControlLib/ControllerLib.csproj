@@ -41,28 +41,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ControllerBase.cs" />
-    <Compile Include="Defination.cs" />
     <Compile Include="BusConfigModle\BusConfigBase.cs" />
+    <Compile Include="BusConfigModle\BusConfig_CANopen.cs" />
+    <Compile Include="BusConfigModle\BusConfig_DeviceNet.cs" />
+    <Compile Include="BusConfigModle\BusConfig_EtherCAT.cs" />
+    <Compile Include="BusConfigModle\BusConfig_ModbusRTU.cs" />
+    <Compile Include="BusConfigModle\BusConfig_ModbusTCP.cs" />
     <Compile Include="BusConfigModle\BusConfig_PROFIBUS_DP.cs" />
     <Compile Include="BusConfigModle\BusConfig_PROFINET_IO.cs" />
-    <Compile Include="BusConfigModle\BusConfig_ModbusTCP.cs" />
-    <Compile Include="BusConfigModle\BusConfig_EtherCAT.cs" />
-    <Compile Include="BusConfigModle\BusConfig_DeviceNet.cs" />
-    <Compile Include="BusConfigModle\BusConfig_CANopen.cs" />
-    <Compile Include="BusConfigModle\BusConfig_ModbusRTU.cs" />
+    <Compile Include="ControllerBase.cs" />
+    <Compile Include="Defination.cs" />
     <Compile Include="Ethercat\EC_Controller.cs" />
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfigModleBase.cs" />
-    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL5002.cs" />
-    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL5001.cs" />
-    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL4002.cs" />
-    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL4001.cs" />
-    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL3002.cs" />
-    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL3001.cs" />
-    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2003.cs" />
-    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2002.cs" />
-    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2001.cs" />
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL1001.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2001.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2002.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2003.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL3001.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL3002.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL4001.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL4002.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL5001.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL5002.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

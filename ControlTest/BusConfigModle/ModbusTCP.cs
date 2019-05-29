@@ -1,17 +1,15 @@
-﻿using ControllerLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.BusConfigModle
+namespace ControlTest.BusConfigModle
 {
     [Serializable()]
-    public class BusConfig_ModbusTCP : BusConfigBase
+    public class ModbusTCP : BusCfgBase
     {
-        public override EnumBusType BusType { get; } = EnumBusType.ModbusTCP;
         public override string ShortName { get; protected set; } = "HL6804";
 
         /// <summary>
@@ -23,10 +21,10 @@ namespace EC_ControlLib.BusConfigModle
         /// 是什么类型的总线
         /// </summary>
         public override string Type { get; set; } = "MT excel";
-        public BusConfig_ModbusTCP()
+        public ModbusTCP()
         {
         }
-        protected BusConfig_ModbusTCP(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected ModbusTCP(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 
         }

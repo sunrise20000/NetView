@@ -1,15 +1,12 @@
-﻿using ControllerLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EC_ControlLib.Ethercat.ModuleConfigModle
+namespace ControlTest.ModuleConfigModle
 {
     [Serializable()]
-    public class ModuleConfig_HL1001 : ModuleConfigModleBase
+    public class ModuleCfg_HL1001 : ModuleCfgModleBase
     {
         byte[] TypeList = new byte[] {0x00, 0x01, 0x03,0x07, 0x0F,0x1F,0x3F,0x7F,0xFF};
         string[] TypeStringList = new string[] { "Normal", "DI1 as Alarm", "DI1~2 as Alarm", "DI1~3 as Alarm", "DI1~4 as Alarm" ,
@@ -18,7 +15,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
 
         protected override int GuiStringListNumber { get; } = 4;
 
-        public ModuleConfig_HL1001()
+        public ModuleCfg_HL1001()
         {
             DeviceName = EnumDeviceName.HL1001;
             for (int i = 0; i < TypeList.Count(); i++)
@@ -74,7 +71,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             BtArr.Add(Type);
             return BtArr;
         }
-        protected ModuleConfig_HL1001(SerializationInfo info, StreamingContext context) : base(info,context)
+        protected ModuleCfg_HL1001(SerializationInfo info, StreamingContext context) : base(info,context)
         {
           
         }

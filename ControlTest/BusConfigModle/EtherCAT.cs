@@ -1,17 +1,15 @@
-﻿using ControllerLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.BusConfigModle
+namespace ControlTest.BusConfigModle
 {
     [Serializable()]
-    public class BusConfig_EtherCAT : BusConfigBase
+    public class EtherCAT : BusCfgBase
     {
-        public override EnumBusType BusType { get; } = EnumBusType.EtherCAT;
         public override string ShortName { get; protected set; } = "HL6805";
 
         /// <summary>
@@ -23,10 +21,10 @@ namespace EC_ControlLib.BusConfigModle
         /// 是什么类型的总线
         /// </summary>
         public override string Type { get; set; } = "EC xml";
-        public BusConfig_EtherCAT()
+        public EtherCAT()
         {
         }
-        protected BusConfig_EtherCAT(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected EtherCAT(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 
         }

@@ -1,17 +1,15 @@
-﻿using ControllerLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.BusConfigModle
+namespace ControlTest.BusConfigModle
 {
     [Serializable()]
-    public class BusConfig_DeviceNet : BusConfigBase
+    public class DeviceNet : BusCfgBase
     {
-        public override EnumBusType BusType { get; } = EnumBusType.DeviceNet;
         public override string ShortName { get; protected set; } = "HL6807";
 
         /// <summary>
@@ -23,11 +21,11 @@ namespace EC_ControlLib.BusConfigModle
         /// 是什么类型的总线
         /// </summary>
         public override string Type { get; set; } = "DE EDS";
-        public BusConfig_DeviceNet()
+        public DeviceNet()
         {
           
         }
-        protected BusConfig_DeviceNet(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected DeviceNet(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 
         }

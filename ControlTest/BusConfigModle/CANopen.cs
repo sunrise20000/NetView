@@ -1,18 +1,17 @@
-﻿using ControllerLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.BusConfigModle
+namespace ControlTest.BusConfigModle
 {
     [Serializable()]
-    public class BusConfig_CANopen : BusConfigBase
+    public class CANopen : BusCfgBase
     {
         public override string ShortName { get; protected set; } = "HL6806";
-        public override EnumBusType BusType { get; } = EnumBusType.CANopen;
+
         /// <summary>
         /// 默认文件名
         /// </summary>
@@ -22,11 +21,11 @@ namespace EC_ControlLib.BusConfigModle
         /// 是什么类型的总线
         /// </summary>
         public override string Type { get; set; } = "CA EDS";
-        public BusConfig_CANopen()
+        public CANopen()
         {
            
         }
-        protected BusConfig_CANopen(SerializationInfo info, StreamingContext context) : base(info,context)
+        protected CANopen(SerializationInfo info, StreamingContext context) : base(info,context)
         {
 
         }

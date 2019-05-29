@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ControllerLib
+namespace ControlTest
 {
     enum EnumControllerType
     {
@@ -24,6 +24,7 @@ namespace ControllerLib
         HL5001,
         HL5002,
     }
+
     public enum EnumBusType
     {
         CANopen,
@@ -34,5 +35,4 @@ namespace ControllerLib
         PROFIBUS_DP,
         PROFINET_IO,
     }
-
 }

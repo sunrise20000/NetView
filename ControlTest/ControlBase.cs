@@ -16,7 +16,7 @@ namespace ControlTest
         protected int m_sequence;
         private bool m_leftMouseDownFlag;//鼠标左键按下标志
         private Point m_lastPoint;//控件上一时刻鼠标位置 
-
+        protected Window_Property WinPropertySetting =null;
         public event EventHandler OnSubBusModleDelete;
         #endregion
         #region 属性定义
@@ -112,7 +112,7 @@ namespace ControlTest
         {
             ShowProperty();
         }
-        public virtual  void ShowProperty()
+        public virtual void ShowProperty()
         {
             
         }
