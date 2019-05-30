@@ -16,7 +16,8 @@ namespace ControlTest.ModuleConfigModle
         public ModuleCfg_HL3002()
         {
        
-            DeviceName = EnumDeviceName.HL3002;       
+            DeviceName = EnumDeviceName.HL3002;
+            Function = "AIx4Ch. 4-20mA";
         }
 
         [TypeConverter(typeof(Tcv))]
@@ -78,7 +79,7 @@ namespace ControlTest.ModuleConfigModle
             GuiStringList.Clear();
 
             GetListFromStr(GuiStringList,
-                Name, "AIx4Ch. 4-20mA",
+                Name, Function,
                 Function,
                 Ch1_Input_Type.ToString(),
                 Ch1_Accuracy.ToString(),

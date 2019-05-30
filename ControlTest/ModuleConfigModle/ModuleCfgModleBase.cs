@@ -33,10 +33,13 @@ namespace ControlTest.ModuleConfigModle
         [Browsable(false)]
         public EnumDeviceName DeviceName { get; protected set; }
 
+        [ReadOnly(true)]
         public string Name { get; set; }
 
+        [ReadOnly(true)]
         public string Function { get; protected set; }
 
+        [ReadOnly(true)]
         public string Plug_Sequence { get; set; }
 
 

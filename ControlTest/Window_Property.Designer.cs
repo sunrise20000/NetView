@@ -47,7 +47,6 @@
             this.ClientSize = new System.Drawing.Size(402, 475);
             this.Controls.Add(this.propertyGrid);
             this.Name = "Window_Property";
-            this.Text = "Window_Property";
             this.ResumeLayout(false);
 
         }

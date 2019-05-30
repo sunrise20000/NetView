@@ -27,7 +27,7 @@ namespace ControlTest
         }
         public override void ShowProperty()
         {
-            WinPropertySetting = new Window_Property();
+            WinPropertySetting = new Window_Property(Bcb.Name);
             WinPropertySetting.SelectedObject = Bcb;
             WinPropertySetting.ShowDialog();
         }

@@ -26,7 +26,9 @@ namespace ControlTest
         }
         public override void ShowProperty()
         {
-            WinPropertySetting = new Window_Property();
+            WinPropertySetting = new Window_Property(Mcm.Name);
+            Mcm.Name = $"{this.Name}";
+            
             WinPropertySetting.SelectedObject = Mcm;
             WinPropertySetting.ShowDialog();
         }
