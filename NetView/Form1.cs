@@ -185,22 +185,24 @@ namespace NetView
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+            ProjController.ModuleConfigList.Clear();
+
             foreach (var it in MiddleControl.Controls)
             {
                 if (it is BusModel)
                 {
-                    
+                    //DoNothing
                 }
                 else if(it is SubBusModel)
                 {
-                    //var SB = it as SubBusModel;
-                    //var P=SB.GetPropertyInfo();
-                    //var SubBusClassName = $"EC_ControlLib.BusConfigModle.ModuleConfig_{SB.Name.Split('_')[0]}";
-                    //var T= Type.GetType(SubBusClassName);
-                    //dynamic obj = T.Assembly.CreateInstance(SubBusClassName);
-                    //ModuleConfigModleBase CfgBase = obj as ModuleConfigModleBase;
-                    //CfgBase.FromString(P.ToArray());
-                    //ProjController.ModuleConfigList.Add(CfgBase);
+                    SubBusModel SB = it as SubBusModel;
+                    var SubBusClassName = $"EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_{SB.ModuleType.ToString()}";
+                    Type T = typeof(ModuleConfigModleBase);
+                    dynamic obj = T.Assembly.CreateInstance(SubBusClassName);
+                    ModuleConfigModleBase CfgBase = obj as ModuleConfigModleBase;
+                    var list = SB.Mcb.ToStringList().ToArray();
+                    CfgBase.FromString(list);
+                    ProjController.ModuleConfigList.Add(CfgBase);
                 }
             }
             ProjController.SaveProject();

@@ -24,23 +24,24 @@ namespace ControlTest.ModuleConfigModle
         }
         protected void GetListFromStr(List<string> L, params string[] Str)
         {
-            if (L.Count != Str.Count())
+            L.Clear();
+            if (GuiStringListNumber != Str.Count())
                 throw new Exception("Can't GetStringFromList");
-            for (int i = 0; i < L.Count; i++)
-                L[i] = Str[i];
+            for (int i = 0; i < GuiStringListNumber; i++)
+                L.Add(Str[i]);
         }
 
         [Browsable(false)]
         public EnumDeviceName DeviceName { get; protected set; }
 
         [ReadOnly(true)]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [ReadOnly(true)]
-        public string Function { get; protected set; }
+        public string Function { get; protected set; } = "";
 
         [ReadOnly(true)]
-        public string Plug_Sequence { get; set; }
+        public string Plug_Sequence { get; set; } = "";
 
 
         protected virtual void SetProfile()

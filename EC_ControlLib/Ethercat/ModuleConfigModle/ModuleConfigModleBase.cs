@@ -13,7 +13,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
     {
         protected virtual int GuiStringListNumber { get; }=0;
 
-        protected List<string> GuiStringList = new List<string>();
+        public List<string> GuiStringList = new List<string>();
 
         protected List<byte> BtArr = new List<byte>();
 

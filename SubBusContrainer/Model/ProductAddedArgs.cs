@@ -8,9 +8,7 @@ namespace SubBusContrainer.Model
 {
     public class ModuleAddedArgs
     {
-        public string ProductName { get; set; }
         public bool IsAdd { get; set; }
-        public bool IsBusModule { get; set; }
-
+        public ControlTest.ControlBase Module { get; set; }
     }
 }

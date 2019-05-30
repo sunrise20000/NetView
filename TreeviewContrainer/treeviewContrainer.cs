@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SubBusContrainer;
+using ControlTest;
+using ControlTest.ModuleConfigModle;
+
 namespace TreeviewContrainer
 {
     public partial class treeviewContrainer: UserControl
@@ -57,27 +60,27 @@ namespace TreeviewContrainer
         /// <param name="e"></param>
         private void ProductContrainer_OnProductChangedHandler(object sender, SubBusContrainer.Model.ModuleAddedArgs e)
         {
-            if (e.IsBusModule == false)
+            if (e.Module is SubBusModel)
             {
-                TreeNode DesNode = null;
+                //TreeNode DesNode = null;
                 foreach (TreeNode it in treeView_ProductInfo.Nodes)
                 {
                     if (it.Text.Equals(productContrainer.BusName))
                     {
-                        DesNode = it;
+                        //DesNode = it;
                         Dictionary<int, string> NodeTextDic = new Dictionary<int, string>();
                         int i = 0;
                         foreach (TreeNode node in it.Nodes)
                             NodeTextDic.Add(i++, node.Text);
                         if (e.IsAdd)
                         {
-                            it.Nodes.Add(e.ProductName, e.ProductName);
+                            it.Nodes.Add(e.Module.Name, e.Module.Name);
                         }
                         else
                         {
                             for (int j = 0; j < NodeTextDic.Count; j++)
                             {
-                                if (NodeTextDic.ElementAt(j).Value.Equals(e.ProductName))
+                                if (NodeTextDic.ElementAt(j).Value.Contains(e.Module.Name))
                                 {
                                     it.Nodes.RemoveAt(j);
                                     NodeTextDic.Remove(NodeTextDic.ElementAt(j).Key);
@@ -92,11 +95,11 @@ namespace TreeviewContrainer
             {
                 if (treeView_ProductInfo.Nodes.Count != 0)
                 {
-                    treeView_ProductInfo.Nodes[0].Text = e.ProductName;
+                    treeView_ProductInfo.Nodes[0].Text = e.Module.Name;
                 }
                 else
                 {
-                    treeView_ProductInfo.Nodes.Add(new TreeNode(e.ProductName));
+                    treeView_ProductInfo.Nodes.Add(new TreeNode(e.Module.Name));
                 }
             }
             treeView_ProductInfo.ExpandAll();
@@ -131,8 +134,9 @@ namespace TreeviewContrainer
         /// <summary>
         /// Left----->Middle
         /// </summary>
-        /// <param name="NameListWithIndex"></param>
-        public void ReplaceNewList(string BusName,List<string> NameListWithIndex)
+        /// <param name="BusName"></param>
+        /// <param name="ModuleInfoList">ModuleName, LocalIndex, GlobalIndex</param>
+        public void ReplaceNewList(string BusName,List<Tuple<string,int,int, ModuleCfgModleBase>>ModuleInfoList)
         {
 
             if (treeView_ProductInfo.Nodes.Count == 0)
@@ -150,13 +154,13 @@ namespace TreeviewContrainer
                 {
                     while (it.Nodes.Count > 0)
                         it.Nodes.RemoveAt(0);
-                    foreach (var Name in NameListWithIndex)
-                        it.Nodes.Add(Name);
+                    foreach (var Info in ModuleInfoList)
+                        it.Nodes.Add($"{Info.Item1}_{Info.Item2}");
                     break;
                 }       
             }
             treeView_ProductInfo.ExpandAll();
-            ProductContrainer.ReplaceNewList(BusName,NameListWithIndex);
+            ProductContrainer.ReplaceNewList(BusName,ModuleInfoList);
         }
 
 
@@ -240,7 +244,7 @@ namespace TreeviewContrainer
                 var ExistNode = NameList.Where(n=>n.Contains((sender as ToolStripMenuItem).Text));
                 var Name = $"{(sender as ToolStripMenuItem).Text}_{ExistNode.Count() + 1}";
                 treeView_ProductInfo.SelectedNode.Nodes.Add(Name, Name);
-                productContrainer.AddSubProduct(Name);  
+                productContrainer.AddSubProduct((sender as ToolStripMenuItem).Text, ExistNode.Count() + 1, NameList.Count());
             }
         }
 

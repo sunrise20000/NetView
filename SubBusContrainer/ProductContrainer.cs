@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using ControlTest;
 using System.Diagnostics;
 using SubBusContrainer.Model;
+using ControlTest.ModuleConfigModle;
 
 namespace SubBusContrainer
 {
@@ -24,7 +25,6 @@ namespace SubBusContrainer
         SubBusModel LastSubModel = null;
 
         BusModel BusModule = null;
-
        
         Bitmap bitmap;
 
@@ -102,18 +102,18 @@ namespace SubBusContrainer
 
             if (BusModule !=null && info.ToString().Contains("HL")) //子模块
             {     
-                var ExistControlName = ControlNameList.Where(c => c.Contains(info.ToString()));
+                var ExistCount = ControlNameList.Where(c => c.Contains(info.ToString())).Count();
                 EnumDeviceName subBusModelType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), info.ToString().Substring(0, 6));
-                SubBusModel SubBusModule = new SubBusModel(point, subBusModelType);
-                SubBusModule.Name = $"{info.ToString()}_{ExistControlName.Count() + 1}";
+                SubBusModel SubBusModule = new SubBusModel(point, subBusModelType, ExistCount + 1, ControlNameList.Count + 1);
+
                 SubBusModule.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
                 this.Controls.Add(SubBusModule);
                 SubBusModule.BringToFront();
                 SubBusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
                 BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
 
-               // DrawLine(SubBusModule);
-                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { ProductName = SubBusModule.Name, IsAdd = true, IsBusModule=false});
+               
+                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() {Module= SubBusModule,IsAdd = true});
             }
             else  //总线
             {
@@ -128,7 +128,7 @@ namespace SubBusContrainer
                 }
 
                 BusName = info.ToString();
-                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { ProductName = BusName, IsAdd = true, IsBusModule = true });
+                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() {IsAdd = true, Module= BusModule });
             }
   
         }
@@ -163,7 +163,7 @@ namespace SubBusContrainer
             if (sender is SubBusModel)
             {
                 SubBusModel SubBusModel = sender as SubBusModel;
-                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { ProductName = SubBusModel.Name, IsAdd = false, IsBusModule=false });
+                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() {IsAdd = false, Module= SubBusModel });
             }
         }
 
@@ -214,7 +214,7 @@ namespace SubBusContrainer
         /// Left——》Middle
         /// </summary>
         /// <param name="subproductname"></param>
-        public void AddSubProduct(string subproductname)
+        public void AddSubProduct(string subproductname, int LocalIndex, int GlobalIndex)
         {
             if (CheckExit(subproductname))
             {
@@ -233,7 +233,7 @@ namespace SubBusContrainer
             }
             EnumDeviceName subBusModelType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), subproductname.Substring(0, 6));
 
-            LastSubModel = new SubBusModel(point, subBusModelType);
+            LastSubModel = new SubBusModel(point, subBusModelType, LocalIndex,GlobalIndex);
             LastSubModel.Name = subproductname;
 
             LastSubModel.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
@@ -281,39 +281,24 @@ namespace SubBusContrainer
             }
 
         }
-        //private void pictureBox1_Paint(object sender, PaintEventArgs e)
-        //{
-        //    _pb.Image = bitmap;
-        //    m_g = Graphics.FromImage(bitmap);
-        //    m_g.Clear(this.BackColor);
-        //    m_g.DrawLine(new Pen(m_hcLine.PenColor, m_hcLine.LineWidth), new PointF(m_hcLine.Left, m_hcLine.Top), new PointF(m_hcLine.Left + m_hcLine.Width, m_hcLine.Top));
-
-        //    foreach (var member in Controls)
-        //    {
-        //        ControlBase control = member as ControlBase;
-        //        if (control != null)
-        //        {
-        //            DrawLine(control);
-        //        }
-        //    }
-        //    m_g.Flush();
-        //    m_g.Dispose();
-        //    _pb.Image = bitmap;
-        //}
-        public void ReplaceNewList(string BusName, List<string> NameListWithIndex)
+        public void ReplaceNewList(string BusName, List<Tuple<string,int,int,ModuleCfgModleBase>> SubModuleInfoList)
         {
-            List<ControlBase> list = new List<ControlBase>();
+            List<SubBusModel> list = new List<SubBusModel>();
             foreach (var member in this.Controls)
             {
-                if(member is ControlBase)
-                list.Add(member as ControlBase);
+                if(member is SubBusModel)
+                list.Add(member as SubBusModel);
             }
             foreach (var it in list)
             {
                 if (it != null)
                     it.Dispose();
             }
-
+            if (BusModule != null)
+            {
+                BusModule.Dispose();
+                BusModule = null;
+            }
 
             if (BusModule == null)
             {
@@ -326,10 +311,9 @@ namespace SubBusContrainer
                 this.BusName = BusName;
             }
 
-           
-
+          
             LastSubModel = null;
-            foreach (var Name in NameListWithIndex)
+            foreach (var Info in SubModuleInfoList)
             {
                 Point point = new Point();
                 if (LastSubModel == null)
@@ -342,11 +326,10 @@ namespace SubBusContrainer
                     point.X = this.LastSubModel.Location.X + 30;
                     point.Y = this.LastSubModel.Location.Y+10;
                 }
-                EnumDeviceName subBusModelType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), Name.Substring(0, 6));
-
-                LastSubModel = new SubBusModel(point, subBusModelType);
-                LastSubModel.Name = Name;
-
+                EnumDeviceName subBusModelType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), Info.Item1);
+                LastSubModel = new SubBusModel(point, subBusModelType, Info.Item2, Info.Item3);
+                LastSubModel.InitGcb(Info.Item4);
+                 
                 this.Controls.Add(LastSubModel);
                 LastSubModel.BringToFront();
                 LastSubModel.Focus();

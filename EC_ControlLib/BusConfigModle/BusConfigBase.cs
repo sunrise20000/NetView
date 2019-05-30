@@ -30,6 +30,10 @@ namespace EC_ControlLib.BusConfigModle
 
         public virtual  EnumBusType BusType { get; }
 
+        public int GlobalIndex { get; set; }
+
+        public int LocalIndex { get; set; }
+
         public string Function { get; private set; } = "HURRY RomoteIO Slaves";
         public string Corpration { get; private set; } = "Shanghai Hurry Electronics Tech.Co,.Ltd";
         public string Author { get;private set; } = "Hurry Lee";

@@ -1,4 +1,5 @@
-﻿using EC_ControlLib.BusConfigModle;
+﻿using ControlTest.ModuleConfigModle;
+using EC_ControlLib.BusConfigModle;
 using EC_ControlLib.Ethercat.ModuleConfigModle;
 using NetView.Model;
 using System;
@@ -56,7 +57,6 @@ namespace NetView.Class
                         ModuleConfigList.Add(formatter.Deserialize(s) as ModuleConfigModleBase);
                     }
                     s.Close();
-
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace NetView.Class
             sfd.FilterIndex = 2;
             sfd.RestoreDirectory = true;
             sfd.InitialDirectory = FileFullPathName;
-            sfd.FileName = $"{BusCfg.Name}.hcp";
+            sfd.FileName = $"{BusCfg.ShortName}.hcp";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 FileFullPathName = sfd.FileName;
@@ -86,12 +86,19 @@ namespace NetView.Class
         public string BusName { get {
                 return BusCfg.Name.Split(' ')[0];
             } }
-        public List<string> SubBusNameWithIndexList
+        public List<Tuple<string, int, int, ModuleCfgModleBase>> SubBusNameWithIndexList
         {
             get {
-                List<string> L = new List<string>();
+                var L = new List<Tuple<string,int,int, ModuleCfgModleBase>>();
+                Type T = typeof(ModuleCfgModleBase);
+          
                 foreach (var it in ModuleConfigList)
-                    L.Add($"{it.DeviceName.ToString()}_{it.LocalIndex}");
+                {
+                    var ClassName = $"ControlTest.ModuleConfigModle.ModuleCfg_{it.DeviceName.ToString()}";
+                    var Mcb = T.Assembly.CreateInstance(ClassName) as ModuleCfgModleBase;
+                    Mcb.FromString(it.GuiStringList.ToArray());
+                    L.Add(new Tuple<string, int, int, ModuleCfgModleBase>(it.DeviceName.ToString(), it.LocalIndex, it.GlobalIndex, Mcb));
+                }
                 return L;
             }
         }

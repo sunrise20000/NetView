@@ -12,24 +12,36 @@ namespace ControlTest
 {
     public partial class SubBusModel : ControlBase
     {
-        public ModuleCfgModleBase Mcm { get; private set; }
+        public ModuleCfgModleBase Mcb { get; set; }
         public EnumDeviceName ModuleType { get; private set; }
-        public SubBusModel(Point location, EnumDeviceName modelType, int Width = 140, int Height = 60) : base(location, Width, Height, Color.LightBlue)
+
+
+        public SubBusModel(Point location, EnumDeviceName modelType, int LocalIndex, int GlobalIndex, int Width = 140, int Height = 60) : base(location, Width, Height, Color.LightBlue)
         {
             ModuleType = modelType;
             InitializeComponent();
+            this.Name = modelType.ToString();
+            this.LocalIndex = LocalIndex;
+            this.GlobalIndex = GlobalIndex;
+            this.DisplayName = $"{Name}_{LocalIndex}";
             //实例化
             var ClassName = $"ControlTest.ModuleConfigModle.ModuleCfg_{modelType.ToString()}";
             var T = Type.GetType(ClassName);
-            Mcm = T.Assembly.CreateInstance(ClassName) as ModuleCfgModleBase;
-            
+            Mcb = T.Assembly.CreateInstance(ClassName) as ModuleCfgModleBase;
+            //Mcb.Name = modelType.ToString();
+            Mcb.Name = DisplayName;
+            Mcb.Plug_Sequence = $"{this.GlobalIndex}";
+            //Mcb.FromString()
+        }
+
+        public void InitGcb(ModuleCfgModleBase mcb)
+        {
+            this.Mcb = mcb;
         }
         public override void ShowProperty()
         {
-            WinPropertySetting = new Window_Property(Mcm.Name);
-            Mcm.Name = $"{this.Name}";
-            
-            WinPropertySetting.SelectedObject = Mcm;
+            WinPropertySetting = new Window_Property(Mcb.Name);
+            WinPropertySetting.SelectedObject = Mcb;
             WinPropertySetting.ShowDialog();
         }
     }

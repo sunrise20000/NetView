@@ -17,16 +17,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         protected override int GuiStringListNumber { get; } = 11;
         public ModuleConfig_HL3001()
         {
-            DeviceName = EnumDeviceName.HL3001;
-            InputTypeDic.Add(0x00, "Normal");
-            InputTypeDic.Add(0x01, "0-10V");
-            InputTypeDic.Add(0x02, "0-5V");
-            for (byte i=3;i< 11;i++)
-                InputTypeDic.Add(i, $"Reserved{i}");
-
-            AccuracyDic.Add(0x0A, "10bits sampling");
-            AccuracyDic.Add(0x0C, "12bits sampling");
-            AccuracyDic.Add(0x10, "16bits sampling");
+            DeviceName = EnumDeviceName.HL3001; 
         }
 
         public byte[] ChInputTypeArr { get; private set; } = new byte[4];
@@ -35,8 +26,25 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
 
         public override void FromString(params string[] ParaList)
         {
+            InputTypeDic.Clear();
+            AccuracyDic.Clear();
+
+            InputTypeDic.Add(0x00, "Normal");
+            InputTypeDic.Add(0x01, "0-10V");
+            InputTypeDic.Add(0x02, "0-5V");
+            for (byte i = 3; i < 11; i++)
+                InputTypeDic.Add(i, $"Reserved{i}");
+
+            AccuracyDic.Add(0x0A, "10bits sampling");
+            AccuracyDic.Add(0x0C, "12bits sampling");
+            AccuracyDic.Add(0x10, "16bits sampling");
+
+            GuiStringList.Clear();
             if (ParaList.Length != 11)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
+            foreach (var it in ParaList)
+                GuiStringList.Add(it);
+
             var L1 = GuiStringList[0].Split('_');
             //Name
             Enum.TryParse(L1[0], out EnumDeviceName Dn);
@@ -88,7 +96,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         }
         protected ModuleConfig_HL3001(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-
+           
         }
     }
 }

@@ -57,6 +57,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ControlTest\ControlTest.csproj">
+      <Project>{5DFD49D9-223B-4FCD-A0B7-800B003A2378}</Project>
+      <Name>ControlTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SubBusContrainer\SubBusContrainer.csproj">
       <Project>{01a6a00b-3da7-40cc-9f3d-fbb830662d4d}</Project>
       <Name>SubBusContrainer</Name>
