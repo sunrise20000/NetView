@@ -14,6 +14,7 @@ namespace ControlTest.ModuleConfigModle
         public ModuleCfg_HL2003()
         {
             DeviceName = EnumDeviceName.HL2003;
+            Function = "DO8xDC24V 2.0A";
         }
 
 
@@ -21,6 +22,9 @@ namespace ControlTest.ModuleConfigModle
         {
             if (ParaList.Length != GuiStringListNumber)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
+            GuiStringList.Clear();
+            foreach (var it in ParaList)
+                GuiStringList.Add(it);
             Name = GuiStringList[0];
             Function = GuiStringList[1];
             Plug_Sequence = GuiStringList[2];
@@ -33,9 +37,9 @@ namespace ControlTest.ModuleConfigModle
 
             GuiStringList.Add(Name);
 
-            GuiStringList.Add("DO8xDC24V 2.0A");
-
             GuiStringList.Add(Function);
+
+            GuiStringList.Add(Plug_Sequence);
         }
 
     }

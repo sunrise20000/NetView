@@ -12,10 +12,13 @@ namespace ControlTest.ModuleConfigModle
 
 
         protected override int GuiStringListNumber { get; } = 4;
-
+        Tcv tcv = new Tcv();
+        Dictionary<object, string> StrEnumType = null;
         public ModuleCfg_HL1001()
         {
-            DeviceName = EnumDeviceName.HL1001;      
+            DeviceName = EnumDeviceName.HL1001;
+            Function = "DI8xDC24V";
+            StrEnumType = tcv.GetEnumValueDesDic(typeof(EnumHL1001Type));
         }
 
         [TypeConverter(typeof(TypeConvertClass.Tcv))]
@@ -29,18 +32,22 @@ namespace ControlTest.ModuleConfigModle
         {
             if (ParaList.Length != GuiStringListNumber)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
-            Name=GuiStringList[0];
+            GuiStringList.Clear();
+            foreach (var it in ParaList)
+                GuiStringList.Add(it);
+
+            Name =GuiStringList[0];
             Function = GuiStringList[1];
-            Plug_Sequence= GuiStringList[2];
-            Enum.TryParse(GuiStringList[3],out EnumHL1001Type type);
-         
+            Plug_Sequence= GuiStringList[2];   
+            
+            Enum.TryParse(StrEnumType.Where(a => a.Value.Equals(GuiStringList[3])).FirstOrDefault().Key.ToString(), out EnumHL1001Type type);        
             Type = type;   
         }
 
         protected override void SetProfile()
         {
             GuiStringList.Clear();
-            GetListFromStr(GuiStringList, Name, "DI8xDC24V", Function, Type.ToString());
+            GetListFromStr(GuiStringList, Name, Function, Plug_Sequence, StrEnumType[Type]);
         }  
     }
 }

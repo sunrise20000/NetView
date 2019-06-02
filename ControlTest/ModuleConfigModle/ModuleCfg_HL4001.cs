@@ -12,10 +12,17 @@ namespace ControlTest.ModuleConfigModle
 {
     public class ModuleCfg_HL4001 : ModuleCfgModleBase
     {
+        Tcv tcv = new Tcv();
+        Dictionary<object, string> StrEnumType = null;
+        Dictionary<object, string> StrEnumAccuracy = null;
+
         protected override int GuiStringListNumber { get; } = 11;
         public ModuleCfg_HL4001()
         {
             DeviceName = EnumDeviceName.HL4001;
+            Function = "AOx4Ch. 0-10V";
+            StrEnumType = tcv.GetEnumValueDesDic(typeof(EnumHL4001Type));
+            StrEnumAccuracy = tcv.GetEnumValueDesDic(typeof(EnumHL4001Accuracy));
         }
         [TypeConverter(typeof(Tcv))]
         public EnumHL4001Type Ch1_Output_Type { get; set; }
@@ -44,28 +51,31 @@ namespace ControlTest.ModuleConfigModle
             EnumHL4001Accuracy acc;
             if (ParaList.Length != GuiStringListNumber)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
+            GuiStringList.Clear();
+            foreach (var it in ParaList)
+                GuiStringList.Add(it);
             Name = GuiStringList[0];
             Function = GuiStringList[1];
             Plug_Sequence = GuiStringList[2];
 
-            Enum.TryParse(GuiStringList[3], out type);
-            Enum.TryParse(GuiStringList[4], out acc);
+            Enum.TryParse(StrEnumType.Where(a=>a.Value.Equals(GuiStringList[3])).First().Key.ToString() , out type);
+            Enum.TryParse(StrEnumAccuracy.Where(a=>a.Value.Equals(GuiStringList[4])).First().Key.ToString() , out acc);
             Ch1_Output_Type = type;
             Ch1_Accuracy = acc;
 
-            Enum.TryParse(GuiStringList[5], out type);
-            Enum.TryParse(GuiStringList[6], out acc);
+            Enum.TryParse(StrEnumType.Where(a => a.Value.Equals(GuiStringList[5])).First().Key.ToString(), out type);
+            Enum.TryParse(StrEnumAccuracy.Where(a => a.Value.Equals(GuiStringList[6])).First().Key.ToString(), out acc);
             Ch2_Output_Type = type;
             Ch2_Accuracy = acc;
 
 
-            Enum.TryParse(GuiStringList[7], out type);
-            Enum.TryParse(GuiStringList[8], out acc);
+            Enum.TryParse(StrEnumType.Where(a => a.Value.Equals(GuiStringList[7])).First().Key.ToString(), out type);
+            Enum.TryParse(StrEnumAccuracy.Where(a => a.Value.Equals(GuiStringList[8])).First().Key.ToString(), out acc);
             Ch3_Output_Type = type;
             Ch3_Accuracy = acc;
 
-            Enum.TryParse(GuiStringList[9], out type);
-            Enum.TryParse(GuiStringList[10], out acc);
+            Enum.TryParse(StrEnumType.Where(a => a.Value.Equals(GuiStringList[9])).First().Key.ToString(), out type);
+            Enum.TryParse(StrEnumAccuracy.Where(a => a.Value.Equals(GuiStringList[10])).First().Key.ToString(), out acc);
             Ch4_Output_Type = type;
             Ch4_Accuracy = acc;
 
@@ -75,19 +85,20 @@ namespace ControlTest.ModuleConfigModle
         {
             GuiStringList.Clear();
             GetListFromStr(GuiStringList,
-                Name, "AOx4Ch. 0-10V",
+                Name,
                 Function,
-                Ch1_Output_Type.ToString(),
-                Ch1_Accuracy.ToString(),
+                Plug_Sequence,
+                StrEnumType[Ch1_Output_Type],
+                StrEnumAccuracy[Ch1_Accuracy],
 
-                Ch2_Output_Type.ToString(),
-                Ch2_Accuracy.ToString(),
+                StrEnumType[Ch2_Output_Type],
+                StrEnumAccuracy[Ch2_Accuracy],
 
-                Ch3_Output_Type.ToString(),
-                Ch3_Accuracy.ToString(),
+                StrEnumType[Ch3_Output_Type],
+                StrEnumAccuracy[Ch3_Accuracy],
 
-                Ch4_Output_Type.ToString(),
-                Ch4_Accuracy.ToString());
+                StrEnumType[Ch4_Output_Type],
+                StrEnumAccuracy[Ch4_Accuracy]);
 
         }
     }

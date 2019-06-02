@@ -22,6 +22,10 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         {
             if (ParaList.Length != 3)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
+            GuiStringList.Clear();
+            foreach (var it in ParaList)
+                GuiStringList.Add(it);
+
             var L1 = GuiStringList[0].Split('_');
             //Name
             Enum.TryParse(L1[0], out EnumDeviceName Dn);

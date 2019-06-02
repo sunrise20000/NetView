@@ -21,8 +21,6 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         public ModuleConfig_HL1001()
         {
             DeviceName = EnumDeviceName.HL1001;
-            for (int i = 0; i < TypeList.Count(); i++)
-                TypeDic.Add(TypeList[i], TypeStringList[i]);
         }
 
         public byte  Type{
@@ -33,8 +31,17 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
 
         public override void FromString(params string[] ParaList)
         {
+            TypeDic.Clear();
+            for (int i = 0; i < TypeList.Count(); i++)
+                TypeDic.Add(TypeList[i], TypeStringList[i]);
+
             if (ParaList.Length != GuiStringListNumber)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
+
+            GuiStringList.Clear();
+            foreach (var it in ParaList)
+                GuiStringList.Add(it);
+
             var L1 = GuiStringList[0].Split('_');
             //Name
             Enum.TryParse(L1[0], out EnumDeviceName Dn);
@@ -49,7 +56,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             GlobalIndex = int.Parse(GuiStringList[2]);
 
             //Type
-            Type = byte.Parse(GuiStringList[3]);
+            Type = TypeDic.Where(a=>a.Value.Equals(GuiStringList[3])).First().Key;
 
         }
 

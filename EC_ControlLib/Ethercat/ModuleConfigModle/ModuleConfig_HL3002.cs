@@ -19,6 +19,18 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         {
        
             DeviceName = EnumDeviceName.HL3002;
+            
+        }
+
+        public byte[] ChInputTypeArr { get; private set; } = new byte[4];
+        public byte[] ChAccuracyArr { get; private set; } = new byte[4];
+
+
+        public override void FromString(params string[] ParaList)
+        {
+            InputTypeDic.Clear();
+            AccuracyDic.Clear();
+
             InputTypeDic.Add(0x00, "Normal");
             InputTypeDic.Add(0x01, "4-20mA");
             InputTypeDic.Add(0x02, "0-20mA");
@@ -28,16 +40,13 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             AccuracyDic.Add(0x0A, "10bits sampling");
             AccuracyDic.Add(0x0C, "12bits sampling");
             AccuracyDic.Add(0x10, "16bits sampling");
-        }
 
-        public byte[] ChInputTypeArr { get; private set; } = new byte[4];
-        public byte[] ChAccuracyArr { get; private set; } = new byte[4];
-
-
-        public override void FromString(params string[] ParaList)
-        {
             if (ParaList.Length != 11)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
+
+            GuiStringList.Clear();
+            foreach (var it in ParaList)
+                GuiStringList.Add(it);
             var L1 = GuiStringList[0].Split('_');
             //Name
             Enum.TryParse(L1[0], out EnumDeviceName Dn);

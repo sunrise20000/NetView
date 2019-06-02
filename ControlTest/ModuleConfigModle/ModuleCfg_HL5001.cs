@@ -16,6 +16,7 @@ namespace ControlTest.ModuleConfigModle
         public ModuleCfg_HL5001()
         {
             DeviceName = EnumDeviceName.HL5001;
+            Function = "Counter 6000";
         }
 
         public string CounterLimitH { get; set; }
@@ -33,15 +34,18 @@ namespace ControlTest.ModuleConfigModle
         {
             if (ParaList.Length != 11)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
-            GetListFromStr(GuiStringList, Name, Function, Plug_Sequence, CounterLimitH, CounterLimitL, ResPara1,
+            GuiStringList.Clear();
+            foreach (var it in ParaList)
+                GuiStringList.Add(it);
+            GetStringFromList(GuiStringList, Name, Function, Plug_Sequence, CounterLimitH, CounterLimitL, ResPara1,
                             ResPara2, ResPara3, ResPara4, ResPara5, ResPara6);
 
         }
 
         protected override void SetProfile()
         {
-            GuiStringList.Clear();
-           GetStringFromList(GuiStringList,Name, "Counter 6000", Plug_Sequence,CounterLimitH,CounterLimitL, ResPara1,
+           GuiStringList.Clear();
+            GetListFromStr(GuiStringList,Name, Function, Plug_Sequence,CounterLimitH,CounterLimitL, ResPara1,
                             ResPara2, ResPara3, ResPara4, ResPara5, ResPara6);
 
         }

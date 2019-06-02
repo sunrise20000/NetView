@@ -15,19 +15,10 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         Dictionary<byte, string> ResolutionDic = new Dictionary<byte, string>();
         Dictionary<byte, string> RevolutionDic = new Dictionary<byte, string>();
 
-        protected override int GuiStringListNumber { get; } = 10;
+        protected override int GuiStringListNumber { get; } = 11;
         public ModuleConfig_HL5002()
         {
             DeviceName = EnumDeviceName.HL5002;
-            ResolutionDic.Add(0, "Normal");
-            RevolutionDic.Add(0, "Normal");
-            for (byte i = 1; i < 17; i++)
-            {
-                ResolutionDic.Add(i, $"{i}bits");
-                RevolutionDic.Add(i, $"{i}bits");
-            }
-
-
         }
 
    
@@ -42,8 +33,22 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
 
         public override void FromString(params string[] ParaList)
         {
+            ResolutionDic.Clear();
+            RevolutionDic.Clear();
+            ResolutionDic.Add(0, "Normal");
+            RevolutionDic.Add(0, "Normal");
+            for (byte i = 1; i < 17; i++)
+            {
+                ResolutionDic.Add(i, $"{i}bits");
+                RevolutionDic.Add(i, $"{i}bits");
+            }
+
             if (ParaList.Length != 11)
                 throw new Exception($"Wrong para number when parse {DeviceName.ToString()} formstring");
+            GuiStringList.Clear();
+            foreach (var it in ParaList)
+                GuiStringList.Add(it);
+
             var L1 = GuiStringList[0].Split('_');
             //Name
             Enum.TryParse(L1[0], out EnumDeviceName Dn);
@@ -59,17 +64,25 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             GlobalIndex = int.Parse(GuiStringList[2]);
 
             //Resolution
-            Resolution = byte.Parse(GuiStringList[3]);
+            Resolution = ResolutionDic.Where(a=>a.Value.Equals(GuiStringList[3])).First().Key;
 
             //Revolution
-            Revolution = byte.Parse(GuiStringList[4]);
+            Revolution = RevolutionDic.Where(a => a.Value.Equals(GuiStringList[4])).First().Key;
 
             //PresetValue
-            PresetValue = UInt32.Parse(GuiStringList[5]);
+            if (UInt32.TryParse(GuiStringList[5], out UInt32 presetValue))
+                PresetValue = presetValue;
+            else
+                PresetValue = 0;
 
             //ResPara
             for (int i = 0; i < 5; i++)
-                ResParaArr[i] = byte.Parse(GuiStringList[i + 6]);
+            {
+                if (byte.TryParse(GuiStringList[i + 6], out byte resValue))
+                    ResParaArr[i] = resValue;
+                else
+                    ResParaArr[i] = 0;
+            }
 
 
         }
@@ -85,9 +98,11 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             //GlobalIndex
             GuiStringList.Add($"{GlobalIndex}");
             //Resolution
-            GuiStringList.Add($"{Resolution}");
+            GuiStringList.Add($"{ResolutionDic[Resolution]}");
             //Revolution
-            GuiStringList.Add($"{Revolution}");
+            GuiStringList.Add($"{RevolutionDic[Revolution]}");
+
+            GuiStringList.Add($"{PresetValue}");
 
             for (int i = 0; i < 5; i++)
                 GuiStringList.Add($"{ResParaArr[i]}");
