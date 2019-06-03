@@ -46,17 +46,17 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             Function = 0x51;
 
             //GlobalIndex
-            GlobalIndex = int.Parse(GuiStringList[2]);
+            GlobalIndex = int.TryParse(GuiStringList[2], out int globalIndex) ? globalIndex : 0;
 
             //CounterLimitH
-            CounterLimitH = byte.Parse(GuiStringList[3]);
+            CounterLimitH = byte.TryParse(GuiStringList[3], out byte counterLimitH)? counterLimitH : (byte)0;
 
             //CounterLimitL
-            CounterLimitL= byte.Parse(GuiStringList[4]);
+            CounterLimitL= byte.TryParse(GuiStringList[4], out byte counterLimitL) ? counterLimitL : (byte)0;
 
             //ResPara
             for (int i = 0; i < 6; i++)
-                ResParaArr[i] = byte.Parse(GuiStringList[i+5]);
+                ResParaArr[i] = byte.TryParse(GuiStringList[i+5],out byte resPara)? resPara:(byte)0;
 
         }
 

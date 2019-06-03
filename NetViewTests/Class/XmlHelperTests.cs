@@ -14,12 +14,10 @@ namespace NetView.Class.Tests
         [TestMethod()]
         public void XmlHelperTest()
         {
-          
-
-           
 
 
             //Console.WriteLine(xml.ReadNodeString("0"));
         }
+       
     }
 }

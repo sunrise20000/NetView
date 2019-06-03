@@ -1,17 +1,15 @@
-﻿using ControllerLib;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.BusConfigModle
+namespace ControlTest.BusConfigModle
 {
-    [Serializable()]
-    public class BusConfig_PROFIBUS_DP : BusConfigBase
+    public class BusGUI_PROFIBUS_DP : BusGUI_Base
     {
-        public override EnumBusType BusType { get; } = EnumBusType.PROFIBUS_DP;
         public override string Name { get; protected set; } = "HL6802";
 
         /// <summary>
@@ -19,16 +17,11 @@ namespace EC_ControlLib.BusConfigModle
         /// </summary>
         public override string Type { get; protected set; } = "PROFIBUS_DP Coupler V1.0";
 
+
         /// <summary>
         /// 是什么类型的总线
         /// </summary>
         public override string ShortName { get; protected set; } = "GSD";
-        public BusConfig_PROFIBUS_DP()
-        {
-        }
-        protected BusConfig_PROFIBUS_DP(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-
-        }
+   
     }
 }

@@ -34,10 +34,7 @@ namespace NetView
         treeviewContrainer LeftControl = null;
         DataTable DTVarMonitor = new DataTable();
 
-        BusFileMgBase BusFileMgr = new EthercatFileMgr();
         ControllerBase BusController = new EC_Controller();
-        BusConfigBase BusCfgBase = new BusConfig_EtherCAT();
-
         ProjectController ProjController = new ProjectController();
 
         const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
@@ -119,6 +116,7 @@ namespace NetView
 
             //添加侧面控件
             LeftControl = new treeviewContrainer();
+            LeftControl.OnBusModulChanged += LeftControl_OnBusModulChanged;
             this.dockPanelLeft.Controls.Add(LeftControl);
             LeftControl.Dock = DockStyle.Fill;
             LeftControl.ProductContrainer = MiddleControl;
@@ -151,16 +149,41 @@ namespace NetView
             dockManager1.ActivePanel = dockPanelMiddle;
             
             //dockManager1.RemovePanel(dockPanelVarMonitor);
+            ProjController.BusFileMgr = new EthercatFileMgr();
+        }
 
-            ProjController.BusCfg =BusCfgBase ;
-            ProjController.BusFileMgr = BusFileMgr;
+        /// <summary>
+        /// 当总线改变的时候
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LeftControl_OnBusModulChanged(object sender, SubBusContrainer.Model.ModuleAddedArgs e)
+        {
+            if (e.IsAdd)
+            {
+                var T = typeof(BusConfigBase);
+                var ClassName = $"EC_ControlLib.BusConfigModle.BusConfig_{e.Module.Name}";
+                var obj = T.Assembly.CreateInstance(ClassName) as BusConfigBase;
+                ProjController.BusCfg = obj;
+            }
+            else
+            {
+                ProjController.BusCfg = null;
+            }
+
+           // e.Name
+           //ProjController.BusCfg=new 
+           //throw new NotImplementedException();
         }
 
         private void BarSubIteExportFile_Popup(object sender, EventArgs e)
         {
-            var C = (sender as BarSubItem).LinksPersistInfo;
-            foreach (LinkPersistInfo it in C)
-                it.Item.Enabled = it.Item.Caption.Contains(BusCfgBase.ShortName);
+            if (ProjController.BusCfg != null)
+            {
+                var C = (sender as BarSubItem).LinksPersistInfo;
+                foreach (LinkPersistInfo it in C)
+                    it.Item.Enabled = it.Item.Caption.Contains(ProjController.BusCfg.ShortName);
+            }
             
         }
 
@@ -242,7 +265,7 @@ namespace NetView
             {
                 MessageBox.Show($"Error when connect to controller:{ex.Message}","Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Error);
             }
-}
+        }
 
         private void barButtonItemUpload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
@@ -324,12 +347,12 @@ namespace NetView
         private void barButtonItemExportFile_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-            var strFilter = $"{BusFileMgr.ExtString} File(*.{BusFileMgr.ExtString})|*.{BusFileMgr.ExtString}";
+            var strFilter = $"{ProjController.BusFileMgr.ExtString} File(*.{ProjController.BusFileMgr.ExtString})|*.{ProjController.BusFileMgr.ExtString}";
             sfd.Filter = strFilter;
             sfd.FilterIndex = 2;
             sfd.RestoreDirectory = true;
             sfd.InitialDirectory = FileOpenPath;
-            sfd.FileName = $"Untitled.{BusFileMgr.ExtString}";
+            sfd.FileName = $"Untitled.{ProjController.BusFileMgr.ExtString}";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 FileOpenPath = sfd.FileName;
@@ -339,7 +362,7 @@ namespace NetView
                     {
                         PureName = it,
                     });
-                BusFileMgr.SaveFile(NameModelList, FileOpenPath);
+                ProjController.BusFileMgr.SaveFile(NameModelList, FileOpenPath);
             }
         }
 

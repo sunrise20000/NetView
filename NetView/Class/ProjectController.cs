@@ -86,18 +86,18 @@ namespace NetView.Class
         public string BusName { get {
                 return BusCfg.Name.Split(' ')[0];
             } }
-        public List<Tuple<string, int, int, ModuleCfgModleBase>> SubBusNameWithIndexList
+        public List<Tuple<string, int, int, ModuleGUIBase>> SubBusNameWithIndexList
         {
             get {
-                var L = new List<Tuple<string,int,int, ModuleCfgModleBase>>();
-                Type T = typeof(ModuleCfgModleBase);
+                var L = new List<Tuple<string,int,int, ModuleGUIBase>>();
+                Type T = typeof(ModuleGUIBase);
           
                 foreach (var it in ModuleConfigList)
                 {
                     var ClassName = $"ControlTest.ModuleConfigModle.ModuleCfg_{it.DeviceName.ToString()}";
-                    var Mcb = T.Assembly.CreateInstance(ClassName) as ModuleCfgModleBase;
+                    var Mcb = T.Assembly.CreateInstance(ClassName) as ModuleGUIBase;
                     Mcb.FromString(it.GuiStringList.ToArray());
-                    L.Add(new Tuple<string, int, int, ModuleCfgModleBase>(it.DeviceName.ToString(), it.LocalIndex, it.GlobalIndex, Mcb));
+                    L.Add(new Tuple<string, int, int, ModuleGUIBase>(it.DeviceName.ToString(), it.LocalIndex, it.GlobalIndex, Mcb));
                 }
                 return L;
             }

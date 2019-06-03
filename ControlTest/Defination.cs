@@ -273,31 +273,31 @@ namespace ControlTest
         [Description("Normal")]
         E1,
 
-        [Description("8Bits")]
+        [Description("8bits")]
         E2,
 
-        [Description("9Bits")]
+        [Description("9bits")]
         E3,
 
-        [Description("10Bits")]
+        [Description("10bits")]
         E4,
 
-        [Description("11Bits")]
+        [Description("11bits")]
         E5,
 
-        [Description("12Bits")]
+        [Description("12bits")]
         E6,
 
-        [Description("13Bits")]
+        [Description("13bits")]
         E7,
 
-        [Description("14Bits")]
+        [Description("14bits")]
         E8,
 
-        [Description("15Bits")]
+        [Description("15bits")]
         E9,
 
-        [Description("16Bits")]
+        [Description("16bits")]
         E10,
     }
     public enum EnumHL5002Revolution
@@ -305,31 +305,31 @@ namespace ControlTest
         [Description("Normal")]
         E1,
 
-        [Description("8Bits")]
+        [Description("8bits")]
         E2,
 
-        [Description("9Bits")]
+        [Description("9bits")]
         E3,
 
-        [Description("10Bits")]
+        [Description("10bits")]
         E4,
 
-        [Description("11Bits")]
+        [Description("11bits")]
         E5,
 
-        [Description("12Bits")]
+        [Description("12bits")]
         E6,
 
-        [Description("13Bits")]
+        [Description("13bits")]
         E7,
 
-        [Description("14Bits")]
+        [Description("14bits")]
         E8,
 
-        [Description("15Bits")]
+        [Description("15bits")]
         E9,
 
-        [Description("16Bits")]
+        [Description("16bits")]
         E10,
     }
     #endregion

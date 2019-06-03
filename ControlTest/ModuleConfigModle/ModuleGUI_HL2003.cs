@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace ControlTest.ModuleConfigModle
 {
-    public class ModuleCfg_HL2003 : ModuleCfgModleBase
+    public class ModuleGUI_HL2003 : ModuleGUIBase
     {
         protected override int GuiStringListNumber { get; } = 3;
-        public ModuleCfg_HL2003()
+        public ModuleGUI_HL2003()
         {
             DeviceName = EnumDeviceName.HL2003;
             Function = "DO8xDC24V 2.0A";

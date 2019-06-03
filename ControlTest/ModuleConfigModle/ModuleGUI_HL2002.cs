@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 
 namespace ControlTest.ModuleConfigModle
 {
-    public class ModuleCfg_HL2001 : ModuleCfgModleBase
+   
+    public class ModuleGUI_HL2002 : ModuleGUIBase
     {
         protected override int GuiStringListNumber { get; } = 3;
-
-        public ModuleCfg_HL2001()
+        public ModuleGUI_HL2002()
         {
-            DeviceName = EnumDeviceName.HL2001;
-            Function = "DO8xDC24V 0.5A";
+            DeviceName = EnumDeviceName.HL2002;
+            Function = "DO8xDC24V 1.5A";
         }
+
         public override void FromString(params string[] ParaList)
         {
             if (ParaList.Length != GuiStringListNumber)
@@ -27,19 +28,18 @@ namespace ControlTest.ModuleConfigModle
             Name = GuiStringList[0];
             Function = GuiStringList[1];
             Plug_Sequence = GuiStringList[2];
-     
+
         }
 
         protected override void SetProfile()
         {
             GuiStringList.Clear();
-           
+
             GuiStringList.Add(Name);
-        
+
             GuiStringList.Add(Function);
-          
+
             GuiStringList.Add(Plug_Sequence);
         }
     }
-   
 }

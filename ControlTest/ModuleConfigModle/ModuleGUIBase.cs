@@ -9,19 +9,19 @@ using System.Threading.Tasks;
 
 namespace ControlTest.ModuleConfigModle
 {
-    public class ModuleCfgModleBase
+    public class ModuleGUIBase
     {
         protected virtual int GuiStringListNumber { get; }=0;
 
         protected List<string> GuiStringList = new List<string>();
 
-        protected void GetStringFromList(List<string> L, params string[] Str)
-        {
-            if (L.Count != Str.Count())
-                throw new Exception("Can't GetStringFromList");
-            for (int i = 0; i < L.Count; i++)
-                Str[i] = L[i];
-        }
+        //protected void GetStringFromList(List<string> L, params string[] Str)
+        //{
+        //    if (L.Count != Str.Count())
+        //        throw new Exception("Can't GetStringFromList");
+        //    for (int i = 0; i < L.Count; i++)
+        //        Str[i] = L[i];
+        //}
         protected void GetListFromStr(List<string> L, params string[] Str)
         {
             L.Clear();

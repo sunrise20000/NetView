@@ -9,23 +9,19 @@ using System.Threading.Tasks;
 
 namespace ControlTest.BusConfigModle
 {
-    [Serializable()]
-    public class BusCfgBase : ISerializable
+    public class BusGUI_Base
     {
         /// <summary>
         /// 主要是为了区分保存为哪种输出文件
         /// </summary>
         public virtual string ShortName { get;protected set; }
 
-        /// <summary>
-        /// 默认文件名
-        /// </summary>
-        public virtual string Name { get; set; }
-
+        public virtual string Name { get; protected set; }
         /// <summary>
         /// 是什么类型的总线
         /// </summary>
-        public virtual string Type { get; set; }
+        public virtual string Type { get; protected set; }
+
         public string Function { get; private set; } = "HURRY RomoteIO Slaves";
         public string Corpration { get; private set; } = "Shanghai Hurry Electronics Tech.Co,.Ltd";
         public string Author { get;private set; } = "Hurry Lee";
@@ -38,19 +34,5 @@ namespace ControlTest.BusConfigModle
         }
         public string Email { get; private set; } = "hurry@hurry-tech.cn";
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("Type", Type);
-            info.AddValue("Name", Name);
-            info.AddValue("ShortName", ShortName);
-        }
-
-        protected BusCfgBase(SerializationInfo info, StreamingContext context)
-        {
-            Type = info.GetString("Type");
-            Name = info.GetString("Name");
-            ShortName = info.GetString("ShortName");
-        }
-        public BusCfgBase() { }
     }
 }

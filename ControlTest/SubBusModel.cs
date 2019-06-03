@@ -12,7 +12,7 @@ namespace ControlTest
 {
     public partial class SubBusModel : ControlBase
     {
-        public ModuleCfgModleBase Mcb { get; set; }
+        public ModuleGUIBase Mcb { get; set; }
         public EnumDeviceName ModuleType { get; private set; }
 
 
@@ -24,17 +24,19 @@ namespace ControlTest
             this.LocalIndex = LocalIndex;
             this.GlobalIndex = GlobalIndex;
             this.DisplayName = $"{Name}_{LocalIndex}";
+
             //实例化
-            var ClassName = $"ControlTest.ModuleConfigModle.ModuleCfg_{modelType.ToString()}";
+            var ClassName = $"ControlTest.ModuleConfigModle.ModuleGUI_{modelType.ToString()}";
             var T = Type.GetType(ClassName);
-            Mcb = T.Assembly.CreateInstance(ClassName) as ModuleCfgModleBase;
+            Mcb = T.Assembly.CreateInstance(ClassName) as ModuleGUIBase;
             //Mcb.Name = modelType.ToString();
             Mcb.Name = DisplayName;
             Mcb.Plug_Sequence = $"{this.GlobalIndex}";
+
             //Mcb.FromString()
         }
 
-        public void InitGcb(ModuleCfgModleBase mcb)
+        public void InitGcb(ModuleGUIBase mcb)
         {
             this.Mcb = mcb;
         }

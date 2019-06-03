@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 namespace ControlTest.ModuleConfigModle
 {
     [Serializable()]
-    public class ModuleCfg_HL5002 : ModuleCfgModleBase
+    public class ModuleGUI_HL5002 : ModuleGUIBase
     {
         Tcv tcv = new Tcv();
         Dictionary<object, string> StrEnumResolution = null;
         Dictionary<object, string> StrEnumRevolution = null;
         protected override int GuiStringListNumber { get; } = 11;
-        public ModuleCfg_HL5002()
+        public ModuleGUI_HL5002()
         {
             DeviceName = EnumDeviceName.HL5002;
             Function = "AbsEncoder SSI";
@@ -48,15 +48,26 @@ namespace ControlTest.ModuleConfigModle
             GuiStringList.Clear();
             foreach (var it in ParaList)
                 GuiStringList.Add(it);
-            string R1="", R2="";
-            GetStringFromList(GuiStringList, Name, Function, Plug_Sequence, R1, R2, PresetValue,
-                        ResPara1,ResPara2, ResPara3, ResPara4, ResPara5);
 
 
-            Enum.TryParse(StrEnumResolution.Where(a=>a.Value.Equals(R1)).First().Key.ToString(), out EnumHL5002Resolution resolution);
-            Enum.TryParse(StrEnumRevolution.Where(a => a.Value.Equals(R1)).First().Key.ToString(), out EnumHL5002Revolution revolution);
+
+            Name = GuiStringList[0];
+            Function = GuiStringList[1];
+            Plug_Sequence = GuiStringList[2];
+
+            Enum.TryParse(StrEnumResolution.Where(a => a.Value.Equals(GuiStringList[3])).First().Key.ToString(), out EnumHL5002Resolution resolution);
+            Enum.TryParse(StrEnumRevolution.Where(a => a.Value.Equals(GuiStringList[4])).First().Key.ToString(), out EnumHL5002Revolution revolution);
             Resolution = resolution;
             Revolution = revolution;
+
+            PresetValue= GuiStringList[5];
+
+
+            ResPara1 = GuiStringList[6];
+            ResPara2 = GuiStringList[7];
+            ResPara3 = GuiStringList[8];
+            ResPara4 = GuiStringList[9];
+            ResPara5 = GuiStringList[10];  
         }
 
         protected override void SetProfile()

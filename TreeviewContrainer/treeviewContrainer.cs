@@ -16,7 +16,8 @@ namespace TreeviewContrainer
     public partial class treeviewContrainer: UserControl
     {
         private ProductContrainer productContrainer;
-        public List<string> PureNameList    //修改这个  srh
+        public event EventHandler<SubBusContrainer.Model.ModuleAddedArgs> OnBusModulChanged;
+        public List<string> PureNameList    
         {
             get
             {
@@ -74,13 +75,13 @@ namespace TreeviewContrainer
                             NodeTextDic.Add(i++, node.Text);
                         if (e.IsAdd)
                         {
-                            it.Nodes.Add(e.Module.Name, e.Module.Name);
+                            it.Nodes.Add($"{e.Module.Name}_{e.Module.LocalIndex}", $"{e.Module.Name}_{e.Module.LocalIndex}");
                         }
                         else
                         {
                             for (int j = 0; j < NodeTextDic.Count; j++)
                             {
-                                if (NodeTextDic.ElementAt(j).Value.Contains(e.Module.Name))
+                                if (NodeTextDic.ElementAt(j).Value.Contains($"{e.Module.Name}_{e.Module.LocalIndex}"))
                                 {
                                     it.Nodes.RemoveAt(j);
                                     NodeTextDic.Remove(NodeTextDic.ElementAt(j).Key);
@@ -95,12 +96,16 @@ namespace TreeviewContrainer
             {
                 if (treeView_ProductInfo.Nodes.Count != 0)
                 {
-                    treeView_ProductInfo.Nodes[0].Text = e.Module.Name;
+                    if (e.IsAdd)
+                        treeView_ProductInfo.Nodes[0].Text = e.Module.Name;
+                    else
+                        treeView_ProductInfo.Nodes.Clear();
                 }
                 else
                 {
                     treeView_ProductInfo.Nodes.Add(new TreeNode(e.Module.Name));
                 }
+                OnBusModulChanged?.Invoke(this,e);
             }
             treeView_ProductInfo.ExpandAll();
             //RenameTreeNode();
@@ -136,7 +141,7 @@ namespace TreeviewContrainer
         /// </summary>
         /// <param name="BusName"></param>
         /// <param name="ModuleInfoList">ModuleName, LocalIndex, GlobalIndex</param>
-        public void ReplaceNewList(string BusName,List<Tuple<string,int,int, ModuleCfgModleBase>>ModuleInfoList)
+        public void ReplaceNewList(string BusName,List<Tuple<string,int,int, ModuleGUIBase>>ModuleInfoList)
         {
 
             if (treeView_ProductInfo.Nodes.Count == 0)
@@ -154,6 +159,7 @@ namespace TreeviewContrainer
                 {
                     while (it.Nodes.Count > 0)
                         it.Nodes.RemoveAt(0);
+                    ModuleInfoList.Sort((a, b) => a.Item3.CompareTo(b.Item3));
                     foreach (var Info in ModuleInfoList)
                         it.Nodes.Add($"{Info.Item1}_{Info.Item2}");
                     break;
@@ -201,10 +207,6 @@ namespace TreeviewContrainer
             this.treeView_ProductInfo.SelectedNode = _treeNode;
             if (_treeNode != null)
             {
-                //if (_treeNode.Level == 0)
-                //    MessageBox.Show("BusModel");
-                //else
-                //    MessageBox.Show("SubModel");
                 productContrainer.ShowProperty(_treeNode.Text);
             }
         }

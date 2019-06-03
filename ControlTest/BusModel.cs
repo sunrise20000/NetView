@@ -12,18 +12,19 @@ namespace ControlTest
 {
     public partial class BusModel : ControlBase
     {
-        public BusCfgBase Bcb { get; private set; }
+        public BusGUI_Base Bcb { get; private set; }
         public EnumBusType BusType { get; private set; }
         public BusModel(EnumBusType BusType, Point location, int Width=200, int Height=150):base(location,Width,Height,Color.Teal)
         {
             this.BusType = BusType;
             InitializeComponent();
-
+            this.Name = BusType.ToString();
+            this.DisplayName = this.BusType.ToString();
             //实例化
-            var ClassName = $"ControlTest.BusConfigModle.{BusType.ToString()}";
+            var ClassName = $"ControlTest.BusConfigModle.BusGUI_{BusType.ToString()}";
             var T = Type.GetType(ClassName);
-            Bcb = T.Assembly.CreateInstance(ClassName) as BusCfgBase;
-
+            Bcb = T.Assembly.CreateInstance(ClassName) as BusGUI_Base;
+            
         }
         public override void ShowProperty()
         {

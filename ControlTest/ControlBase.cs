@@ -15,16 +15,12 @@ namespace ControlTest
         private bool m_leftMouseDownFlag;//鼠标左键按下标志
         private Point m_lastPoint;//控件上一时刻鼠标位置 
         protected Window_Property WinPropertySetting =null;
-        public event EventHandler OnSubBusModleDelete;
+        public event EventHandler OnModleDelete;
         #endregion
         #region 属性定义
         public new string Name
         {
-            get { return this.label1.Text; }
-            set
-            {
-                this.label1.Text = value;
-            }
+            get;set;
         }
         
         protected string DisplayName { get { return this.label1.Text; } set { this.label1.Text=value;} }
@@ -91,9 +87,9 @@ namespace ControlTest
 
         private void toolStripMenuItem_Delete_Click(object sender, EventArgs e)
         {
-            OnControlMove(new ControlMoveEventArgs("LeftMouseDown"));
-            this.Dispose();
-            OnSubBusModleDelete?.Invoke(this, e);
+            //OnControlMove(new ControlMoveEventArgs("LeftMouseDown"));
+            OnControlMove(new ControlMoveEventArgs("Delete"));
+            OnModleDelete?.Invoke(this, e);
         }  
 
         private void label1_MouseDoubleClick(object sender, MouseEventArgs e)

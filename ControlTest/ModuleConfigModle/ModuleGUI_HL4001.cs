@@ -10,22 +10,20 @@ using System.Threading.Tasks;
 
 namespace ControlTest.ModuleConfigModle
 {
-    [Serializable()]
-    public class ModuleCfg_HL4002 : ModuleCfgModleBase
+    public class ModuleGUI_HL4001 : ModuleGUIBase
     {
         Tcv tcv = new Tcv();
         Dictionary<object, string> StrEnumType = null;
         Dictionary<object, string> StrEnumAccuracy = null;
 
         protected override int GuiStringListNumber { get; } = 11;
-        public ModuleCfg_HL4002()
+        public ModuleGUI_HL4001()
         {
-            DeviceName = EnumDeviceName.HL4002;
-            Function = "AOx4Ch. 4-20mA";
-            StrEnumType = tcv.GetEnumValueDesDic(typeof(EnumHL4002Type));
-            StrEnumAccuracy = tcv.GetEnumValueDesDic(typeof(EnumHL4002Accuracy));
+            DeviceName = EnumDeviceName.HL4001;
+            Function = "AOx4Ch. 0-10V";
+            StrEnumType = tcv.GetEnumValueDesDic(typeof(EnumHL4001Type));
+            StrEnumAccuracy = tcv.GetEnumValueDesDic(typeof(EnumHL4001Accuracy));
         }
-
         [TypeConverter(typeof(Tcv))]
         public EnumHL4001Type Ch1_Output_Type { get; set; }
         [TypeConverter(typeof(Tcv))]
@@ -60,8 +58,8 @@ namespace ControlTest.ModuleConfigModle
             Function = GuiStringList[1];
             Plug_Sequence = GuiStringList[2];
 
-            Enum.TryParse(StrEnumType.Where(a => a.Value.Equals(GuiStringList[3])).First().Key.ToString(), out type);
-            Enum.TryParse(StrEnumAccuracy.Where(a => a.Value.Equals(GuiStringList[4])).First().Key.ToString(), out acc);
+            Enum.TryParse(StrEnumType.Where(a=>a.Value.Equals(GuiStringList[3])).First().Key.ToString() , out type);
+            Enum.TryParse(StrEnumAccuracy.Where(a=>a.Value.Equals(GuiStringList[4])).First().Key.ToString() , out acc);
             Ch1_Output_Type = type;
             Ch1_Accuracy = acc;
 

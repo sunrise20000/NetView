@@ -100,37 +100,45 @@ namespace SubBusContrainer
                 if ((it as SubBusModel) != null)
                     ControlNameList.Add((it as SubBusModel).Name);
 
-            if (BusModule !=null && info.ToString().Contains("HL")) //子模块
-            {     
+            if (info.ToString().Contains("HL")) //子模块
+            {
+                if (BusModule == null)
+                {
+                    MessageBox.Show("Please add a bus first!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
                 var ExistCount = ControlNameList.Where(c => c.Contains(info.ToString())).Count();
                 EnumDeviceName subBusModelType = (EnumDeviceName)Enum.Parse(typeof(EnumDeviceName), info.ToString().Substring(0, 6));
                 SubBusModel SubBusModule = new SubBusModel(point, subBusModelType, ExistCount + 1, ControlNameList.Count + 1);
 
-                SubBusModule.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
+                SubBusModule.OnModleDelete += UserControl1_OnModleDelete;
                 this.Controls.Add(SubBusModule);
                 SubBusModule.BringToFront();
                 SubBusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
                 BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
 
-               
                 OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() {Module= SubBusModule,IsAdd = true});
             }
             else  //总线
             {
-                if (BusModule == null)
+                if (BusModule != null)
                 {
-                    Enum.TryParse(info.ToString(), out EnumBusType BusType);
-                    BusModule = new BusModel(BusType,new Point(100, this.Height/2+100));
-                    this.Controls.Add(BusModule);
-                    BusModule.BringToFront();
-                    BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
-                    BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
+                    if (BusModule.Name!=info.ToString() && MessageBox.Show("Do you want to change bus type?", "Question", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+                        this.Controls.Remove(BusModule);
+                    else
+                        return;
                 }
 
-                BusName = info.ToString();
+                Enum.TryParse(info.ToString(), out EnumBusType BusType);
+                BusModule = new BusModel(BusType,new Point(100, this.Height/2+100));
+               
+                this.Controls.Add(BusModule);
+                BusModule.BringToFront();
+                BusModule.OnModleDelete += UserControl1_OnModleDelete;
+                BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
+                BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
                 OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() {IsAdd = true, Module= BusModule });
             }
-  
         }
 
         private void BusModule_ControlMoveEvent(object sender, ControlMoveEventArgs e)
@@ -138,16 +146,24 @@ namespace SubBusContrainer
             _pb.Image = bitmap;
             m_g = Graphics.FromImage(bitmap);
             m_g.Clear(this.BackColor);
-            m_g.DrawLine(new Pen(m_hcLine.PenColor, m_hcLine.LineWidth), new PointF(m_hcLine.Left, m_hcLine.Top), new PointF(m_hcLine.Left + m_hcLine.Width, m_hcLine.Top));
-
+            bool bDrawHLine = false;
             foreach (var member in Controls)
             {
                 ControlBase control = member as ControlBase;
                 if (control != null)
                 {
+                    if (bDrawHLine == false)
+                    {
+                        bDrawHLine = true;
+                        m_g.DrawLine(new Pen(m_hcLine.PenColor, m_hcLine.LineWidth), new PointF(m_hcLine.Left, m_hcLine.Top), new PointF(m_hcLine.Left + m_hcLine.Width, m_hcLine.Top));
+                    }
                     DrawLine(control);
                 }
             }
+
+           
+
+            
             m_g.Flush();
             m_g.Dispose();
             _pb.Image = bitmap;       
@@ -158,13 +174,34 @@ namespace SubBusContrainer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UserControl1_OnSubBusModleDelete(object sender, EventArgs e)
+        private void UserControl1_OnModleDelete(object sender, EventArgs e)
         {
-            if (sender is SubBusModel)
+
+            if (sender is BusModel)
             {
-                SubBusModel SubBusModel = sender as SubBusModel;
-                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() {IsAdd = false, Module= SubBusModel });
+                if (MessageBox.Show("You will delete all the submodules, do you want to delelte all submodules?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                {
+                    List<ControlBase> ModuleList = new List<ControlBase>();
+                    BusModule = null;
+                    foreach (var it in this.Controls)
+                    {
+                        if (it is ControlBase)
+                            ModuleList.Add(it as ControlBase);
+                    }
+                    foreach (var it in ModuleList)
+                        it.Dispose();
+                    BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
+                    OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { IsAdd = false, Module = sender as ControlBase });
+                }
             }
+            else
+            {
+                
+                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { IsAdd = false, Module = sender as ControlBase });
+                (sender as ControlBase).Dispose();
+                BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
+            }
+
         }
 
         private void panel_Product_DragEnter(object sender, DragEventArgs e)
@@ -236,7 +273,7 @@ namespace SubBusContrainer
             LastSubModel = new SubBusModel(point, subBusModelType, LocalIndex,GlobalIndex);
             LastSubModel.Name = subproductname;
 
-            LastSubModel.OnSubBusModleDelete += UserControl1_OnSubBusModleDelete;
+            LastSubModel.OnModleDelete += UserControl1_OnModleDelete;
             this.Controls.Add(LastSubModel);
             LastSubModel.ControlMoveEvent += BusModule_ControlMoveEvent;
             BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
@@ -272,16 +309,17 @@ namespace SubBusContrainer
                 SubBusModel _controlBase = member as SubBusModel;
                 if (_controlBase != null)
                 {
-                    if (_controlBase.Name == subproductname)
+                    if ($"{_controlBase.Name}_{_controlBase.LocalIndex}".Equals(subproductname))
                     {
                         _controlBase.Dispose();
+                        BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
                         break;
                     }
                 }
             }
 
         }
-        public void ReplaceNewList(string BusName, List<Tuple<string,int,int,ModuleCfgModleBase>> SubModuleInfoList)
+        public void ReplaceNewList(string BusName, List<Tuple<string,int,int,ModuleGUIBase>> SubModuleInfoList)
         {
             List<SubBusModel> list = new List<SubBusModel>();
             foreach (var member in this.Controls)

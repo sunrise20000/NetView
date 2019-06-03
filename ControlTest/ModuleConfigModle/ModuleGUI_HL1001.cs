@@ -7,14 +7,14 @@ using System.Runtime.Serialization;
 
 namespace ControlTest.ModuleConfigModle
 {
-    public class ModuleCfg_HL1001 : ModuleCfgModleBase
+    public class ModuleGUI_HL1001 : ModuleGUIBase
     {
 
 
         protected override int GuiStringListNumber { get; } = 4;
         Tcv tcv = new Tcv();
         Dictionary<object, string> StrEnumType = null;
-        public ModuleCfg_HL1001()
+        public ModuleGUI_HL1001()
         {
             DeviceName = EnumDeviceName.HL1001;
             Function = "DI8xDC24V";

@@ -21,12 +21,12 @@ namespace EC_ControlLib.BusConfigModle
         /// <summary>
         /// 默认文件名
         /// </summary>
-        public virtual string Name { get; set; }
+        public virtual string Name { get;protected set; }
 
         /// <summary>
         /// 是什么类型的总线
         /// </summary>
-        public virtual string Type { get; set; }
+        public virtual string Type { get; protected set; }
 
         public virtual  EnumBusType BusType { get; }
 
