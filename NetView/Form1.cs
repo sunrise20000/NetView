@@ -352,7 +352,7 @@ namespace NetView
             sfd.FilterIndex = 2;
             sfd.RestoreDirectory = true;
             sfd.InitialDirectory = FileOpenPath;
-            sfd.FileName = $"Untitled.{ProjController.BusFileMgr.ExtString}";
+            sfd.FileName = $"{ProjController.BusCfg.Name}.{ProjController.BusFileMgr.ExtString}";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 FileOpenPath = sfd.FileName;

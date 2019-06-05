@@ -344,6 +344,7 @@ namespace SubBusContrainer
                 BusModule = new BusModel(BusType,new Point(100, this.Height / 2 + 100));
                 this.Controls.Add(BusModule);
                 BusModule.BringToFront();
+                BusModule.OnModleDelete += UserControl1_OnModleDelete;
                 BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
                 BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
                 this.BusName = BusName;
@@ -371,7 +372,7 @@ namespace SubBusContrainer
                 this.Controls.Add(LastSubModel);
                 LastSubModel.BringToFront();
                 LastSubModel.Focus();
-
+                LastSubModel.OnModleDelete += UserControl1_OnModleDelete;
                 LastSubModel.ControlMoveEvent += BusModule_ControlMoveEvent;
                 BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
             }
