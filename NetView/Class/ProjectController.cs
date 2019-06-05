@@ -94,7 +94,7 @@ namespace NetView.Class
           
                 foreach (var it in ModuleConfigList)
                 {
-                    var ClassName = $"ControlTest.ModuleConfigModle.ModuleCfg_{it.DeviceName.ToString()}";
+                    var ClassName = $"ControlTest.ModuleConfigModle.ModuleGUI_{it.DeviceName.ToString()}";
                     var Mcb = T.Assembly.CreateInstance(ClassName) as ModuleGUIBase;
                     Mcb.FromString(it.GuiStringList.ToArray());
                     L.Add(new Tuple<string, int, int, ModuleGUIBase>(it.DeviceName.ToString(), it.LocalIndex, it.GlobalIndex, Mcb));

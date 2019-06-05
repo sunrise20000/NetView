@@ -10,7 +10,6 @@ namespace ControlTest.BusConfigModle
 {
     public class BusGUI_DeviceNet : BusGUI_Base
     {
-        public override string ShortName { get; protected set; } = "HL6807";
 
         /// <summary>
         /// 默认文件名
@@ -22,7 +21,8 @@ namespace ControlTest.BusConfigModle
         /// 是什么类型的总线
         /// </summary>
         public override string Type { get; protected set; } = "DE EDS";
-        
-  
+
+        public override string ShortName { get; protected set; } = "HL6807";
+
     }
 }

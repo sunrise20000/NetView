@@ -377,14 +377,14 @@ namespace SubBusContrainer
             }
 
         }
-        public void ShowProperty(string subproductname)
+        public void ShowProperty(string subproductnameWithLocalIndex)
         {
             foreach (var member in this.Controls)
             {
                 ControlBase _controlBase = member as ControlBase;
                 if (_controlBase != null)
                 {
-                    if (_controlBase.Name == subproductname)
+                    if ($"{_controlBase.Name}_{_controlBase.LocalIndex}" == subproductnameWithLocalIndex)
                     {
                         _controlBase.ShowProperty();
                         break;

@@ -11,16 +11,18 @@ namespace ControlTest.BusConfigModle
 {
     public class BusGUI_Base
     {
-        /// <summary>
-        /// 主要是为了区分保存为哪种输出文件
-        /// </summary>
-        public virtual string ShortName { get;protected set; }
 
         public virtual string Name { get; protected set; }
         /// <summary>
         /// 是什么类型的总线
         /// </summary>
         public virtual string Type { get; protected set; }
+
+        /// <summary>
+        /// 主要是为了区分保存为哪种输出文件
+        /// </summary>
+        public virtual string ShortName { get; protected set; }
+
 
         public string Function { get; private set; } = "HURRY RomoteIO Slaves";
         public string Corpration { get; private set; } = "Shanghai Hurry Electronics Tech.Co,.Ltd";

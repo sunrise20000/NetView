@@ -13,11 +13,7 @@ namespace EC_ControlLib.BusConfigModle
     [Serializable()]
     public class BusConfigBase : ISerializable
     {
-        /// <summary>
-        /// 主要是为了区分保存为哪种输出文件
-        /// </summary>
-        public virtual string ShortName { get;protected set; }
-
+   
         /// <summary>
         /// 默认文件名
         /// </summary>
@@ -27,6 +23,12 @@ namespace EC_ControlLib.BusConfigModle
         /// 是什么类型的总线
         /// </summary>
         public virtual string Type { get; protected set; }
+
+        /// <summary>
+        /// 主要是为了区分保存为哪种输出文件
+        /// </summary>
+        public virtual string ShortName { get; protected set; }
+
 
         public virtual  EnumBusType BusType { get; }
 
