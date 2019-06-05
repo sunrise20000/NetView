@@ -22,6 +22,7 @@ using NetView.Definations;
 using EC_ControlLib.BusConfigModle;
 using ControlTest;
 using EC_ControlLib.Ethercat.ModuleConfigModle;
+using System.Text.RegularExpressions;
 
 namespace NetView
 {
@@ -38,7 +39,7 @@ namespace NetView
         ProjectController ProjController = new ProjectController();
 
         const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
-
+        ComportSettingModel ComSettingCfgModel = null;
         public Form1()
         {
             InitializeComponent();
@@ -248,18 +249,37 @@ namespace NetView
 
         private void barButtonItemSetting_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
+
             Window_ComSetting window = new Window_ComSetting();
+            if (ComSettingCfgModel != null)
+                window.ComSetting = ComSettingCfgModel;
             window.ShowDialog();
+            ComSettingCfgModel = window.ComSetting;
         }
 
         private void barButtonItemConnect_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             try
             {
-                if (!BusController.IsConnected)
-                    BusController.Open("1");
+                string RegStr = @"COM\d{1,2}";
+                var IsMatched = Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr);
+                if (ComSettingCfgModel != null && IsMatched)
+                {
+                    BusController.Open(ComSettingCfgModel.ComportName);
+                    if (!BusController.IsConnected)
+                    {
+                        BusController.Connect();
+                    }
+                    else
+                    {
+                        //BusController.CLose();
+                        BusController.DisConnect();
+                    }
+                }
                 else
-                    BusController.CLose();
+                {
+                    MessageBox.Show("Please select a comport to connect controller");
+                }
             }            
             catch (Exception ex)
             {

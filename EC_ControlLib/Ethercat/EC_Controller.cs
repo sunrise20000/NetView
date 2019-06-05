@@ -21,7 +21,7 @@ namespace ControllerLib.Ethercat
         public override bool IsConnected { get; protected set; }
         public override bool Open(string Port)
         {
-            Comport.PortName = $"COM{Port}";
+            Comport.PortName = Port.ToUpper();
             Comport.BaudRate = 9600;
             Comport.Parity = Parity.Even;
             Comport.DataBits = 7;
@@ -35,7 +35,7 @@ namespace ControllerLib.Ethercat
             Comport.Open();
             Comport.DiscardInBuffer();
             Comport.DiscardOutBuffer();
-            return IsConnected;
+            return Comport.IsOpen;
         }
 
         public override bool Connect()

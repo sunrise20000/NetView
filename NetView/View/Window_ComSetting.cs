@@ -19,5 +19,10 @@ namespace NetView.View
 
             this.propertyGrid1.SelectedObject = new ComportSettingModel();
         }
+
+        public ComportSettingModel ComSetting {
+            get { return this.propertyGrid1.SelectedObject as ComportSettingModel; }
+            set { this.propertyGrid1.SelectedObject = value; }
+        }
     }
 }
