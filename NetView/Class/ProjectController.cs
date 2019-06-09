@@ -1,6 +1,6 @@
 ﻿using ControlTest.ModuleConfigModle;
-using EC_ControlLib.BusConfigModle;
-using EC_ControlLib.Ethercat.ModuleConfigModle;
+using ControllerLib.BusConfigModle;
+using ControllerLib.Ethercat.ModuleConfigModle;
 using NetView.Model;
 using System;
 using System.Collections.Generic;

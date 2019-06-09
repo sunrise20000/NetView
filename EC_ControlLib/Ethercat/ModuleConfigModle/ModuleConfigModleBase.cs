@@ -6,12 +6,14 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.Ethercat.ModuleConfigModle
+namespace ControllerLib.Ethercat.ModuleConfigModle
 {
     [Serializable()]
     public class ModuleConfigModleBase : ISerializable
     {
         protected virtual int GuiStringListNumber { get; }=0;
+
+        public virtual int ByteArrayExpectLength { get; } = 0;
 
         public List<string> GuiStringList = new List<string>();
 
@@ -35,6 +37,10 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        ///Insert byte: -----> Function, LocalIndex, GlobalIndex
+        /// </summary>
+        /// <returns></returns>
         public virtual List<byte> ToByteArr()
         {
             BtArr.Clear();
@@ -42,6 +48,19 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             BtArr.Add((byte)LocalIndex);
             BtArr.Add((byte)GlobalIndex);
             return BtArr;
+        }
+
+        /// <summary>
+        /// 完全是一整个BtArr数组过来
+        /// </summary>
+        /// <param name="BtArr"></param>
+        public virtual void FromByteArray(byte[] BtArr)
+        {
+            if (BtArr.Length != ByteArrayExpectLength)
+                throw new Exception($"Wrong length of BtArr when parse byteArr to ModuleConfigModule");
+            Function = BtArr[0];
+            LocalIndex = BtArr[1];
+            GlobalIndex = BtArr[2];
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

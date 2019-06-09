@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.Ethercat.ModuleConfigModle
+namespace ControllerLib.Ethercat.ModuleConfigModle
 {
     [Serializable()]
     public class ModuleConfig_HL4001 : ModuleConfigModleBase
@@ -15,6 +15,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         private Dictionary<byte, string> AccuracyDic = new Dictionary<byte, string>();
 
         protected override int GuiStringListNumber { get; } = 11;
+        public override int ByteArrayExpectLength { get; } = 11;
         public ModuleConfig_HL4001()
         {
             DeviceName = EnumDeviceName.HL4001;

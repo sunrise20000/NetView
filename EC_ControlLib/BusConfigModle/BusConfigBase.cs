@@ -8,7 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.BusConfigModle
+namespace ControllerLib.BusConfigModle
 {
     [Serializable()]
     public class BusConfigBase : ISerializable

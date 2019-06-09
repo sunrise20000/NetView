@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.Ethercat.ModuleConfigModle
+namespace ControllerLib.Ethercat.ModuleConfigModle
 {
     [Serializable()]
     public class ModuleConfig_HL5002 : ModuleConfigModleBase
@@ -16,6 +16,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         Dictionary<byte, string> RevolutionDic = new Dictionary<byte, string>();
 
         protected override int GuiStringListNumber { get; } = 11;
+        public override int ByteArrayExpectLength { get; } = 14;
         public ModuleConfig_HL5002()
         {
             DeviceName = EnumDeviceName.HL5002;
@@ -111,7 +112,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         }
         public override List<byte> ToByteArr()
         {
-            base.ToByteArr();
+            base.ToByteArr();   
             BtArr.Add(Resolution);
             BtArr.Add(Revolution);
             BtArr.Add((byte)((PresetValue>>24)& 0xFF));

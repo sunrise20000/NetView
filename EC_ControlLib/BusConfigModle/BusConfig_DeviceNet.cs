@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.BusConfigModle
+namespace ControllerLib.BusConfigModle
 {
     [Serializable()]
     public class BusConfig_DeviceNet : BusConfigBase

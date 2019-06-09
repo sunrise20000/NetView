@@ -7,8 +7,8 @@
     <ProjectGuid>{43D5816D-DE56-46B9-A217-676615301425}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EC_ControlLib</RootNamespace>
-    <AssemblyName>EC_ControlLib</AssemblyName>
+    <RootNamespace>ControllerLib</RootNamespace>
+    <AssemblyName>ControllerLib</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

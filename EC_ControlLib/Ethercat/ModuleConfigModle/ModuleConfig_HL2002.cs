@@ -6,12 +6,13 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.Ethercat.ModuleConfigModle
+namespace ControllerLib.Ethercat.ModuleConfigModle
 {
     [Serializable()]
     public class ModuleConfig_HL2002 : ModuleConfigModleBase
     {
         protected override int GuiStringListNumber { get; } = 3;
+        public override int ByteArrayExpectLength { get; } = 3;
         public ModuleConfig_HL2002()
         {
             DeviceName = EnumDeviceName.HL2002;

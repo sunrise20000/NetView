@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.Ethercat.ModuleConfigModle
+namespace ControllerLib.Ethercat.ModuleConfigModle
 {
     [Serializable()]
     public class ModuleConfig_HL1001 : ModuleConfigModleBase
@@ -17,6 +17,7 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
         Dictionary<byte, string> TypeDic = new Dictionary<byte, string>();
 
         protected override int GuiStringListNumber { get; } = 4;
+        public override int ByteArrayExpectLength { get; } = 4;
 
         public ModuleConfig_HL1001()
         {
@@ -60,6 +61,10 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
 
         }
 
+        /// <summary>
+        /// 根据Byte生成StringList
+        /// </summary>
+        /// <returns></returns>
         public override List<string> ToStringList()
         {
             GuiStringList.Clear();
@@ -80,6 +85,12 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             base.ToByteArr();
             BtArr.Add(Type);
             return BtArr;
+        }
+
+        public override void FromByteArray(byte[] BtArr)
+        {
+            base.FromByteArray(BtArr);
+            Type = BtArr[3];
         }
         protected ModuleConfig_HL1001(SerializationInfo info, StreamingContext context) : base(info,context)
         {

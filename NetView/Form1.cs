@@ -19,9 +19,9 @@ using ControllerLib;
 using ControllerLib.Ethercat;
 using DevExpress.XtraBars;
 using NetView.Definations;
-using EC_ControlLib.BusConfigModle;
+using ControllerLib.BusConfigModle;
 using ControlTest;
-using EC_ControlLib.Ethercat.ModuleConfigModle;
+using ControllerLib.Ethercat.ModuleConfigModle;
 using System.Text.RegularExpressions;
 
 namespace NetView
@@ -163,7 +163,7 @@ namespace NetView
             if (e.IsAdd)
             {
                 var T = typeof(BusConfigBase);
-                var ClassName = $"EC_ControlLib.BusConfigModle.BusConfig_{e.Module.Name}";
+                var ClassName = $"ControllerLib.BusConfigModle.BusConfig_{e.Module.Name}";
                 var obj = T.Assembly.CreateInstance(ClassName) as BusConfigBase;
                 ProjController.BusCfg = obj;
             }
@@ -220,7 +220,7 @@ namespace NetView
                 else if(it is SubBusModel)
                 {
                     SubBusModel SB = it as SubBusModel;
-                    var SubBusClassName = $"EC_ControlLib.Ethercat.ModuleConfigModle.ModuleConfig_{SB.ModuleType.ToString()}";
+                    var SubBusClassName = $"ControllerLib.Ethercat.ModuleConfigModle.ModuleConfig_{SB.ModuleType.ToString()}";
                     Type T = typeof(ModuleConfigModleBase);
                     dynamic obj = T.Assembly.CreateInstance(SubBusClassName);
                     ModuleConfigModleBase CfgBase = obj as ModuleConfigModleBase;

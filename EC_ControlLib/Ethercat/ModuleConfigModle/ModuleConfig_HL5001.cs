@@ -6,13 +6,14 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC_ControlLib.Ethercat.ModuleConfigModle
+namespace ControllerLib.Ethercat.ModuleConfigModle
 {
     [Serializable()]
     public class ModuleConfig_HL5001 : ModuleConfigModleBase
     {
 
         protected override int GuiStringListNumber { get; } = 11;
+        public override int ByteArrayExpectLength { get; } = 11;
         public ModuleConfig_HL5001()
         {
             DeviceName = EnumDeviceName.HL5001;
@@ -57,7 +58,6 @@ namespace EC_ControlLib.Ethercat.ModuleConfigModle
             //ResPara
             for (int i = 0; i < 6; i++)
                 ResParaArr[i] = byte.TryParse(GuiStringList[i+5],out byte resPara)? resPara:(byte)0;
-
         }
 
         public override List<string> ToStringList()
