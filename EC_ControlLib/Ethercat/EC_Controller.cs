@@ -75,6 +75,10 @@ namespace ControllerLib.Ethercat
         }
 
 
+        /// <summary>
+        /// 获取模块信息列表，从控制器读取
+        /// </summary>
+        /// <returns></returns>
         public override List<string> GetModuleList()
         {
             //68 08 01 02 68 05 69 96 CRC
@@ -90,8 +94,9 @@ namespace ControllerLib.Ethercat
             }
         }
 
+
         /// <summary>
-        /// PureNameList
+        /// PureNameList， 将配置信息发送给控制器
         /// </summary>
         /// <param name="ModuleNameList"></param>
         /// <returns></returns>
@@ -120,6 +125,9 @@ namespace ControllerLib.Ethercat
         {
 
         }
+
+
+
         public override void CLose()
         {
             lock (ComportLock)
@@ -258,6 +266,9 @@ namespace ControllerLib.Ethercat
             var strByte = string.Format("{0:X2}",Bt);
             return $"{strByte[0]}00{strByte[1]}";
         }
+
+
+
         bool CompareList(byte[] BtList1, int offset1, byte[] BtList2, int offset2, int length)
         {
             if (BtList1.Count() < offset1 + length || BtList2.Count() < offset2 + length)

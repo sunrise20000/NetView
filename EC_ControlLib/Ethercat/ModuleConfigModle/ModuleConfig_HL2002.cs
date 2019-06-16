@@ -58,7 +58,10 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
             return base.ToByteArr();
         }
 
-
+        public override void FromByteArray(byte[] BtArr)
+        {
+            base.FromByteArray(BtArr);
+        }
         protected ModuleConfig_HL2002(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 

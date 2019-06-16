@@ -89,6 +89,14 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
                 BtArr.Add(ResParaArr[i]);
             return BtArr;
         }
+        public override void FromByteArray(byte[] BtArr)
+        {
+            base.FromByteArray(BtArr);
+            CounterLimitH = BtArr[3];
+            CounterLimitL = BtArr[4];
+            for (int i = 0; i < 6; i++)
+                ResParaArr[i]= BtArr[i+5];
+        }
         protected ModuleConfig_HL5001(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 

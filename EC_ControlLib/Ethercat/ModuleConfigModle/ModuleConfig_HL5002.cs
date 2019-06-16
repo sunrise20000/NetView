@@ -125,6 +125,16 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
 
             return BtArr;
         }
+
+        public override void FromByteArray(byte[] BtArr)
+        {
+            base.FromByteArray(BtArr);
+            Resolution = BtArr[3];
+            Revolution = BtArr[4];
+            PresetValue = (uint)((BtArr[5] << 24) + (BtArr[6] << 16) + (BtArr[7] << 8) + BtArr[8]);
+            for (int i = 0; i < 5; i++)
+                ResParaArr[i] = BtArr[i + 9];
+        }
         protected ModuleConfig_HL5002(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 

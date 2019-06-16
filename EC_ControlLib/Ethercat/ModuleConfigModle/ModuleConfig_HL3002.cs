@@ -97,6 +97,16 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
             }
             return BtArr;
         }
+
+        public override void FromByteArray(byte[] BtArr)
+        {
+            base.FromByteArray(BtArr);
+            for (int i = 0; i < 4; i++)
+            {
+                ChInputTypeArr[i] = BtArr[2 * i + 3];
+                ChAccuracyArr[i] = BtArr[2 * i + 4];
+            }
+        }
         protected ModuleConfig_HL3002(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 
