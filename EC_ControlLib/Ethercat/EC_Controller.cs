@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ControllerLib.Ethercat.ModuleConfigModle;
+using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -55,7 +56,8 @@ namespace ControllerLib.Ethercat
         public override bool DisConnect()
         {
             //68 06 01 FF 68 05 CRC
-            byte[] Cmd = new byte[] { 0x68, 0x06, 0x01, 0xFF, 0x68, 0x05, };
+            byte[] Cmd = new byte[] { 0x68, 0x06, 0x01, 0xFF, 0x68, 0x05};
+            
             var Crc = CRC16(Cmd, 0, Cmd.Length);
             List<byte> FinalCmd = new List<byte>(Cmd);
             FinalCmd.Add(Crc[1]);
@@ -64,7 +66,9 @@ namespace ControllerLib.Ethercat
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
                 IsConnected = false;
-                if (ReadVoidAck(0x68, 0x06, 0x01, 0x02, 0x68, 0x05))
+                //Expected Ack
+                var ExpectedAck = new byte[] { 0x68, 0x06, 0x01, 0x02, 0x68, 0x05 };
+                if (ReadVoidAck(ExpectedAck))
                 {
                     IsConnected = false;
                     return true;
@@ -79,7 +83,7 @@ namespace ControllerLib.Ethercat
         /// 获取模块信息列表，从控制器读取
         /// </summary>
         /// <returns></returns>
-        public override List<string> GetModuleList()
+        public override List<ModuleConfigModleBase> GetModuleList()
         {
             //68 08 01 02 68 05 69 96 CRC
             byte[] Cmd = new byte[] { 0x68, 0x08, 0x01,0x02, 0x68, 0x05, 0x69, 0x96 };
@@ -97,30 +101,43 @@ namespace ControllerLib.Ethercat
 
         /// <summary>
         /// PureNameList， 将配置信息发送给控制器
+        /// 68 N 01 02 68 05 96 69 模块 1 参数 … 模块 N 参数 CRC（05 表示 EtherCAT，其他总线其他值）
         /// </summary>
-        /// <param name="ModuleNameList"></param>
+        /// <param name="ModuleInfoList"></param>
         /// <returns></returns>
-        public override bool SendModuleList(List<string> ModuleNameList)
+        public override bool SendModuleList(List<ModuleConfigModleBase> ModuleInfoList)
         {
             //68 N 01 02 68 05 96 69
-            byte[] Cmd = new byte[] { 0x68, 0x08, 0x01, 0x02, 0x68, 0x05, 0x96, 0x69 };
-            var Crc = CRC16(Cmd, 0, Cmd.Length);
-            List<byte> FinalCmd = new List<byte>(Cmd);
+            byte[] CmdHeader = new byte[] { 0x68, 0x08, 0x01, 0x02, 0x68, 0x05, 0x96, 0x69 };
+            List<byte> CmdSend = new List<byte>(CmdHeader);
+            foreach (var it in ModuleInfoList)
+                CmdSend.Concat(it.ToByteArr());
+            var Crc = CRC16(CmdSend.ToArray(), 0, CmdSend.Count);
+            List<byte> FinalCmd = new List<byte>(CmdSend);
             FinalCmd.Add(Crc[1]);
             FinalCmd.Add(Crc[0]);
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                return ReadVoidAck();
+                return ReadVoidAck(0x68, 0x08, 0x01, 0x02, 0x68, 0x05, 0x69, 0x96);
             }
         }
 
+        /// <summary>
+        /// 读取模块的值
+        /// </summary>
+        /// <param name="InputValueList"></param>
+        /// <param name="OutputValueList"></param>
         public override void GetModuleValue(out List<int> InputValueList, out List<int> OutputValueList)
         {
             InputValueList = new List<int>();
             OutputValueList = new List<int>();
         }
 
+        /// <summary>
+        /// 强制写入
+        /// </summary>
+        /// <param name="OutputValueList"></param>
         public override void SetModuleValue(List<int> OutputValueList)
         {
 
@@ -174,7 +191,11 @@ namespace ControllerLib.Ethercat
         }
 
      
-
+        /// <summary>
+        /// 无需填写CRC进去，会自动计算CRC是否正确
+        /// </summary>
+        /// <param name="ExpectAckByteList"></param>
+        /// <returns></returns>
         bool ReadVoidAck(params byte[] ExpectAckByteList)
         {
             var StartTime = DateTime.Now.Ticks;
@@ -218,9 +239,9 @@ namespace ControllerLib.Ethercat
         /// PureName
         /// </summary>
         /// <returns></returns>
-        List<string> ReadModuleListAck()
+        List<ModuleConfigModleBase> ReadModuleListAck()
         {
-            List<string> ModuleList = new List<string>();
+            var ModuleList = new List<ModuleConfigModleBase>();
             var StartTime = DateTime.Now.Ticks;
             List<byte> Recv = new List<byte>();
             bool IsHeaderFound = false;
@@ -243,11 +264,7 @@ namespace ControllerLib.Ethercat
                         var CrcCal = CRC16(Recv.ToArray(), 0, Length);
                         if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
                         {
-                            for (int i = 2; i < Recv.Count-2; i++)
-                            {
-                                ModuleList.Add(GetModuleFromByte(Recv[i]));
-                            }
-                            return ModuleList;
+                            return GetModuleFromByteArr(Recv.ToArray(),2, Recv.Count-4);
                         }
                         else
                             throw new Exception("CRC check error");
@@ -261,10 +278,62 @@ namespace ControllerLib.Ethercat
 
 
 
-        string GetModuleFromByte (byte Bt)
+        List<ModuleConfigModleBase> GetModuleFromByteArr (byte[] BtArr, int StartPos, int length)
         {
-            var strByte = string.Format("{0:X2}",Bt);
-            return $"{strByte[0]}00{strByte[1]}";
+            if (StartPos + length > BtArr.Length)
+                throw new Exception("Wrong length parametr when parse Module from ByteArr");
+            List<ModuleConfigModleBase> ModuleList = new List<ModuleConfigModleBase>();
+            ModuleConfigModleBase ModuleInfo = null;
+            int iPos = 0;
+            while (iPos < BtArr.Length)
+            {
+                byte ModuleType = BtArr[0];
+                switch (ModuleType)
+                {
+                    case 0x11:
+                        ModuleInfo = new ModuleConfig_HL1001();                        
+                        break;
+                    case 0x21:
+                        ModuleInfo = new ModuleConfig_HL2001();
+                        break;
+                    case 0x22:
+                        ModuleInfo = new ModuleConfig_HL2002();
+                        break;
+                    case 0x23:
+                        ModuleInfo = new ModuleConfig_HL2003();
+                        break;
+                    case 0x31:
+                        ModuleInfo = new ModuleConfig_HL3001();
+                        break;
+                    case 0x32:
+                        ModuleInfo = new ModuleConfig_HL3002();
+                        break;
+                    case 0x41:
+                        ModuleInfo = new ModuleConfig_HL4001();
+                        break;
+                    case 0x42:
+                        ModuleInfo = new ModuleConfig_HL4002();
+                        break;
+                    case 0x51:
+                        ModuleInfo = new ModuleConfig_HL5001();
+                        break;
+                    case 0x52:
+                        ModuleInfo = new ModuleConfig_HL5002();
+                        break;
+                    default:
+                        throw new Exception("Wrong length parametr when parse Module from ByteArr");
+                }
+                List<byte> ModuleByteArr = new List<byte>();
+
+                for (int i = 0; i < ModuleInfo.ByteArrayExpectLength; i++)
+                    ModuleByteArr.Add(BtArr[iPos+i]);
+
+                ModuleInfo.FromByteArray(ModuleByteArr.ToArray());
+                iPos += ModuleInfo.ByteArrayExpectLength;
+                ModuleList.Add(ModuleInfo);
+            }
+            return ModuleList;
+
         }
 
 
