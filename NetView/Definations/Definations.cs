@@ -15,9 +15,9 @@ namespace NetView.Definations
 
     public enum EnumDisplayFormat
     {
-        Hex,
-        Dec,
-        Float,
+        Hex,        //16
+        Dec,        //10
+        Float,      //float
     }
     public enum EnumModuleIOType
     {

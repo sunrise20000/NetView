@@ -1,21 +1,24 @@
 ﻿using NetView.Definations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NetView.Model
 {
-    public class MonitorVarModel
+    public class MonitorVarModel : INotifyPropertyChanged
     {
+        private string curValue= "CurValue";
+        private string modifyValue = "ModifyValue";
+        private EnumDisplayFormat displayFormat = EnumDisplayFormat.Dec;
         public MonitorVarModel()
         {
             IoType = EnumModuleIOType.IN;
             SubModelName = "HL1001";
             DisplayFormat = EnumDisplayFormat.Dec;
-            CurValue = "CurValue";
-            ModifyValue = "ModifyValue";
         }
         public EnumModuleIOType IoType { get; set; }
 
@@ -24,12 +27,52 @@ namespace NetView.Model
         /// <summary>
         /// Hex/Dec/Float
         /// </summary>
-        public EnumDisplayFormat DisplayFormat { get; set; }
+        public EnumDisplayFormat DisplayFormat
+        {
+            get { return displayFormat; }
+            set {
+                if (value != displayFormat)
+                {
+                    UpdateDisplayFormat(displayFormat, value);
+                    displayFormat = value;
+                    RaisePropertyChanged(); 
+                }
+            }
+        }
 
-        public string CurValue { get; set; }
+        public string CurValue
+        {
+            get { return curValue; }
+            set {
+                if (value != curValue)
+                {
+                    curValue = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
-        public string ModifyValue { get; set; }
+        public string ModifyValue
+        {
+            get { return modifyValue; }
+            set {
+                if (value != modifyValue)
+                {
+                    modifyValue = value;
+                    RaisePropertyChanged();
+                }
+            }
+        }
 
-       
+        public event PropertyChangedEventHandler PropertyChanged;
+        void RaisePropertyChanged([CallerMemberName]string PropertyName = "")
+        {
+            PropertyChanged?.Invoke(this,new PropertyChangedEventArgs(PropertyName));
+        }
+
+        void UpdateDisplayFormat(EnumDisplayFormat oldFormat, EnumDisplayFormat newFormat)
+        {
+            
+        }
     }
 }

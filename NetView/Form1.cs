@@ -23,6 +23,10 @@ using ControllerLib.BusConfigModle;
 using ControlTest;
 using ControllerLib.Ethercat.ModuleConfigModle;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.ObjectModel;
+using NetView.Model.ModuleInfo;
 
 namespace NetView
 {
@@ -40,6 +44,15 @@ namespace NetView
 
         const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
         ComportSettingModel ComSettingCfgModel = null;
+
+ 
+        CancellationTokenSource ctsMonitorController = new CancellationTokenSource();
+        CancellationTokenSource ctsHeartBeat = new CancellationTokenSource();
+        ManualResetEvent EventMonitorController = new ManualResetEvent(false);
+        ManualResetEvent EventHeartBeat = new ManualResetEvent(true);
+
+        ObservableCollection<MonitorVarModel> VarCollect = null;
+
         public Form1()
         {
             InitializeComponent();
@@ -114,6 +127,7 @@ namespace NetView
             MiddleControl = new ProductContrainer();
             this.dockPanelMiddle.Controls.Add(MiddleControl);
             MiddleControl.Dock = DockStyle.Fill;
+      
 
             //添加侧面控件
             LeftControl = new treeviewContrainer();
@@ -129,16 +143,16 @@ namespace NetView
             ucMonitor.OnStartMonitorEventHandler += UcMonitor_OnStartMonitorEventHandler;
             ucMonitor.OnStopMonitorEventHandler += UcMonitor_OnStopMonitorEventHandler;
             ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
-            var VarCollect = ucMonitor.VarCollect;
 
+            VarCollect = ucMonitor.VarCollect;
 
             //for (int i = 0; i < 3; i++)
             //{
             VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
             VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
             VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
             //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
             //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
             //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
@@ -148,10 +162,56 @@ namespace NetView
             this.elementHost1.BackColorTransparent = true;
             this.elementHost2.BackColorTransparent = true;
             dockManager1.ActivePanel = dockPanelMiddle;
-            
+            dockPanelVarMonitor.VisibilityChanged += DockPanelVarMonitor_VisibilityChanged;
+
             //dockManager1.RemovePanel(dockPanelVarMonitor);
             ProjController.BusFileMgr = new EthercatFileMgr();
+
+
+            //Start Task to monitor Controller
+            Task.Run(() => {
+                while (!ctsMonitorController.IsCancellationRequested)
+                {
+                    EventMonitorController.WaitOne();
+                    Thread.Sleep(200);
+                    if (BusController.IsConnected)
+                    {
+                        BusController.GetModuleValue(out List<int> ValueOutList, out List<int> ValueInList);
+                        var OutputMonitorModule = VarCollect.Where(c=>c.IoType==EnumModuleIOType.OUT);
+                        var InputMonitorModule = VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
+                        if (OutputMonitorModule != null && OutputMonitorModule.Count()==ValueOutList.Count)
+                        {
+                            for (int i = 0; i < ValueOutList.Count; i++)
+                                OutputMonitorModule.ElementAt(i).CurValue = $"{ValueInList[i]}";                         
+                        }
+                        if (InputMonitorModule != null && InputMonitorModule.Count() == ValueInList.Count)
+                        {
+                            for (int i = 0; i < ValueInList.Count; i++)
+                                InputMonitorModule.ElementAt(i).CurValue = $"{ValueInList[i]}";
+                        }
+                    }
+                }
+            }, ctsMonitorController.Token);
+
+            //HeartBeat
+            Task.Run(()=> {
+                while (!ctsHeartBeat.IsCancellationRequested)
+                {
+                    if (BusController.IsConnected)
+                    {
+                        EventHeartBeat.WaitOne();
+                        Thread.Sleep(1000);
+                        
+                    }
+                }
+            },ctsHeartBeat.Token);
+
         }
+
+     
+
+
+
 
         /// <summary>
         /// 当总线改变的时候
@@ -261,14 +321,44 @@ namespace NetView
         {
             try
             {
+                if (ComSettingCfgModel == null)
+                {
+                    MessageBox.Show("Please select comport", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 string RegStr = @"COM\d{1,2}";
-                var IsMatched = Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr);
-                if (ComSettingCfgModel != null && IsMatched)
+                if (Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr))
                 {
                     BusController.Open(ComSettingCfgModel.ComportName);
                     if (!BusController.IsConnected)
                     {
-                        BusController.Connect();
+                        if (BusController.Connect())
+                        {
+                            var ModuleInfoList=BusController.GetModuleList();
+                            if (ModuleInfoList != null)
+                            {
+                                List<ModuleInfoBase> listMonitorModule = new List<ModuleInfoBase>();
+                                var t = typeof(ModuleInfoBase);
+                                foreach (var it in ModuleInfoList)
+                                {
+                                    var obj=t.Assembly.CreateInstance($"NetView.Model.ModuleInfo.ModuleInfo_{it.DeviceName}") as ModuleInfoBase;
+                                    listMonitorModule.Add(obj);
+                                }
+                                VarCollect.Clear();
+                                foreach (var it in listMonitorModule)
+                                {
+                                    foreach (var c in it.ModuleList)
+                                    {
+                                        VarCollect.Add(new MonitorVarModel() {
+                                            IoType = c.IOType,
+                                            SubModelName=c.Name,
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        else
+                            MessageBox.Show("Can't connect to the controller! Please check!");
                     }
                     else
                     {
@@ -336,19 +426,29 @@ namespace NetView
 
         private void UcMonitor_OnModifyValueEventHandler(object sender, EventArgs e)
         {
-            
+            // Don nothing;
         }
 
         private void UcMonitor_OnStopMonitorEventHandler(object sender, EventArgs e)
         {
-           
+            this.EventMonitorController.Reset();
+            this.EventHeartBeat.Set();
         }
 
         private void UcMonitor_OnStartMonitorEventHandler(object sender, EventArgs e)
         {
-           
+            this.EventMonitorController.Set();
+            this.EventHeartBeat.Reset();
         }
 
+        private void DockPanelVarMonitor_VisibilityChanged(object sender, VisibilityChangedEventArgs e)
+        {
+            if (e.Visibility == DockVisibility.Hidden)
+            {
+                this.EventMonitorController.Reset();
+                this.EventHeartBeat.Set();
+            }
+        }
 
         #endregion
 
