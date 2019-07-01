@@ -88,6 +88,10 @@
     </Compile>
     <Compile Include="Model\AvilableDeviceModel.cs" />
     <Compile Include="Model\ComportSettingModel.cs" />
+    <Compile Include="Model\DisplayFormat\DisplayFormatBase.cs" />
+    <Compile Include="Model\DisplayFormat\DisplayFormatDec.cs" />
+    <Compile Include="Model\DisplayFormat\DisplayFormatFloat.cs" />
+    <Compile Include="Model\DisplayFormat\DisplayFormatHex.cs" />
     <Compile Include="Model\MessageModel.cs" />
     <Compile Include="Model\ModuleInfo\ModuleBase.cs" />
     <Compile Include="Model\ModuleInfo\ModuleInfoBase.cs" />

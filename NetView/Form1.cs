@@ -34,7 +34,7 @@ namespace NetView
     {
         AvilableDeviceModel[] DeviceCfg = null;
         string FileOpenPath = @"C:\";
-      
+
         ProductContrainer MiddleControl = null;
         treeviewContrainer LeftControl = null;
         DataTable DTVarMonitor = new DataTable();
@@ -45,14 +45,17 @@ namespace NetView
         const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
         ComportSettingModel ComSettingCfgModel = null;
 
- 
+
         CancellationTokenSource ctsMonitorController = new CancellationTokenSource();
         CancellationTokenSource ctsHeartBeat = new CancellationTokenSource();
         ManualResetEvent EventMonitorController = new ManualResetEvent(false);
         ManualResetEvent EventHeartBeat = new ManualResetEvent(true);
 
         ObservableCollection<MonitorVarModel> VarCollect = null;
-
+        //
+        List<UInt32> OutputValueRecv_List = new List<UInt32>();
+        List<UInt32> InputValueRecv_List = new List<UInt32>();
+        bool OnFirstCircle = true;
         public Form1()
         {
             InitializeComponent();
@@ -127,7 +130,7 @@ namespace NetView
             MiddleControl = new ProductContrainer();
             this.dockPanelMiddle.Controls.Add(MiddleControl);
             MiddleControl.Dock = DockStyle.Fill;
-      
+
 
             //添加侧面控件
             LeftControl = new treeviewContrainer();
@@ -136,7 +139,7 @@ namespace NetView
             LeftControl.Dock = DockStyle.Fill;
             LeftControl.ProductContrainer = MiddleControl;
 
-  
+
             //VarMonitor
             UC_VarMonitor ucMonitor = new UC_VarMonitor();
             elementHost2.Child = ucMonitor;
@@ -169,46 +172,78 @@ namespace NetView
 
 
             //Start Task to monitor Controller
-            Task.Run(() => {
+            Task.Run(() =>
+            {
+                var ModifyValueList = new List<UInt32>();
+                var ModuleInfoList = new List<ModuleInfoBase>();
                 while (!ctsMonitorController.IsCancellationRequested)
                 {
                     EventMonitorController.WaitOne();
                     Thread.Sleep(200);
                     if (BusController.IsConnected)
                     {
-                        BusController.GetModuleValue(out List<int> ValueOutList, out List<int> ValueInList);
-                        var OutputMonitorModule = VarCollect.Where(c=>c.IoType==EnumModuleIOType.OUT);
-                        var InputMonitorModule = VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
-                        if (OutputMonitorModule != null && OutputMonitorModule.Count()==ValueOutList.Count)
+                        if (OnFirstCircle)
                         {
-                            for (int i = 0; i < ValueOutList.Count; i++)
-                                OutputMonitorModule.ElementAt(i).CurValue = $"{ValueInList[i]}";                         
+                            OnFirstCircle = false;
+                            //首次不修改输出模块的值，只是在需要修改的时候才修改
+                            UpdateMonitorVarCollect(out ModuleInfoList);
+                            for (int i = 0; i < ModuleInfoList.Count; i++)
+                            {
+                                var L = ModuleInfoList[i].ModuleList.Where(m => m.IOType == EnumModuleIOType.OUT);
+                                if (L != null)
+                                {
+                                    foreach (var it in L)
+                                        ModifyValueList.Add(0x55);
+                                }
+                            }
                         }
-                        if (InputMonitorModule != null && InputMonitorModule.Count() == ValueInList.Count)
+
+                        BusController.GetModuleValue(ModifyValueList, out OutputValueRecv_List, out InputValueRecv_List);
+                        var OutputMonitorModule = VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
+                        var InputMonitorModule = VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
+                        if (OutputMonitorModule != null && OutputMonitorModule.Count() == OutputValueRecv_List.Count)
                         {
-                            for (int i = 0; i < ValueInList.Count; i++)
-                                InputMonitorModule.ElementAt(i).CurValue = $"{ValueInList[i]}";
+                            for (int i = 0; i < OutputValueRecv_List.Count; i++)
+                                OutputMonitorModule.ElementAt(i).CurValue = $"{OutputValueRecv_List[i]}";
+                        }
+                        if (InputMonitorModule != null && InputMonitorModule.Count() == InputValueRecv_List.Count)
+                        {
+                            for (int i = 0; i < InputValueRecv_List.Count; i++)
+                                InputMonitorModule.ElementAt(i).CurValue = $"{InputValueRecv_List[i]}";
                         }
                     }
                 }
             }, ctsMonitorController.Token);
 
             //HeartBeat
-            Task.Run(()=> {
+            Task.Run(() =>
+            {
                 while (!ctsHeartBeat.IsCancellationRequested)
                 {
                     if (BusController.IsConnected)
                     {
                         EventHeartBeat.WaitOne();
+                        try
+                        {
+                            if (!BusController.Hearbeat())
+                            {
+                                EventHeartBeat.Reset();
+                                MessageBox.Show("Connection Timeout");
+                            }
+                        }
+                        catch
+                        {
+                            EventHeartBeat.Reset();
+                            MessageBox.Show("Connection Timeout");
+                        }
                         Thread.Sleep(1000);
-                        
                     }
                 }
-            },ctsHeartBeat.Token);
+            }, ctsHeartBeat.Token);
 
         }
 
-     
+
 
 
 
@@ -232,9 +267,9 @@ namespace NetView
                 ProjController.BusCfg = null;
             }
 
-           // e.Name
-           //ProjController.BusCfg=new 
-           //throw new NotImplementedException();
+            // e.Name
+            //ProjController.BusCfg=new 
+            //throw new NotImplementedException();
         }
 
         private void BarSubIteExportFile_Popup(object sender, EventArgs e)
@@ -245,12 +280,12 @@ namespace NetView
                 foreach (LinkPersistInfo it in C)
                     it.Item.Enabled = it.Item.Caption.Contains(ProjController.BusCfg.ShortName);
             }
-            
+
         }
 
         private void TreeViewDevice_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            
+
         }
 
         private void TreeViewDevice_ItemDrag(object sender, ItemDragEventArgs e)
@@ -258,9 +293,9 @@ namespace NetView
             string ProductName = (e.Item as TreeNode).Text;
             var list = ProductName.Split(' ');
             var nLen = list.Length;
-            treeViewDevice.DoDragDrop(list[0].Replace("-", "_"), DragDropEffects.Copy);  
+            treeViewDevice.DoDragDrop(list[0].Replace("-", "_"), DragDropEffects.Copy);
         }
-  
+
         private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ProjController.OpenProject();
@@ -277,7 +312,7 @@ namespace NetView
                 {
                     //DoNothing
                 }
-                else if(it is SubBusModel)
+                else if (it is SubBusModel)
                 {
                     SubBusModel SB = it as SubBusModel;
                     var SubBusClassName = $"ControllerLib.Ethercat.ModuleConfigModle.ModuleConfig_{SB.ModuleType.ToString()}";
@@ -334,28 +369,7 @@ namespace NetView
                     {
                         if (BusController.Connect())
                         {
-                            var ModuleInfoList=BusController.GetModuleList();
-                            if (ModuleInfoList != null)
-                            {
-                                List<ModuleInfoBase> listMonitorModule = new List<ModuleInfoBase>();
-                                var t = typeof(ModuleInfoBase);
-                                foreach (var it in ModuleInfoList)
-                                {
-                                    var obj=t.Assembly.CreateInstance($"NetView.Model.ModuleInfo.ModuleInfo_{it.DeviceName}") as ModuleInfoBase;
-                                    listMonitorModule.Add(obj);
-                                }
-                                VarCollect.Clear();
-                                foreach (var it in listMonitorModule)
-                                {
-                                    foreach (var c in it.ModuleList)
-                                    {
-                                        VarCollect.Add(new MonitorVarModel() {
-                                            IoType = c.IOType,
-                                            SubModelName=c.Name,
-                                        });
-                                    }
-                                }
-                            }
+                            UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
                         }
                         else
                             MessageBox.Show("Can't connect to the controller! Please check!");
@@ -370,10 +384,10 @@ namespace NetView
                 {
                     MessageBox.Show("Please select a comport to connect controller");
                 }
-            }            
+            }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error when connect to controller:{ex.Message}","Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Error);
+                MessageBox.Show($"Error when connect to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             }
         }
 
@@ -385,15 +399,15 @@ namespace NetView
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error when upload to controller:{ex.Message}","Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Error);
+                MessageBox.Show($"Error when upload to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             }
         }
 
         private void barButtonItemDownLoad_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             try
-            { 
-            BusController.SendModuleList(null);
+            {
+                BusController.SendModuleList(null);
             }
             catch (Exception ex)
             {
@@ -406,7 +420,7 @@ namespace NetView
             dockPanelVarMonitor.Visibility = dockPanelVarMonitor.Visibility == DockVisibility.Visible ? DockVisibility.Hidden : DockVisibility.Visible;
             if (dockPanelVarMonitor.Visibility == DockVisibility.Visible)
                 dockManager1.ActivePanel = dockPanelVarMonitor;
-                      
+
         }
 
         private void MenuSaveAs_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -426,7 +440,31 @@ namespace NetView
 
         private void UcMonitor_OnModifyValueEventHandler(object sender, EventArgs e)
         {
-            // Don nothing;
+            var OutputValueList = VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
+            if (OutputValueList != null)
+            {
+                List<UInt32> list = new List<UInt32>();
+                if (OutputValueList.Count() == OutputValueRecv_List.Count)
+                {
+                    for (int i = 0; i < OutputValueList.Count(); i++)
+                    {
+
+                        if (!string.IsNullOrEmpty(OutputValueList.ElementAt(i).ModifyValue.Trim()))
+                        {
+                            list.Add(UInt32.Parse(OutputValueList.ElementAt(i).ModifyValue));
+                        }
+                        else
+                        {
+                            list.Add(OutputValueRecv_List[i]);
+                        }
+                    }
+
+                }
+
+                //只看修改的值，如果没有修改就直接将原来读取的值拿过来
+                BusController.SetModuleValue(list);
+            }
+            
         }
 
         private void UcMonitor_OnStopMonitorEventHandler(object sender, EventArgs e)
@@ -439,6 +477,7 @@ namespace NetView
         {
             this.EventMonitorController.Set();
             this.EventHeartBeat.Reset();
+            OnFirstCircle = true;
         }
 
         private void DockPanelVarMonitor_VisibilityChanged(object sender, VisibilityChangedEventArgs e)
@@ -454,7 +493,7 @@ namespace NetView
 
         private void barButtonItemNewProject_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-","_")}";
+            var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-", "_")}";
             MiddleControl.BusName = e.Item.Caption;
             //BusConfigBase=new 
         }
@@ -486,7 +525,7 @@ namespace NetView
             }
         }
 
-        private void ShowMessage(EnumMsgType MsgType,string Msg)
+        private void ShowMessage(EnumMsgType MsgType, string Msg)
         {
             this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
         }
@@ -494,6 +533,33 @@ namespace NetView
         private void Form1_Load(object sender, EventArgs e)
         {
             //dockPanelVarMonitor.Visibility = DockVisibility.Hidden;
+        }
+
+        private void UpdateMonitorVarCollect(out List<ModuleInfoBase> listMonitorModule)
+        {
+            listMonitorModule = new List<ModuleInfoBase>();
+            var ModuleInfoList = BusController.GetModuleList();
+            if (ModuleInfoList != null)
+            {             
+                var t = typeof(ModuleInfoBase);
+                foreach (var it in ModuleInfoList)
+                {
+                    var obj = t.Assembly.CreateInstance($"NetView.Model.ModuleInfo.ModuleInfo_{it.DeviceName}") as ModuleInfoBase;
+                    listMonitorModule.Add(obj);
+                }
+                VarCollect.Clear();
+                foreach (var it in listMonitorModule)
+                {
+                    foreach (var c in it.ModuleList)
+                    {
+                        VarCollect.Add(new MonitorVarModel()
+                        {
+                            IoType = c.IOType,
+                            SubModelName = c.Name,
+                        });
+                    }
+                }
+            }
         }
     }
 }

@@ -25,9 +25,11 @@ namespace ControllerLib
         /// <returns></returns>
         public abstract bool SendModuleList(List<ModuleConfigModleBase> ModuleNameList);
 
-        public abstract void GetModuleValue(out List<int> InputValueList, out List<int> OutputValueList);
+        public abstract void GetModuleValue(List<UInt32> ModifyValueList,out List<UInt32> InputValueList, out List<UInt32> OutputValueList);
 
-        public abstract void SetModuleValue(List<int> OutputValueList);
+        public abstract void SetModuleValue(List<UInt32> OutputValueList);
+
+        public abstract bool Hearbeat();
 
         public abstract void CLose();
 

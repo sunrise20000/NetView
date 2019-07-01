@@ -11,18 +11,22 @@ namespace NetView.Model
 {
     public class MonitorVarModel : INotifyPropertyChanged
     {
-        private string curValue= "CurValue";
-        private string modifyValue = "ModifyValue";
+        private string curValue= "";
+        private string modifyValue = "";
         private EnumDisplayFormat displayFormat = EnumDisplayFormat.Dec;
+
         public MonitorVarModel()
         {
             IoType = EnumModuleIOType.IN;
             SubModelName = "HL1001";
             DisplayFormat = EnumDisplayFormat.Dec;
+            DataType = EnumType.UINT;
         }
         public EnumModuleIOType IoType { get; set; }
-
+           
         public string SubModelName { get; set; }
+
+        public EnumType DataType { get; set; }
 
         /// <summary>
         /// Hex/Dec/Float
@@ -72,7 +76,7 @@ namespace NetView.Model
 
         void UpdateDisplayFormat(EnumDisplayFormat oldFormat, EnumDisplayFormat newFormat)
         {
-            
+            return;
         }
     }
 }

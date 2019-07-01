@@ -13,6 +13,7 @@ namespace ControllerLib.Ethercat
         #region Field
         SerialPort Comport = new SerialPort();
         object ComportLock = new object();
+        List<ModuleConfigModleBase> ModuleList = new List<ModuleConfigModleBase>();
         #endregion
 
         #region UserAPI
@@ -126,25 +127,38 @@ namespace ControllerLib.Ethercat
 
         /// <summary>
         /// 读取模块的值
+        /// 68 N 01 02 N M D0….D n CRC
+        /// 其中，68 是固定数据头；01 是组态软件站号，02 是耦合器站号，都固定；N 是实
+        ///  际组态的输出字节数；M 是实际组态的输入字节数
         /// </summary>
         /// <param name="InputValueList"></param>
         /// <param name="OutputValueList"></param>
-        public override void GetModuleValue(out List<int> InputValueList, out List<int> OutputValueList)
+        public override void GetModuleValue(List<uint> ModifyValueList, out List<uint> InputValueList, out List<uint> OutputValueList)
         {
-            InputValueList = new List<int>();
-            OutputValueList = new List<int>();
+            InputValueList = new List<uint>();
+            OutputValueList = new List<uint>();
+            //说明已经获取到Module的列表
+            if (ModuleList.Count > 0)
+            {
+
+
+            }
         }
 
         /// <summary>
         /// 强制写入
         /// </summary>
         /// <param name="OutputValueList"></param>
-        public override void SetModuleValue(List<int> OutputValueList)
+        public override void SetModuleValue(List<uint> OutputValueList)
         {
-
+            throw new NotImplementedException();
         }
 
-
+        public override bool Hearbeat()
+        {
+            return this.Connect();
+            //throw new NotImplementedException();
+        }
 
         public override void CLose()
         {
@@ -265,7 +279,8 @@ namespace ControllerLib.Ethercat
                         var CrcCal = CRC16(Recv.ToArray(), 0, Length);
                         if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
                         {
-                            return GetModuleFromByteArr(Recv.ToArray(),2, Recv.Count-4);
+                            ModuleList= GetModuleFromByteArr(Recv.ToArray(),2, Recv.Count-4);
+                            return ModuleList;
                         }
                         else
                             throw new Exception("CRC check error");
