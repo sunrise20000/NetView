@@ -1,4 +1,5 @@
 ﻿using ControllerLib;
+using ControllerLib.Ethercat.ModuleConfigModle.ConfigSubInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,13 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         public ModuleConfig_HL4001()
         {
             DeviceName = EnumDeviceName.HL4001;
-            
+            for (int i = 0; i < 4; i++)
+                ModuleSubInfoList.Add(new ModuleConfig_16()
+                {
+                    IOType = EnumModuleIoType.OUT,
+                });
+
+
         }
         public byte[] ChOutputTypeArr { get; private set; } = new byte[4];
         public byte[] ChAccuracyArr { get; private set; } = new byte[4];
@@ -107,6 +114,14 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         protected ModuleConfig_HL4001(SerializationInfo info, StreamingContext context) : base(info, context)
         {
 
+        }
+
+        public override void GetSubModuleListValueFromBtArr(byte[] BtArr, int StartPos, int Len)
+        {
+            if (Len != 8)
+                throw new Exception("Wrong len to parse HL4001 SubModuleValue");
+            for (int i = 0; i < 4; i++)
+                ModuleSubInfoList[i].RawData = (UInt32)((BtArr[2 * i] << 8) + BtArr[2 * i + 1]);
         }
     }
 }

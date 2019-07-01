@@ -151,11 +151,11 @@ namespace NetView
 
             //for (int i = 0; i < 3; i++)
             //{
-            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-            VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
+            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
+            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
             //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
             //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
             //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
@@ -440,29 +440,36 @@ namespace NetView
 
         private void UcMonitor_OnModifyValueEventHandler(object sender, EventArgs e)
         {
-            var OutputValueList = VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
-            if (OutputValueList != null)
+            try
             {
-                List<UInt32> list = new List<UInt32>();
-                if (OutputValueList.Count() == OutputValueRecv_List.Count)
+                var OutputValueList = VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
+                if (OutputValueList != null)
                 {
-                    for (int i = 0; i < OutputValueList.Count(); i++)
+                    List<UInt32> list = new List<UInt32>();
+                    if (OutputValueList.Count() == OutputValueRecv_List.Count)
                     {
+                        for (int i = 0; i < OutputValueList.Count(); i++)
+                        {
 
-                        if (!string.IsNullOrEmpty(OutputValueList.ElementAt(i).ModifyValue.Trim()))
-                        {
-                            list.Add(UInt32.Parse(OutputValueList.ElementAt(i).ModifyValue));
+                            if (!string.IsNullOrEmpty(OutputValueList.ElementAt(i).ModifyValue.Trim()))
+                            {
+                                list.Add(UInt32.Parse(OutputValueList.ElementAt(i).ModifyValue));
+                            }
+                            else
+                            {
+                                list.Add(OutputValueRecv_List[i]);
+                            }
                         }
-                        else
-                        {
-                            list.Add(OutputValueRecv_List[i]);
-                        }
+
                     }
 
+                    //只看修改的值，如果没有修改就直接将原来读取的值拿过来
+                    BusController.SetModuleValue(list);
                 }
-
-                //只看修改的值，如果没有修改就直接将原来读取的值拿过来
-                BusController.SetModuleValue(list);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
             
         }

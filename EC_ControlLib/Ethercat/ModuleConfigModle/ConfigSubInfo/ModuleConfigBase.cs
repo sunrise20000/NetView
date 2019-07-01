@@ -16,5 +16,7 @@ namespace ControllerLib.Ethercat.ModuleConfigModle.ConfigSubInfo
 
         public int BitSize { get; protected set; }
 
+        public UInt32 RawData { get; set; }  //存储当前值
+
     }
 }

@@ -73,6 +73,11 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
                 info.AddValue($"L{i}", GuiStringList[i]);
         }
 
+        public virtual void GetSubModuleListValueFromBtArr(byte[] BtArr, int StartPos, int Len)
+        {
+            throw new NotImplementedException();
+        }
+
         protected ModuleConfigModleBase(SerializationInfo info, StreamingContext context)
         {
             GuiStringList.Clear();
@@ -80,6 +85,7 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
                 GuiStringList.Add(info.GetString($"L{i}"));
             FromString(GuiStringList.ToArray());
         }
+
         public ModuleConfigModleBase() { }
     }
 }

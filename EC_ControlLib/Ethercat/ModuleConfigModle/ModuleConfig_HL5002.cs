@@ -149,5 +149,13 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         {
 
         }
+
+        public override void GetSubModuleListValueFromBtArr(byte[] BtArr, int StartPos, int Len)
+        {
+            if (Len != 6)
+                throw new Exception("Wrong len to parse HL4002 SubModuleValue");
+            ModuleSubInfoList[0].RawData = (UInt32)((BtArr[0] << 24) + (BtArr[1] << 16) + (BtArr[2] << 8) + (BtArr[3]));
+            ModuleSubInfoList[1].RawData = (UInt32)((BtArr[4] << 8) + BtArr[5]);
+        }
     }
 }

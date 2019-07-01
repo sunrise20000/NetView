@@ -100,5 +100,12 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         {
           
         }
+
+        public override void GetSubModuleListValueFromBtArr(byte[] BtArr, int StartPos, int Len)
+        {
+            if (Len != 1)
+                throw new Exception("Wrong len to parse HL1001 SubModuleValue");
+            ModuleSubInfoList[0].RawData = (UInt32)BtArr[0];
+        }
     }
 }

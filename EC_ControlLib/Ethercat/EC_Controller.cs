@@ -172,6 +172,7 @@ namespace ControllerLib.Ethercat
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+                GetValueAck(out OutputValueList,out InputValueList);
             }
            
         }
@@ -185,8 +186,6 @@ namespace ControllerLib.Ethercat
             byte N = 0;
             byte M = 0;
             byte Len = 0;
-
-            //说明已经获取到Module的列表   SRH
             foreach (var it in ModuleList)
             {
                 foreach (var Sub in it.ModuleSubInfoList)
@@ -212,6 +211,7 @@ namespace ControllerLib.Ethercat
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+                
             }
         }
 
@@ -352,7 +352,92 @@ namespace ControllerLib.Ethercat
             }
         }
 
+        void GetValueAck(out List<UInt32> OutputValueRecv,out List<UInt32> InputValueRecv)
+        {
+            OutputValueRecv = new List<uint>();
+            InputValueRecv = new List<uint>();
+            //首先获取需要读取的输入输出的字节长度
 
+            byte OutputBtLen = 0;
+            byte InputBtLen = 0;
+            foreach (var it in ModuleList)
+            {
+                foreach (var Sub in it.ModuleSubInfoList)
+                {
+                    if (Sub.IOType == EnumModuleIoType.IN)
+                    {
+                        InputBtLen += (byte)(Sub.BitSize / 8);
+                    }
+                    else
+                    {
+                        OutputBtLen += (byte)(Sub.BitSize / 8);
+                    }
+                }
+            }
+
+            var StartTime = DateTime.Now.Ticks;
+            List<byte> Recv = new List<byte>();
+            bool IsHeaderFound = false;
+            int Length = 0;
+            while (true)
+            {
+                byte bt = (byte)Comport.ReadByte();
+                if (bt == 0x68)
+                {
+                    IsHeaderFound = true;
+                    Recv.Add(bt);
+                }
+                if (IsHeaderFound)
+                { 
+                    Recv.Add(bt);
+                    if (Recv.Count == 2)
+                        Length = Recv[1];
+                    if (Length == Recv.Count - 2 && Length-2 == OutputBtLen + InputBtLen)   //接受完毕
+                    {
+                        var CrcCal = CRC16(Recv.ToArray(), 0, Length);
+                        if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
+                        {
+                           
+                            int OutputStartPos = 2;
+                            int InputStartPos = 2+OutputBtLen;
+
+                            //读取完毕赋值
+                            foreach (var it in ModuleList)
+                            {
+                                List<byte> BtArrTotalInModule = new List<byte>();
+                                foreach (var Sub in it.ModuleSubInfoList)
+                                {
+                                    if (Sub.IOType == EnumModuleIoType.IN)
+                                    {
+                                        for (int i = 0; i < Sub.BitSize / 8; i++)
+                                            BtArrTotalInModule.Add(Recv[InputStartPos++ + i]);
+                                    }
+                                    else
+                                    {
+                                        for (int i = 0; i < Sub.BitSize / 8; i++)
+                                            BtArrTotalInModule.Add(Recv[OutputStartPos++ + i]);
+                                    }
+                                }
+                                it.GetSubModuleListValueFromBtArr(BtArrTotalInModule.ToArray(), 0, BtArrTotalInModule.Count);
+
+                                //返回值赋值
+                                foreach (var xx in it.ModuleSubInfoList)
+                                {
+                                    if (xx.IOType == EnumModuleIoType.IN)
+                                        InputValueRecv.Add(xx.RawData);
+                                    else
+                                        OutputValueRecv.Add(xx.RawData);
+                                }
+                            }
+                        }
+                        else
+                            throw new Exception("CRC check error");
+                    }
+                }
+                if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > 1000)
+                    throw new Exception("Timeout to GetModuleList");
+            }
+        }
 
 
         List<ModuleConfigModleBase> GetModuleFromByteArr (byte[] BtArr, int StartPos, int length)
