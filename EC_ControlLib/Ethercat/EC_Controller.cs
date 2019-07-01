@@ -137,12 +137,43 @@ namespace ControllerLib.Ethercat
         {
             InputValueList = new List<uint>();
             OutputValueList = new List<uint>();
+
+            byte N = 0;
+            byte M = 0;
+            byte Len = 0;
+
             //说明已经获取到Module的列表
-            if (ModuleList.Count > 0)
+            foreach (var it in ModuleList)
             {
-
-
+                foreach (var Sub in it.ModuleSubInfoList)
+                {
+                    if (Sub.IOType == EnumModuleIoType.IN)
+                    {
+                        M += (byte)(Sub.BitSize / 8);
+                    }
+                    else
+                    {
+                        N += (byte)(Sub.BitSize / 8);
+                    }        
+                }
             }
+            Len = (byte)(N + 6);
+            byte[] CmdHeader = new byte[] { 0x68, Len, 0x01, 0x02, N, M};
+            List<byte> CmdSend = new List<byte>(CmdHeader);
+            for (int i = 0; i < N; i++)
+            {
+                CmdSend.Add(0x55);
+            }
+            
+            var Crc = CRC16(CmdSend.ToArray(), 0, CmdSend.Count);
+            List<byte> FinalCmd = new List<byte>(CmdSend);
+            FinalCmd.Add(Crc[1]);
+            FinalCmd.Add(Crc[0]);
+            lock (ComportLock)
+            {
+                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+            }
+           
         }
 
         /// <summary>
@@ -151,7 +182,37 @@ namespace ControllerLib.Ethercat
         /// <param name="OutputValueList"></param>
         public override void SetModuleValue(List<uint> OutputValueList)
         {
-            throw new NotImplementedException();
+            byte N = 0;
+            byte M = 0;
+            byte Len = 0;
+
+            //说明已经获取到Module的列表   SRH
+            foreach (var it in ModuleList)
+            {
+                foreach (var Sub in it.ModuleSubInfoList)
+                {
+                    if (Sub.IOType == EnumModuleIoType.IN)
+                    {
+                        M += (byte)(Sub.BitSize / 8);
+                    }
+                    else
+                    {
+                        N += (byte)(Sub.BitSize / 8);
+                    }
+                }
+            }
+            Len = (byte)(N + 6);
+            byte[] CmdHeader = new byte[] { 0x68, Len, 0x01, 0x02, N, M, 0x96, 0x69 };
+            List<byte> CmdSend = new List<byte>(CmdHeader);
+
+            var Crc = CRC16(CmdSend.ToArray(), 0, CmdSend.Count);
+            List<byte> FinalCmd = new List<byte>(CmdSend);
+            FinalCmd.Add(Crc[1]);
+            FinalCmd.Add(Crc[0]);
+            lock (ComportLock)
+            {
+                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+            }
         }
 
         public override bool Hearbeat()

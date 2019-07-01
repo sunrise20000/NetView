@@ -18,7 +18,12 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         public override int ByteArrayExpectLength { get; } = 11;
         public ModuleConfig_HL3001()
         {
-            DeviceName = EnumDeviceName.HL3001; 
+            DeviceName = EnumDeviceName.HL3001;
+            for (int i = 0; i < 4; i++)
+                ModuleSubInfoList.Add(new ConfigSubInfo.ModuleConfig_16()
+                {
+                    IOType = EnumModuleIoType.IN,
+                });
         }
 
         public byte[] ChInputTypeArr { get; private set; } = new byte[4];

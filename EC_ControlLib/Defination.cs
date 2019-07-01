@@ -35,4 +35,10 @@ namespace ControllerLib
         PROFINET_IO,
     }
 
+    public enum EnumModuleIoType
+    {
+        IN,
+        OUT,
+    }
+    
 }

@@ -1,4 +1,5 @@
 ﻿using ControllerLib;
+using ControllerLib.Ethercat.ModuleConfigModle.ConfigSubInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,15 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         public ModuleConfig_HL5001()
         {
             DeviceName = EnumDeviceName.HL5001;
+            ModuleSubInfoList.Add(new ModuleConfig_32()
+            {
+                IOType = EnumModuleIoType.IN,
+
+            });
+            ModuleSubInfoList.Add(new ModuleConfig_32()
+            {
+                IOType = EnumModuleIoType.IN,
+            });
         }
 
         public byte CounterLimitH { get; set; }

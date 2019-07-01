@@ -16,6 +16,10 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         public ModuleConfig_HL2003()
         {
             DeviceName = EnumDeviceName.HL2003;
+            ModuleSubInfoList.Add(new ConfigSubInfo.ModuleConfig_8()
+            {
+                IOType = EnumModuleIoType.OUT,
+            });
         }
   
 

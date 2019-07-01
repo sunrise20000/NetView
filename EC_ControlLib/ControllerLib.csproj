@@ -52,6 +52,10 @@
     <Compile Include="ControllerBase.cs" />
     <Compile Include="Defination.cs" />
     <Compile Include="Ethercat\EC_Controller.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ConfigSubInfo\ModuleConfigBase.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ConfigSubInfo\ModuleConfig_16.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ConfigSubInfo\ModuleConfig_32.cs" />
+    <Compile Include="Ethercat\ModuleConfigModle\ConfigSubInfo\ModuleConfig_8.cs" />
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfigModleBase.cs" />
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL1001.cs" />
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL2001.cs" />

@@ -1,4 +1,5 @@
 ﻿using ControllerLib;
+using ControllerLib.Ethercat.ModuleConfigModle.ConfigSubInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,11 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         public ModuleConfig_HL4002()
         {
             DeviceName = EnumDeviceName.HL4002;
-            
+            for (int i = 0; i < 4; i++)
+                ModuleSubInfoList.Add(new ModuleConfig_16()
+                {
+                    IOType = EnumModuleIoType.OUT,
+                });
         }
 
         public byte[] ChOutputTypeArr { get; private set; } = new byte[4];

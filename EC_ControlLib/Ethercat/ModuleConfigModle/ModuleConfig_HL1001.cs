@@ -22,6 +22,10 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         public ModuleConfig_HL1001()
         {
             DeviceName = EnumDeviceName.HL1001;
+            ModuleSubInfoList.Add(new ConfigSubInfo.ModuleConfig_8()
+            {
+                IOType = EnumModuleIoType.IN,
+            });
         }
 
         public byte  Type{

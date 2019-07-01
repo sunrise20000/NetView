@@ -1,4 +1,5 @@
 ﻿using ControllerLib;
+using ControllerLib.Ethercat.ModuleConfigModle.ConfigSubInfo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,15 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         public ModuleConfig_HL5002()
         {
             DeviceName = EnumDeviceName.HL5002;
+            ModuleSubInfoList.Add(new ModuleConfig_32()
+            {
+                IOType = EnumModuleIoType.IN,
+            });
+
+            ModuleSubInfoList.Add(new ModuleConfig_16()
+            {
+                IOType = EnumModuleIoType.OUT,
+            });
         }
 
    

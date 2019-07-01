@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using ControllerLib.Ethercat.ModuleConfigModle.ConfigSubInfo;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,6 +37,8 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         {
             throw new NotImplementedException();
         }
+
+        public List<ModuleConfigBase> ModuleSubInfoList = new List<ModuleConfigBase>();
 
         /// <summary>
         ///Insert byte: -----> Function, LocalIndex, GlobalIndex

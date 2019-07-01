@@ -16,6 +16,10 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         public ModuleConfig_HL2001()
         {
             DeviceName = EnumDeviceName.HL2001;
+            ModuleSubInfoList.Add(new ConfigSubInfo.ModuleConfig_8()
+            {
+                IOType = EnumModuleIoType.OUT,
+            });
         }
         public override void FromString(params string[] ParaList)
         {
