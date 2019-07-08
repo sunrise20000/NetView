@@ -246,7 +246,7 @@ namespace TreeviewContrainer
                 var ExistNode = NameList.Where(n=>n.Contains((sender as ToolStripMenuItem).Text));
                 var Name = $"{(sender as ToolStripMenuItem).Text}_{ExistNode.Count() + 1}";
                 treeView_ProductInfo.SelectedNode.Nodes.Add(Name, Name);
-                productContrainer.AddSubProduct((sender as ToolStripMenuItem).Text, ExistNode.Count() + 1, NameList.Count());
+                productContrainer.AddSubProduct((sender as ToolStripMenuItem).Text, ExistNode.Count() + 1, NameList.Count()+1);
             }
         }
 

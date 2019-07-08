@@ -24,5 +24,16 @@ namespace NetView.View
             get { return this.propertyGrid1.SelectedObject as ComportSettingModel; }
             set { this.propertyGrid1.SelectedObject = value; }
         }
+
+        private void BtnRefresh_Click(object sender, EventArgs e)
+        {
+            var model = this.propertyGrid1.SelectedObject as ComportSettingModel;
+            model.RefreshComport();
+        }
+
+        private void BtnOk_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

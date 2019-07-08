@@ -121,23 +121,7 @@ namespace SubBusContrainer
             }
             else  //总线
             {
-                if (BusModule != null)
-                {
-                    if (BusModule.Name!=info.ToString() && MessageBox.Show("Do you want to change bus type?", "Question", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
-                        this.Controls.Remove(BusModule);
-                    else
-                        return;
-                }
-
-                Enum.TryParse(info.ToString(), out EnumBusType BusType);
-                BusModule = new BusModel(BusType,new Point(100, this.Height/2+100));
-               
-                this.Controls.Add(BusModule);
-                BusModule.BringToFront();
-                BusModule.OnModleDelete += UserControl1_OnModleDelete;
-                BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
-                BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
-                OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() {IsAdd = true, Module= BusModule });
+                ChangeBus(info.ToString());
             }
         }
 
@@ -204,6 +188,28 @@ namespace SubBusContrainer
 
         }
 
+        public void ChangeBus(string Name)
+        {
+            if (BusModule != null)
+            {
+                if (BusModule.Name != Name && MessageBox.Show("Do you want to change bus type?", "Question", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+                    this.Controls.Remove(BusModule);
+                else
+                    return;
+            }
+
+            Enum.TryParse(Name, out EnumBusType BusType);
+            BusModule = new BusModel(BusType, new Point(100, this.Height / 2 + 100));
+
+            this.Controls.Add(BusModule);
+            BusModule.BringToFront();
+            BusModule.OnModleDelete += UserControl1_OnModleDelete;
+            BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
+            BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
+            OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { IsAdd = true, Module = BusModule });
+
+        }
+
         private void panel_Product_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.StringFormat))
@@ -253,10 +259,10 @@ namespace SubBusContrainer
         /// <param name="subproductname"></param>
         public void AddSubProduct(string subproductname, int LocalIndex, int GlobalIndex)
         {
-            if (CheckExit(subproductname))
-            {
-                throw new Exception("已存在当前名称的产品");
-            }
+            //if (CheckExit(subproductname))
+            //{
+            //    throw new Exception("已存在当前名称的产品");
+            //}
             Point point = new Point();
             if (LastSubModel == null)
             {

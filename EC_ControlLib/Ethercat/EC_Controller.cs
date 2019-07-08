@@ -26,9 +26,9 @@ namespace ControllerLib.Ethercat
             if (Comport.IsOpen)
                 Comport.Close();
             Comport.PortName = Port.ToUpper();
-            Comport.BaudRate = 9600;
+            Comport.BaudRate = 115200;
             Comport.Parity = Parity.Even;
-            Comport.DataBits = 7;
+            Comport.DataBits = 8;
             Comport.StopBits = StopBits.One;
             Comport.ReadTimeout = 1000;
             Comport.WriteTimeout = 1000;
@@ -43,7 +43,7 @@ namespace ControllerLib.Ethercat
 
         public override bool Connect()
         {
-            byte[] Cmd = new byte[] { 0x68, 0x01, 0x02, 0x68, 0x05 };
+            byte[] Cmd = new byte[] { 0x68,0x06,0x01, 0x02, 0x68, 0x05 };
             var Crc = CRC16(Cmd, 0, Cmd.Length);
             List<byte> FinalCmd = new List<byte>(Cmd);
             FinalCmd.Add(Crc[1]);

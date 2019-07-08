@@ -500,8 +500,9 @@ namespace NetView
 
         private void barButtonItemNewProject_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-", "_")}";
-            MiddleControl.BusName = e.Item.Caption;
+            //var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-", "_")}";
+            //MiddleControl.BusName = e.Item.Caption;
+            MiddleControl.ChangeBus(e.Item.Caption);
             //BusConfigBase=new 
         }
 
