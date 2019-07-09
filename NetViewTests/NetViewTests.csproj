@@ -57,6 +57,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Class\XmlHelperTests.cs" />
+    <Compile Include="Ethercat\EC_ControllerTests.cs" />
     <Compile Include="Model\DataTypeModel\DataType_DT1601Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -284,7 +284,6 @@ namespace ControllerLib.Ethercat
                 if (bt == 0x68)
                 {
                     IsHeaderFound = true;
-                    Recv.Add(bt);
                 }
                 if (IsHeaderFound)
                 {
@@ -328,7 +327,6 @@ namespace ControllerLib.Ethercat
                 if (bt == 0x68)
                 {
                     IsHeaderFound = true;
-                    Recv.Add(bt);
                 }
                 if (IsHeaderFound)
                 {
@@ -340,7 +338,8 @@ namespace ControllerLib.Ethercat
                         var CrcCal = CRC16(Recv.ToArray(), 0, Length);
                         if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
                         {
-                            ModuleList= GetModuleFromByteArr(Recv.ToArray(),2, Recv.Count-4);
+                            //68 0C 01 02 68 05 96 69 11 01 01 00 34 75
+                            ModuleList = GetModuleFromByteArr(Recv.ToArray(),8, Recv.Count-10);
                             return ModuleList;
                         }
                         else
@@ -446,10 +445,13 @@ namespace ControllerLib.Ethercat
                 throw new Exception("Wrong length parametr when parse Module from ByteArr");
             List<ModuleConfigModleBase> ModuleList = new List<ModuleConfigModleBase>();
             ModuleConfigModleBase ModuleInfo = null;
-            int iPos = 0;
-            while (iPos < BtArr.Length)
+            int iPos = StartPos;
+
+
+
+            while (iPos < length + StartPos)
             {
-                byte ModuleType = BtArr[0];
+                byte ModuleType = BtArr[iPos];
                 switch (ModuleType)
                 {
                     case 0x11:

@@ -49,7 +49,7 @@ namespace NetView
         CancellationTokenSource ctsMonitorController = new CancellationTokenSource();
         CancellationTokenSource ctsHeartBeat = new CancellationTokenSource();
         ManualResetEvent EventMonitorController = new ManualResetEvent(false);
-        ManualResetEvent EventHeartBeat = new ManualResetEvent(true);
+        ManualResetEvent EventHeartBeat = new ManualResetEvent(false);
 
         ObservableCollection<MonitorVarModel> VarCollect = null;
         //
@@ -370,6 +370,7 @@ namespace NetView
                         if (BusController.Connect())
                         {
                             UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
+                            //EventHeartBeat.Set();
                         }
                         else
                             MessageBox.Show("Can't connect to the controller! Please check!");
@@ -377,6 +378,7 @@ namespace NetView
                     else
                     {
                         //BusController.CLose();
+                        EventHeartBeat.Reset();
                         BusController.DisConnect();
                     }
                 }
@@ -407,6 +409,7 @@ namespace NetView
         {
             try
             {
+
                 BusController.SendModuleList(null);
             }
             catch (Exception ex)
@@ -489,7 +492,7 @@ namespace NetView
 
         private void DockPanelVarMonitor_VisibilityChanged(object sender, VisibilityChangedEventArgs e)
         {
-            if (e.Visibility == DockVisibility.Hidden)
+            if (e.Visibility == DockVisibility.Hidden && BusController.IsConnected)
             {
                 this.EventMonitorController.Reset();
                 this.EventHeartBeat.Set();
@@ -555,16 +558,37 @@ namespace NetView
                     var obj = t.Assembly.CreateInstance($"NetView.Model.ModuleInfo.ModuleInfo_{it.DeviceName}") as ModuleInfoBase;
                     listMonitorModule.Add(obj);
                 }
-                VarCollect.Clear();
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() => { VarCollect.Clear(); }));
+                }
+                else
+                {
+                    VarCollect.Clear();
+                }
                 foreach (var it in listMonitorModule)
                 {
                     foreach (var c in it.ModuleList)
                     {
-                        VarCollect.Add(new MonitorVarModel()
+                        if (InvokeRequired)
                         {
-                            IoType = c.IOType,
-                            SubModelName = c.Name,
-                        });
+                            Invoke(new Action(()=> {
+                                VarCollect.Add(new MonitorVarModel()
+                                {
+                                    IoType = c.IOType,
+                                    SubModelName = c.Name,
+                                });
+
+                            }));
+                        }
+                        else
+                        {
+                            VarCollect.Add(new MonitorVarModel()
+                            {
+                                IoType = c.IOType,
+                                SubModelName = c.Name,
+                            });
+                        }
                     }
                 }
             }
