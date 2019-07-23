@@ -25,6 +25,17 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
                 {
                     IOType = EnumModuleIoType.OUT,
                 });
+            OutputTypeDic.Clear();
+            AccuracyDic.Clear();
+            OutputTypeDic.Add(0x00, "Normal");
+            OutputTypeDic.Add(0x01, "4-20mA");
+            OutputTypeDic.Add(0x02, "0-20mA");
+            for (byte i = 3; i < 11; i++)
+                OutputTypeDic.Add(i, $"Reserved{i}");
+
+            AccuracyDic.Add(0x0A, "10bits sampling");
+            AccuracyDic.Add(0x0C, "12bits sampling");
+            AccuracyDic.Add(0x10, "16bits sampling");
         }
 
         public byte[] ChOutputTypeArr { get; private set; } = new byte[4];

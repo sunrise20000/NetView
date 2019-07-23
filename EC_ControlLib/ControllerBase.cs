@@ -9,13 +9,11 @@ namespace ControllerLib
 {
     public abstract class ControllerBase
     {
+        public abstract byte ControllerID { get;}  
         public abstract bool IsConnected { get; protected set; }
         public abstract bool Open(string Port);
-
         public abstract bool Connect();
-
         public abstract bool DisConnect();
-
         public abstract List<ModuleConfigModleBase> GetModuleList();
 
         /// <summary>

@@ -24,6 +24,20 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
                 {
                     IOType = EnumModuleIoType.IN,
                 });
+
+            //下面是给Upload时候准备的初始化
+            InputTypeDic.Clear();
+            AccuracyDic.Clear();
+
+            InputTypeDic.Add(0x00, "Normal");
+            InputTypeDic.Add(0x01, "0-10V");
+            InputTypeDic.Add(0x02, "0-5V");
+            for (byte i = 3; i < 11; i++)
+                InputTypeDic.Add(i, $"Reserved{i}");
+
+            AccuracyDic.Add(0x0A, "10bits sampling");
+            AccuracyDic.Add(0x0C, "12bits sampling");
+            AccuracyDic.Add(0x10, "16bits sampling");
         }
 
         public byte[] ChInputTypeArr { get; private set; } = new byte[4];

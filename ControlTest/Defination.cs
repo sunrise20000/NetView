@@ -7,11 +7,6 @@ using System.Threading.Tasks;
 
 namespace ControlTest
 {
-    enum EnumControllerType
-    {
-        EtherCatController=0x05,
-    }
-
     public enum EnumDeviceName
     {
         HL1001,

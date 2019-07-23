@@ -6,11 +6,6 @@ using System.Threading.Tasks;
 
 namespace ControllerLib
 {
-    enum EnumControllerType
-    {
-        EtherCatController=0x05,
-    }
-
     public enum EnumDeviceName
     {
         HL1001,

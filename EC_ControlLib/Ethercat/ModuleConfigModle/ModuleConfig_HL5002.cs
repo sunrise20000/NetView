@@ -30,6 +30,15 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
             {
                 IOType = EnumModuleIoType.OUT,
             });
+            ResolutionDic.Clear();
+            RevolutionDic.Clear();
+            ResolutionDic.Add(0, "Normal");
+            RevolutionDic.Add(0, "Normal");
+            for (byte i = 1; i < 17; i++)
+            {
+                ResolutionDic.Add(i, $"{i}bits");
+                RevolutionDic.Add(i, $"{i}bits");
+            }
         }
 
    

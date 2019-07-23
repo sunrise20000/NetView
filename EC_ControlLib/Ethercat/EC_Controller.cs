@@ -18,9 +18,12 @@ namespace ControllerLib.Ethercat
 
         #region UserAPI
         public EC_Controller() {
-            IsConnected = false;       
+            IsConnected = false;
         }
         public override bool IsConnected { get; protected set; }
+
+        public override byte ControllerID => 0x05;
+
         public override bool Open(string Port)
         {
             if (Comport.IsOpen)
@@ -43,7 +46,7 @@ namespace ControllerLib.Ethercat
 
         public override bool Connect()
         {
-            byte[] Cmd = new byte[] { 0x68,0x06,0x01, 0x02, 0x68, 0x05 };
+            byte[] Cmd = new byte[] { 0x68,0x06,0x01, 0x02, 0x68, ControllerID };
             var Crc = CRC16(Cmd, 0, Cmd.Length);
             List<byte> FinalCmd = new List<byte>(Cmd);
             FinalCmd.Add(Crc[1]);
@@ -51,14 +54,14 @@ namespace ControllerLib.Ethercat
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                return IsConnected=ReadVoidAck(0x68, 0x06, 0x01 ,0x02 ,0x68 ,0x05);
+                return IsConnected=ReadVoidAck(0x68, 0x06, 0x01 ,0x02 ,0x68 , ControllerID);
             }
         }
 
         public override bool DisConnect()
         {
             //68 06 01 FF 68 05 CRC
-            byte[] Cmd = new byte[] { 0x68, 0x06, 0x01, 0xFF, 0x68, 0x05};
+            byte[] Cmd = new byte[] { 0x68, 0x06, 0x01, 0xFF, 0x68, ControllerID };
             
             var Crc = CRC16(Cmd, 0, Cmd.Length);
             List<byte> FinalCmd = new List<byte>(Cmd);
@@ -69,7 +72,7 @@ namespace ControllerLib.Ethercat
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
                 IsConnected = false;
                 //Expected Ack
-                var ExpectedAck = new byte[] { 0x68, 0x06, 0x01, 0x02, 0x68, 0x05 };
+                var ExpectedAck = new byte[] { 0x68, 0x06, 0x01, 0x02, 0x68, ControllerID };
                 if (ReadVoidAck(ExpectedAck))
                 {
                     IsConnected = false;
@@ -88,7 +91,7 @@ namespace ControllerLib.Ethercat
         public override List<ModuleConfigModleBase> GetModuleList()
         {
             //68 08 01 02 68 05 69 96 CRC
-            byte[] Cmd = new byte[] { 0x68, 0x08, 0x01,0x02, 0x68, 0x05, 0x69, 0x96 };
+            byte[] Cmd = new byte[] { 0x68, 0x08, 0x01,0x02, 0x68, ControllerID, 0x69, 0x96 };
             var Crc = CRC16(Cmd, 0, Cmd.Length);
             List<byte> FinalCmd = new List<byte>(Cmd);
             FinalCmd.Add(Crc[1]);
@@ -110,7 +113,7 @@ namespace ControllerLib.Ethercat
         public override bool SendModuleList(List<ModuleConfigModleBase> ModuleInfoList)
         {
             //68 N 01 02 68 05 96 69
-            byte[] CmdHeader = new byte[] { 0x68, 0x08, 0x01, 0x02, 0x68, 0x05, 0x96, 0x69 };
+            byte[] CmdHeader = new byte[] { 0x68, 0x08, 0x01, 0x02, 0x68, ControllerID, 0x96, 0x69 };
             IEnumerable<byte> CmdSend = new List<byte>(CmdHeader);
             foreach (var it in ModuleInfoList)
             {
@@ -126,7 +129,7 @@ namespace ControllerLib.Ethercat
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                return ReadVoidAck(0x68, 0x08, 0x01, 0x02, 0x68, 0x05, 0x69, 0x96);
+                return ReadVoidAck(0x68, 0x08, 0x01, 0x02, 0x68, ControllerID, 0x69, 0x96);
             }
         }
 
@@ -450,7 +453,6 @@ namespace ControllerLib.Ethercat
             List<ModuleConfigModleBase> ModuleList = new List<ModuleConfigModleBase>();
             ModuleConfigModleBase ModuleInfo = null;
             int iPos = StartPos;
-
             while (iPos < length + StartPos)
             {
                 byte ModuleType = BtArr[iPos];
@@ -515,6 +517,7 @@ namespace ControllerLib.Ethercat
             }
             return bRet;
         }
+
         #endregion
     }
 }

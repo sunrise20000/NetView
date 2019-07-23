@@ -26,6 +26,9 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
             {
                 IOType = EnumModuleIoType.IN,
             });
+            TypeDic.Clear();
+            for (int i = 0; i < TypeList.Count(); i++)
+                TypeDic.Add(TypeList[i], TypeStringList[i]);
         }
 
         public byte  Type{

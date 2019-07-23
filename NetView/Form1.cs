@@ -299,7 +299,7 @@ namespace NetView
         private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             ProjController.OpenProject();
-            LeftControl.ReplaceNewList(ProjController.BusName, ProjController.SubBusNameWithIndexList);
+            LeftControl.ReplaceNewList(ProjController.BusName, ProjController.SubBusNameWithIndexList());
         }
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -402,8 +402,7 @@ namespace NetView
         {
             try
             {
-                BusController.GetModuleList();
-                UpdateUI();
+                UpdateUI(BusController.GetModuleList());
             }
             catch (Exception ex)
             {
@@ -413,10 +412,12 @@ namespace NetView
 
         /// <summary>
         /// 将读取到的模块信息显示在界面上
+        /// Controller自动判断属于哪种控制器
         /// </summary>
-        private void UpdateUI()
+        private void UpdateUI(List<ModuleConfigModleBase> ModuleList)
         {
-            ;
+            ProjController.ModuleConfigList = ModuleList;
+            LeftControl.ReplaceNewList("EtherCAT", ProjController.SubBusNameWithIndexList(false));
         }
 
         private void barButtonItemDownLoad_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
