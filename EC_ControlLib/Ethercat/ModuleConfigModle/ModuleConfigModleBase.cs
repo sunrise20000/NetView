@@ -54,7 +54,7 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         }
 
         /// <summary>
-        /// 完全是一整个BtArr数组过来
+        /// 完全是一整个BtArr数组过来，恢复出模块的GlobalIndex与LocalIndex等信息，与后面的构成信息不一致
         /// </summary>
         /// <param name="BtArr"></param>
         public virtual void FromByteArray(byte[] BtArr)
@@ -73,6 +73,12 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
                 info.AddValue($"L{i}", GuiStringList[i]);
         }
 
+        /// <summary>
+        /// 从Byte数组读取到SubModuleList，此函数为了解决模块输入和输出构成的问题，并且用于监视目的用
+        /// </summary>
+        /// <param name="BtArr"></param>
+        /// <param name="StartPos"></param>
+        /// <param name="Len"></param>
         public virtual void GetSubModuleListValueFromBtArr(byte[] BtArr, int StartPos, int Len)
         {
             throw new NotImplementedException();

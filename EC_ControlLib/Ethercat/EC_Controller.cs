@@ -111,13 +111,18 @@ namespace ControllerLib.Ethercat
         {
             //68 N 01 02 68 05 96 69
             byte[] CmdHeader = new byte[] { 0x68, 0x08, 0x01, 0x02, 0x68, 0x05, 0x96, 0x69 };
-            List<byte> CmdSend = new List<byte>(CmdHeader);
+            IEnumerable<byte> CmdSend = new List<byte>(CmdHeader);
             foreach (var it in ModuleInfoList)
-                CmdSend.Concat(it.ToByteArr());
-            var Crc = CRC16(CmdSend.ToArray(), 0, CmdSend.Count);
+            {
+                var B = it.ToByteArr();
+                CmdSend=CmdSend.Concat(B);
+            }
+            var Crc = CRC16(CmdSend.ToArray(), 0, CmdSend.Count());
             List<byte> FinalCmd = new List<byte>(CmdSend);
+            FinalCmd[1] = (byte)FinalCmd.Count;
             FinalCmd.Add(Crc[1]);
             FinalCmd.Add(Crc[0]);
+         
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
@@ -384,7 +389,6 @@ namespace ControllerLib.Ethercat
                 if (bt == 0x68)
                 {
                     IsHeaderFound = true;
-                    Recv.Add(bt);
                 }
                 if (IsHeaderFound)
                 { 
@@ -446,8 +450,6 @@ namespace ControllerLib.Ethercat
             List<ModuleConfigModleBase> ModuleList = new List<ModuleConfigModleBase>();
             ModuleConfigModleBase ModuleInfo = null;
             int iPos = StartPos;
-
-
 
             while (iPos < length + StartPos)
             {

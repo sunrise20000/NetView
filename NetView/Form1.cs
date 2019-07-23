@@ -304,8 +304,13 @@ namespace NetView
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            ProjController.ModuleConfigList.Clear();
+            UpdateProjController();
+            ProjController.SaveProject();
+        }
 
+        private void UpdateProjController()
+        {
+            ProjController.ModuleConfigList.Clear();
             foreach (var it in MiddleControl.Controls)
             {
                 if (it is BusModel)
@@ -324,7 +329,7 @@ namespace NetView
                     ProjController.ModuleConfigList.Add(CfgBase);
                 }
             }
-            ProjController.SaveProject();
+            ProjController.ModuleConfigList.Sort((a, b) => { return a.GlobalIndex - b.GlobalIndex; });
         }
 
         private void barButtonItemCut_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -398,6 +403,7 @@ namespace NetView
             try
             {
                 BusController.GetModuleList();
+                UpdateUI();
             }
             catch (Exception ex)
             {
@@ -405,12 +411,21 @@ namespace NetView
             }
         }
 
+        /// <summary>
+        /// 将读取到的模块信息显示在界面上
+        /// </summary>
+        private void UpdateUI()
+        {
+            ;
+        }
+
         private void barButtonItemDownLoad_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             try
             {
-
-                BusController.SendModuleList(null);
+                UpdateProjController();
+                var Modules = ProjController.ModuleConfigList;
+                BusController.SendModuleList(Modules);
             }
             catch (Exception ex)
             {
