@@ -456,7 +456,7 @@
             // 
             // barButtonItem_Disconnect
             // 
-            this.barButtonItem_Disconnect.Caption = "barButtonItem_Disconnect";
+            //this.barButtonItem_Disconnect.Caption = "barButtonItem_Disconnect";
             this.barButtonItem_Disconnect.Id = 60;
             this.barButtonItem_Disconnect.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem33.ImageOptions.Image")));
             this.barButtonItem_Disconnect.Name = "barButtonItem_Disconnect";
