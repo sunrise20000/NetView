@@ -375,7 +375,8 @@ namespace NetView
                         if (BusController.Connect())
                         {
                             UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
-                            //EventHeartBeat.Set();
+                            //打开心跳
+                            EventHeartBeat.Set();
                         }
                         else
                             MessageBox.Show("Can't connect to the controller! Please check!");
@@ -383,8 +384,7 @@ namespace NetView
                     else
                     {
                         //BusController.CLose();
-                        EventHeartBeat.Reset();
-                        BusController.DisConnect();
+                        MessageBox.Show("Controller is already connected");
                     }
                 }
                 else
@@ -397,7 +397,34 @@ namespace NetView
                 MessageBox.Show($"Error when connect to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             }
         }
-
+        private void barButtonItem_Disconnect_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            try
+            {
+                if (ComSettingCfgModel == null)
+                {
+                    MessageBox.Show("Please select comport", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                string RegStr = @"COM\d{1,2}";
+                if (Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr))
+                {
+                    BusController.Open(ComSettingCfgModel.ComportName);
+                        //BusController.CLose();
+                    EventHeartBeat.Reset();
+                    BusController.DisConnect();
+                    
+                }
+                else
+                {
+                    MessageBox.Show("Please select a comport to connect controller");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error when Disconnect controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+            }
+        }
         private void barButtonItemUpload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
             try
@@ -609,5 +636,7 @@ namespace NetView
                 }
             }
         }
+
+   
     }
 }

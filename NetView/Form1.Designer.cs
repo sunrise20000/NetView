@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            DevExpress.Utils.Animation.PushTransition pushTransition2 = new DevExpress.Utils.Animation.PushTransition();
-            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer2 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            DevExpress.Utils.Animation.PushTransition pushTransition1 = new DevExpress.Utils.Animation.PushTransition();
+            DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer dockingContainer3 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer();
             this.documentGroup1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.DocumentGroup(this.components);
             this.document1 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
             this.document3 = new DevExpress.XtraBars.Docking2010.Views.Tabbed.Document(this.components);
@@ -56,6 +56,7 @@
             this.barButtonItemSetting = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItem6 = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemConnect = new DevExpress.XtraBars.BarButtonItem();
+            this.barButtonItem_Disconnect = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemUpload = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemDownLoad = new DevExpress.XtraBars.BarButtonItem();
             this.barButtonItemMonitor = new DevExpress.XtraBars.BarButtonItem();
@@ -76,12 +77,12 @@
             this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.uC_Output1 = new NetView.View.UC_Output();
-            this.dockPanelMiddle = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.dockPanelVarMonitor = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
             this.elementHost2 = new System.Windows.Forms.Integration.ElementHost();
             this.dataGridViewVarMonitor = new System.Windows.Forms.DataGridView();
+            this.dockPanelMiddle = new DevExpress.XtraBars.Docking.DockPanel();
+            this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.barSubItem1 = new DevExpress.XtraBars.BarSubItem();
             this.barSubItem2 = new DevExpress.XtraBars.BarSubItem();
             this.barSubItem3 = new DevExpress.XtraBars.BarSubItem();
@@ -191,10 +192,10 @@
             this.dockPanel2_Container.SuspendLayout();
             this.dockPanelDown.SuspendLayout();
             this.dockPanel3_Container.SuspendLayout();
-            this.dockPanelMiddle.SuspendLayout();
             this.dockPanelVarMonitor.SuspendLayout();
             this.controlContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVarMonitor)).BeginInit();
+            this.dockPanelMiddle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barManager2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).BeginInit();
@@ -288,8 +289,9 @@
             this.barButtonItem27,
             this.barButtonItem28,
             this.barButtonItem30,
-            this.barButtonItem31});
-            this.barManager1.MaxItemId = 60;
+            this.barButtonItem31,
+            this.barButtonItem_Disconnect});
+            this.barManager1.MaxItemId = 61;
             this.barManager1.StatusBar = this.bar3;
             // 
             // bar1
@@ -311,6 +313,7 @@
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemSetting),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem6),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemConnect),
+            new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItem_Disconnect),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemUpload),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemDownLoad),
             new DevExpress.XtraBars.LinkPersistInfo(this.barButtonItemMonitor)});
@@ -451,6 +454,14 @@
             this.barButtonItemConnect.Name = "barButtonItemConnect";
             this.barButtonItemConnect.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemConnect_ItemClick);
             // 
+            // barButtonItem_Disconnect
+            // 
+            this.barButtonItem_Disconnect.Caption = "barButtonItem_Disconnect";
+            this.barButtonItem_Disconnect.Id = 60;
+            this.barButtonItem_Disconnect.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("barButtonItem33.ImageOptions.Image")));
+            this.barButtonItem_Disconnect.Name = "barButtonItem_Disconnect";
+            this.barButtonItem_Disconnect.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem_Disconnect_ItemClick);
+            // 
             // barButtonItemUpload
             // 
             this.barButtonItemUpload.Id = 26;
@@ -547,7 +558,6 @@
             this.dockPanelDown,
             this.dockPanelVarMonitor,
             this.dockPanelMiddle});
-            //this.dockPanelVarMonitor.Visibility = DevExpress.XtraBars.Docking.DockVisibility.Hidden;
             this.dockManager1.TopZIndexControls.AddRange(new string[] {
             "DevExpress.XtraBars.BarDockControl",
             "DevExpress.XtraBars.StandaloneBarDockControl",
@@ -642,6 +652,47 @@
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.uC_Output1;
             // 
+            // dockPanelVarMonitor
+            // 
+            this.dockPanelVarMonitor.Controls.Add(this.controlContainer1);
+            this.dockPanelVarMonitor.DockedAsTabbedDocument = true;
+            this.dockPanelVarMonitor.FloatLocation = new System.Drawing.Point(945, 594);
+            this.dockPanelVarMonitor.ID = new System.Guid("c8af52a7-8e05-4baa-9e28-ff24fc0a57d5");
+            this.dockPanelVarMonitor.Name = "dockPanelVarMonitor";
+            this.dockPanelVarMonitor.OriginalSize = new System.Drawing.Size(200, 200);
+            this.dockPanelVarMonitor.SavedIndex = 4;
+            this.dockPanelVarMonitor.SavedMdiDocument = true;
+            this.dockPanelVarMonitor.Text = "VarMonitor";
+            // 
+            // controlContainer1
+            // 
+            this.controlContainer1.Controls.Add(this.elementHost2);
+            this.controlContainer1.Controls.Add(this.dataGridViewVarMonitor);
+            this.controlContainer1.Location = new System.Drawing.Point(0, 0);
+            this.controlContainer1.Name = "controlContainer1";
+            this.controlContainer1.Size = new System.Drawing.Size(1318, 727);
+            this.controlContainer1.TabIndex = 0;
+            // 
+            // elementHost2
+            // 
+            this.elementHost2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.elementHost2.Location = new System.Drawing.Point(0, 0);
+            this.elementHost2.Name = "elementHost2";
+            this.elementHost2.Size = new System.Drawing.Size(1318, 727);
+            this.elementHost2.TabIndex = 1;
+            this.elementHost2.Text = "elementHost2";
+            this.elementHost2.Child = null;
+            // 
+            // dataGridViewVarMonitor
+            // 
+            this.dataGridViewVarMonitor.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewVarMonitor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewVarMonitor.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewVarMonitor.Name = "dataGridViewVarMonitor";
+            this.dataGridViewVarMonitor.RowTemplate.Height = 23;
+            this.dataGridViewVarMonitor.Size = new System.Drawing.Size(1318, 727);
+            this.dataGridViewVarMonitor.TabIndex = 0;
+            // 
             // dockPanelMiddle
             // 
             this.dockPanelMiddle.Controls.Add(this.dockPanel4_Container);
@@ -661,49 +712,6 @@
             this.dockPanel4_Container.Name = "dockPanel4_Container";
             this.dockPanel4_Container.Size = new System.Drawing.Size(1318, 696);
             this.dockPanel4_Container.TabIndex = 0;
-            // 
-            // dockPanelVarMonitor
-            // 
-            this.dockPanelVarMonitor.Controls.Add(this.controlContainer1);
-            this.dockPanelVarMonitor.DockedAsTabbedDocument = true;
-            this.dockPanelVarMonitor.FloatLocation = new System.Drawing.Point(945, 594);
-            this.dockPanelVarMonitor.ID = new System.Guid("c8af52a7-8e05-4baa-9e28-ff24fc0a57d5");
-            this.dockPanelVarMonitor.Name = "dockPanelVarMonitor";
-            this.dockPanelVarMonitor.OriginalSize = new System.Drawing.Size(200, 200);
-            this.dockPanelVarMonitor.SavedIndex = 4;
-            this.dockPanelVarMonitor.SavedMdiDocument = true;
-            this.dockPanelVarMonitor.Text = "VarMonitor";
-
-
-            // 
-            // controlContainer1
-            // 
-            this.controlContainer1.Controls.Add(this.elementHost2);
-            this.controlContainer1.Controls.Add(this.dataGridViewVarMonitor);
-            this.controlContainer1.Location = new System.Drawing.Point(0, 0);
-            this.controlContainer1.Name = "controlContainer1";
-            this.controlContainer1.Size = new System.Drawing.Size(1318, 696);
-            this.controlContainer1.TabIndex = 0;
-            // 
-            // elementHost2
-            // 
-            this.elementHost2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.elementHost2.Location = new System.Drawing.Point(0, 0);
-            this.elementHost2.Name = "elementHost2";
-            this.elementHost2.Size = new System.Drawing.Size(1318, 696);
-            this.elementHost2.TabIndex = 1;
-            this.elementHost2.Text = "elementHost2";
-            this.elementHost2.Child = null;
-            // 
-            // dataGridViewVarMonitor
-            // 
-            this.dataGridViewVarMonitor.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewVarMonitor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewVarMonitor.Location = new System.Drawing.Point(0, 0);
-            this.dataGridViewVarMonitor.Name = "dataGridViewVarMonitor";
-            this.dataGridViewVarMonitor.RowTemplate.Height = 23;
-            this.dataGridViewVarMonitor.Size = new System.Drawing.Size(1318, 696);
-            this.dataGridViewVarMonitor.TabIndex = 0;
             // 
             // barSubItem1
             // 
@@ -1360,7 +1368,7 @@
             // workspaceManager1
             // 
             this.workspaceManager1.TargetControl = this;
-            this.workspaceManager1.TransitionType = pushTransition2;
+            this.workspaceManager1.TransitionType = pushTransition1;
             // 
             // barWorkspaceMenuItem2
             // 
@@ -1481,9 +1489,9 @@
             this.document3,
             this.document1});
             this.tabbedView1.RootContainer.Element = null;
-            dockingContainer2.Element = this.documentGroup1;
+            dockingContainer3.Element = this.documentGroup1;
             this.tabbedView1.RootContainer.Nodes.AddRange(new DevExpress.XtraBars.Docking2010.Views.Tabbed.DockingContainer[] {
-            dockingContainer2});
+            dockingContainer3});
             // 
             // Form1
             // 
@@ -1520,10 +1528,10 @@
             this.dockPanel2_Container.ResumeLayout(false);
             this.dockPanelDown.ResumeLayout(false);
             this.dockPanel3_Container.ResumeLayout(false);
-            this.dockPanelMiddle.ResumeLayout(false);
             this.dockPanelVarMonitor.ResumeLayout(false);
             this.controlContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVarMonitor)).EndInit();
+            this.dockPanelMiddle.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.barManager2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.documentManager1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tabbedView1)).EndInit();
@@ -1684,6 +1692,7 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem38;
         private DevExpress.XtraBars.BarButtonItem barButtonItem39;
         private DevExpress.XtraBars.BarButtonItem barButtonItem32;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem_Disconnect;
     }
 }
 
