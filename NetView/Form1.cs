@@ -56,13 +56,27 @@ namespace NetView
         List<UInt32> OutputValueRecv_List = new List<UInt32>();
         List<UInt32> InputValueRecv_List = new List<UInt32>();
         bool OnFirstCircle = true;
+
         public Form1()
         {
             InitializeComponent();
             LoadCfg();
             InitCtrl();
-        }
-        private void LoadCfg()
+			
+		
+
+		}
+		
+		private void BusController_OnConnectStateChanged(object sender, bool e)
+		{
+
+			barButtonItemConnect.Enabled = !e;
+			barButtonItem_Disconnect.Enabled = e;
+			MenuConnect.Enabled = barButtonItemConnect.Enabled;
+			MenuDisconnect.Enabled = barButtonItem_Disconnect.Enabled;
+		}
+
+		private void LoadCfg()
         {
             try
             {
@@ -77,7 +91,14 @@ namespace NetView
         }
         private void InitCtrl()
         {
-            ImageList imgList = new ImageList();
+			BusController.OnConnectStateChanged += BusController_OnConnectStateChanged;
+			barButtonItemConnect.Enabled = true;
+			barButtonItem_Disconnect.Enabled = false;
+			MenuConnect.Enabled = barButtonItemConnect.Enabled;
+			MenuDisconnect.Enabled = barButtonItem_Disconnect.Enabled;
+
+
+			ImageList imgList = new ImageList();
 
             imgList.Images.Add(new Bitmap(@"images/Category.png"));
             imgList.Images.Add(new Bitmap(@"images/Bus.png"));
@@ -218,11 +239,14 @@ namespace NetView
             //HeartBeat
             Task.Run(() =>
             {
+				int i = 0;
                 while (!ctsHeartBeat.IsCancellationRequested)
                 {
-                    if (BusController.IsConnected)
+					EventHeartBeat.WaitOne();
+					Thread.Sleep(500);
+					Console.WriteLine($"---------------Heart beat {i++}------------------");
+					if (BusController.IsConnected)
                     {
-                        EventHeartBeat.WaitOne();
                         try
                         {
                             if (!BusController.Hearbeat())
@@ -231,12 +255,13 @@ namespace NetView
                                 MessageBox.Show("Connection Timeout");
                             }
                         }
-                        catch
+                        catch(Exception ex)
                         {
                             EventHeartBeat.Reset();
-                            MessageBox.Show("Connection Timeout");
-                        }
-                        Thread.Sleep(1000);
+                            MessageBox.Show($"Connection Timeout:{ex.Message}");
+							Console.WriteLine($"Connection Timeout:{ex.StackTrace}");
+
+						}  
                     }
                 }
             }, ctsHeartBeat.Token);
@@ -282,6 +307,7 @@ namespace NetView
             }
 
         }
+
 
         private void TreeViewDevice_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
@@ -370,13 +396,14 @@ namespace NetView
                 if (Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr))
                 {
                     BusController.Open(ComSettingCfgModel.ComportName);
-                    if (!BusController.IsConnected)
+                    if (true || !BusController.IsConnected)
                     {
                         if (BusController.Connect())
                         {
                             UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
                             //打开心跳
                             EventHeartBeat.Set();
+							MessageBox.Show("Connect sucessfully");
                         }
                         else
                             MessageBox.Show("Can't connect to the controller! Please check!");
@@ -394,7 +421,7 @@ namespace NetView
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error when connect to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                MessageBox.Show($"Error when connect to controller:{ex.StackTrace}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
             }
         }
         private void barButtonItem_Disconnect_ItemClick(object sender, ItemClickEventArgs e)
@@ -413,6 +440,7 @@ namespace NetView
                         //BusController.CLose();
                     EventHeartBeat.Reset();
                     BusController.DisConnect();
+					MessageBox.Show("Disconnect controller");
                     
                 }
                 else

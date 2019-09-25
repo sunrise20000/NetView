@@ -15,6 +15,7 @@ namespace ControllerLib
         public abstract bool Connect();
         public abstract bool DisConnect();
         public abstract List<ModuleConfigModleBase> GetModuleList();
+		public abstract event EventHandler<bool> OnConnectStateChanged;
 
         /// <summary>
         /// PureNameList

@@ -8,19 +8,32 @@ using System.Threading.Tasks;
 
 namespace ControllerLib.Ethercat
 {
-    public class EC_Controller : ControllerBase
-    {
-        #region Field
-        SerialPort Comport = new SerialPort();
-        object ComportLock = new object();
-        List<ModuleConfigModleBase> ModuleList = new List<ModuleConfigModleBase>();
-        #endregion
+	public class EC_Controller : ControllerBase
+	{
+		#region Field
+		SerialPort Comport = new SerialPort();
+		object ComportLock = new object();
+		List<ModuleConfigModleBase> ModuleList = new List<ModuleConfigModleBase>();
+		private bool isConnected = false;
 
-        #region UserAPI
-        public EC_Controller() {
-            IsConnected = false;
-        }
-        public override bool IsConnected { get; protected set; }
+		public override event EventHandler<bool> OnConnectStateChanged;
+		#endregion
+
+		#region UserAPI
+		public EC_Controller() {
+			IsConnected = false;
+		}
+		public override bool IsConnected
+		{
+			get { return isConnected; }
+			protected set{
+				if (isConnected != value)
+				{
+					OnConnectStateChanged?.Invoke(this, value);
+					isConnected = value;
+				}
+			}
+		}
 
         public override byte ControllerID => 0x05;
 
@@ -46,16 +59,30 @@ namespace ControllerLib.Ethercat
 
         public override bool Connect()
         {
-            byte[] Cmd = new byte[] { 0x68,0x06,0x01, 0x02, 0x68, ControllerID };
-            var Crc = CRC16(Cmd, 0, Cmd.Length);
-            List<byte> FinalCmd = new List<byte>(Cmd);
-            FinalCmd.Add(Crc[1]);
-            FinalCmd.Add(Crc[0]);
-            lock (ComportLock)
-            {
-                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                return IsConnected=ReadVoidAck(0x68, 0x06, 0x01 ,0x02 ,0x68 , ControllerID);
-            }
+			byte[] Cmd = new byte[] { 0x68, 0x06, 0x01, 0x02, 0x68, ControllerID };
+			var Crc = CRC16(Cmd, 0, Cmd.Length);
+			List<byte> FinalCmd = new List<byte>(Cmd);
+			FinalCmd.Add(Crc[1]);
+			FinalCmd.Add(Crc[0]);
+			try
+			{
+				for (int i = 0; i < 3; i++)
+				{
+					lock (ComportLock)
+					{
+						Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+						IsConnected = ReadVoidAck(new byte[] { 0x68, 0x06, 0x01, 0x02, 0x68, ControllerID });
+						if (IsConnected)
+							return true;
+					}
+				}
+				return false;
+			}
+			catch
+			{
+				IsConnected = false;
+				return false;
+			}
         }
 
         public override bool DisConnect()
@@ -67,20 +94,22 @@ namespace ControllerLib.Ethercat
             List<byte> FinalCmd = new List<byte>(Cmd);
             FinalCmd.Add(Crc[1]);
             FinalCmd.Add(Crc[0]);
-            lock (ComportLock)
-            {
-                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                IsConnected = false;
-                //Expected Ack
-                var ExpectedAck = new byte[] { 0x68, 0x06, 0x01, 0x02, 0x68, ControllerID };
-                if (ReadVoidAck(ExpectedAck))
-                {
-                    IsConnected = false;
-                    return true;
-                }
-                else
-                    return false;
-            }
+			for (int i = 0; i < 3; i++)
+			{
+				lock (ComportLock)
+				{
+					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+					IsConnected = false;
+					//Expected Ack
+					var ExpectedAck = new byte[] { 0x68, 0x06, 0x01, 0x02, 0x68, ControllerID };
+					if (ReadVoidAck(ExpectedAck))
+					{
+						IsConnected = false;
+						return true;
+					}
+				}
+			}
+			return false;
         }
 
 
@@ -129,7 +158,7 @@ namespace ControllerLib.Ethercat
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                return ReadVoidAck(0x68, 0x08, 0x01, 0x02, 0x68, ControllerID, 0x69, 0x96);
+                return ReadVoidAck(new byte[] {0x68, 0x08, 0x01, 0x02, 0x68, ControllerID, 0x69, 0x96 });
             }
         }
 
@@ -280,41 +309,54 @@ namespace ControllerLib.Ethercat
         /// </summary>
         /// <param name="ExpectAckByteList"></param>
         /// <returns></returns>
-        bool ReadVoidAck(params byte[] ExpectAckByteList)
+        bool ReadVoidAck(byte[] ExpectAckByteList, int Timeout=1000)
         {
             var StartTime = DateTime.Now.Ticks;
             List<byte> Recv = new List<byte>();
+			List<byte> RecvFul = new List<byte>();
             bool IsHeaderFound = false;
             int Length = 0;
             while (true)
             {
-                byte bt = (byte)Comport.ReadByte();
-                if (bt == 0x68)
-                {
-                    IsHeaderFound = true;
-                }
-                if (IsHeaderFound)
-                {
-                    Recv.Add(bt);
-                    if (Recv.Count == 2)                   
-                        Length = Recv[1];
-                    if (Length == Recv.Count - 2)
-                    {
-                        if (Length == ExpectAckByteList.Length)
-                        {
-                            if (CompareList(Recv.ToArray(), 0, ExpectAckByteList, 0, Length))
-                            {
-                                var CrcCal = CRC16(Recv.ToArray(), 0, Length);
-                                if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
-                                    return true;
-                                else
-                                    throw new Exception("CRC check error");
-                            }
-                        }
-                    }                  
-                }
-                if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > 1000)
-                    throw new Exception("Timeout to connect controller");
+				byte bt =0;
+				if (Comport.BytesToRead > 0)
+				{
+					bt = (byte)Comport.ReadByte();
+					RecvFul.Add(bt);
+					if (bt == 0x68)
+					{
+						IsHeaderFound = true;
+					}
+
+					if (IsHeaderFound)
+					{
+						Recv.Add(bt);
+						if (Recv.Count == 2)
+							Length = Recv[1];
+						if (Length == Recv.Count - 2)
+						{
+							if (Length == ExpectAckByteList.Length)
+							{
+								if (CompareList(Recv.ToArray(), 0, ExpectAckByteList, 0, Length))
+								{
+									var CrcCal = CRC16(Recv.ToArray(), 0, Length);
+									if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
+										return true;
+									else
+										throw new Exception("CRC check error");
+								}
+							}
+						}
+					}
+				}
+				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+				{
+					//Console.WriteLine($"IsHeaderFound ={IsHeaderFound}, RecvFul的长度{RecvFul.Count}");
+					//foreach (var c in RecvFul)
+					//	Console.WriteLine(string.Format("%2X , ", c));
+					//throw new Exception($"Timeout to connect controller,recieve len;{RecvFul.Count}");
+					return false;
+				}
             }
         }
 
@@ -322,7 +364,7 @@ namespace ControllerLib.Ethercat
         /// PureName
         /// </summary>
         /// <returns></returns>
-        List<ModuleConfigModleBase> ReadModuleListAck()
+        List<ModuleConfigModleBase> ReadModuleListAck(int Timeout=1000)
         {
             var ModuleList = new List<ModuleConfigModleBase>();
             var StartTime = DateTime.Now.Ticks;
@@ -331,35 +373,40 @@ namespace ControllerLib.Ethercat
             int Length = 0;
             while (true)
             {
-                byte bt = (byte)Comport.ReadByte();
-                if (bt == 0x68)
-                {
-                    IsHeaderFound = true;
-                }
-                if (IsHeaderFound)
-                {
-                    Recv.Add(bt);
-                    if (Recv.Count == 2)
-                        Length = Recv[1];
-                    if (Length == Recv.Count - 2)   //接受完毕
-                    {
-                        var CrcCal = CRC16(Recv.ToArray(), 0, Length);
-                        if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
-                        {
-                            //68 0C 01 02 68 05 96 69 11 01 01 00 34 75
-                            ModuleList = GetModuleFromByteArr(Recv.ToArray(),8, Recv.Count-10);
-                            return ModuleList;
-                        }
-                        else
-                            throw new Exception("CRC check error");
-                    }
-                }
-                if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > 1000)
-                    throw new Exception("Timeout to GetModuleList");
-            }
+				byte bt = 0;
+				if (Comport.BytesToRead > 0)
+				{
+					bt = (byte)Comport.ReadByte();
+
+					if (bt == 0x68)
+					{
+						IsHeaderFound = true;
+					}
+					if (IsHeaderFound)
+					{
+						Recv.Add(bt);
+						if (Recv.Count == 2)
+							Length = Recv[1];
+						if (Length == Recv.Count - 2)   //接受完毕
+						{
+							var CrcCal = CRC16(Recv.ToArray(), 0, Length);
+							if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
+							{
+								//68 0C 01 02 68 05 96 69 11 01 01 00 34 75
+								ModuleList = GetModuleFromByteArr(Recv.ToArray(), 8, Recv.Count - 10);
+								return ModuleList;
+							}
+							else
+								return null;
+						}
+					}
+				}
+				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+					return null;
+			}
         }
 
-        void GetValueAck(out List<UInt32> OutputValueRecv,out List<UInt32> InputValueRecv)
+        bool GetValueAck(out List<UInt32> OutputValueRecv,out List<UInt32> InputValueRecv, int Timeout=1000)
         {
             OutputValueRecv = new List<uint>();
             InputValueRecv = new List<uint>();
@@ -388,60 +435,69 @@ namespace ControllerLib.Ethercat
             int Length = 0;
             while (true)
             {
-                byte bt = (byte)Comport.ReadByte();
-                if (bt == 0x68)
-                {
-                    IsHeaderFound = true;
-                }
-                if (IsHeaderFound)
-                { 
-                    Recv.Add(bt);
-                    if (Recv.Count == 2)
-                        Length = Recv[1];
-                    if (Length == Recv.Count - 2 && Length-2 == OutputBtLen + InputBtLen)   //接受完毕
-                    {
-                        var CrcCal = CRC16(Recv.ToArray(), 0, Length);
-                        if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
-                        {
-                           
-                            int OutputStartPos = 2;
-                            int InputStartPos = 2+OutputBtLen;
+				byte bt = 0;
+				if (Comport.BytesToRead > 0)
+				{
 
-                            //读取完毕赋值
-                            foreach (var it in ModuleList)
-                            {
-                                List<byte> BtArrTotalInModule = new List<byte>();
-                                foreach (var Sub in it.ModuleSubInfoList)
-                                {
-                                    if (Sub.IOType == EnumModuleIoType.IN)
-                                    {
-                                        for (int i = 0; i < Sub.BitSize / 8; i++)
-                                            BtArrTotalInModule.Add(Recv[InputStartPos++ + i]);
-                                    }
-                                    else
-                                    {
-                                        for (int i = 0; i < Sub.BitSize / 8; i++)
-                                            BtArrTotalInModule.Add(Recv[OutputStartPos++ + i]);
-                                    }
-                                }
-                                it.GetSubModuleListValueFromBtArr(BtArrTotalInModule.ToArray(), 0, BtArrTotalInModule.Count);
+					bt = (byte)Comport.ReadByte();
 
-                                //返回值赋值
-                                foreach (var xx in it.ModuleSubInfoList)
-                                {
-                                    if (xx.IOType == EnumModuleIoType.IN)
-                                        InputValueRecv.Add(xx.RawData);
-                                    else
-                                        OutputValueRecv.Add(xx.RawData);
-                                }
-                            }
-                        }
-                        else
-                            throw new Exception("CRC check error");
-                    }
-                }
-                if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > 1000)
-                    throw new Exception("Timeout to GetModuleList");
+
+					if (bt == 0x68)
+					{
+						IsHeaderFound = true;
+					}
+					if (IsHeaderFound)
+					{
+						Recv.Add(bt);
+						if (Recv.Count == 2)
+							Length = Recv[1];
+						if (Length == Recv.Count - 2 && Length - 2 == OutputBtLen + InputBtLen)   //接受完毕
+						{
+							var CrcCal = CRC16(Recv.ToArray(), 0, Length);
+							if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
+							{
+
+								int OutputStartPos = 2;
+								int InputStartPos = 2 + OutputBtLen;
+
+								//读取完毕赋值
+								foreach (var it in ModuleList)
+								{
+									List<byte> BtArrTotalInModule = new List<byte>();
+									foreach (var Sub in it.ModuleSubInfoList)
+									{
+										if (Sub.IOType == EnumModuleIoType.IN)
+										{
+											for (int i = 0; i < Sub.BitSize / 8; i++)
+												BtArrTotalInModule.Add(Recv[InputStartPos++ + i]);
+										}
+										else
+										{
+											for (int i = 0; i < Sub.BitSize / 8; i++)
+												BtArrTotalInModule.Add(Recv[OutputStartPos++ + i]);
+										}
+									}
+									it.GetSubModuleListValueFromBtArr(BtArrTotalInModule.ToArray(), 0, BtArrTotalInModule.Count);
+
+									//返回值赋值
+									foreach (var xx in it.ModuleSubInfoList)
+									{
+										if (xx.IOType == EnumModuleIoType.IN)
+											InputValueRecv.Add(xx.RawData);
+										else
+											OutputValueRecv.Add(xx.RawData);
+									}
+
+								}
+								return true;
+							}
+							else
+								return false;
+						}
+					}
+				}
+                if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+                    return false;
             }
         }
 
