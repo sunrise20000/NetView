@@ -33,7 +33,7 @@ namespace NetView.Class
             this.BusFileMgr = BusFileMgr;
         }
 
-        public void OpenProject()
+        public bool OpenProject()
         {
             ModuleConfigList.Clear();
             OpenFileDialog ofd = new OpenFileDialog();
@@ -57,8 +57,10 @@ namespace NetView.Class
                         ModuleConfigList.Add(formatter.Deserialize(s) as ModuleConfigModleBase);
                     }
                     s.Close();
+					return true;
                 }
             }
+			return false;
         }
 
         public void SaveProject()

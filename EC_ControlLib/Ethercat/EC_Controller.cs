@@ -149,17 +149,22 @@ namespace ControllerLib.Ethercat
                 var B = it.ToByteArr();
                 CmdSend=CmdSend.Concat(B);
             }
-            var Crc = CRC16(CmdSend.ToArray(), 0, CmdSend.Count());
-            List<byte> FinalCmd = new List<byte>(CmdSend);
-            FinalCmd[1] = (byte)FinalCmd.Count;
+			List<byte> FinalCmd = new List<byte>(CmdSend);
+			FinalCmd[1] = (byte)FinalCmd.Count;
+			var Crc = CRC16(FinalCmd.ToArray(), 0, FinalCmd.Count());
+                
             FinalCmd.Add(Crc[1]);
             FinalCmd.Add(Crc[0]);
-         
-            lock (ComportLock)
-            {
-                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                return ReadVoidAck(new byte[] {0x68, 0x08, 0x01, 0x02, 0x68, ControllerID, 0x69, 0x96 });
-            }
+			for (int i = 0; i < 3; i++)
+			{
+				lock (ComportLock)
+				{
+					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+					if (ReadVoidAck(new byte[] { 0x68, 0x08, 0x01, 0x02, 0x68, ControllerID, 0x69, 0x96 }))
+						return true;
+				}
+			}
+			return false;
         }
 
         /// <summary>
@@ -170,7 +175,7 @@ namespace ControllerLib.Ethercat
         /// </summary>
         /// <param name="InputValueList"></param>
         /// <param name="OutputValueList"></param>
-        public override void GetModuleValue(List<uint> ModifyValueList, out List<uint> InputValueList, out List<uint> OutputValueList)
+        public override bool GetModuleValue(List<uint> ModifyValueList, out List<uint> InputValueList, out List<uint> OutputValueList)
         {
             InputValueList = new List<uint>();
             OutputValueList = new List<uint>();
@@ -206,11 +211,18 @@ namespace ControllerLib.Ethercat
             List<byte> FinalCmd = new List<byte>(CmdSend);
             FinalCmd.Add(Crc[1]);
             FinalCmd.Add(Crc[0]);
-            lock (ComportLock)
-            {
-                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                GetValueAck(out OutputValueList,out InputValueList);
-            }
+
+			for (int i = 0; i < 3; i++)
+			{
+				lock (ComportLock)
+				{
+					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+					if (GetValueAck(out OutputValueList, out InputValueList))
+						return true;
+				}
+			}
+
+			return false;
            
         }
 

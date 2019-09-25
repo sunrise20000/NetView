@@ -324,8 +324,8 @@ namespace NetView
 
         private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
         {
-            ProjController.OpenProject();
-            LeftControl.ReplaceNewList(ProjController.BusName, ProjController.SubBusNameWithIndexList());
+            if(ProjController.OpenProject())
+				LeftControl.ReplaceNewList(ProjController.BusName, ProjController.SubBusNameWithIndexList());
         }
 
         private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -481,8 +481,11 @@ namespace NetView
             {
                 UpdateProjController();
                 var Modules = ProjController.ModuleConfigList;
-                BusController.SendModuleList(Modules);
-            }
+				if (BusController.SendModuleList(Modules))
+					MessageBox.Show("Download success","Info", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+				else
+					MessageBox.Show("Download failed","Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Error);
+			}
             catch (Exception ex)
             {
                 MessageBox.Show($"Error when download to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);

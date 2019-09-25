@@ -24,7 +24,7 @@ namespace ControllerLib
         /// <returns></returns>
         public abstract bool SendModuleList(List<ModuleConfigModleBase> ModuleNameList);
 
-        public abstract void GetModuleValue(List<UInt32> ModifyValueList,out List<UInt32> InputValueList, out List<UInt32> OutputValueList);
+        public abstract bool GetModuleValue(List<UInt32> ModifyValueList,out List<UInt32> InputValueList, out List<UInt32> OutputValueList);
 
         public abstract void SetModuleValue(List<UInt32> OutputValueList);
 
