@@ -11,6 +11,7 @@
         <Convert:EnumFormat2Text x:Key="EnumFormat2Text"/>
         <Convert:IOType2bool x:Key="IOType2Bool"/>
         <Convert:IOType2Brush x:Key="IOType2Brush"/>
+        <Convert:Bool2EnableForStart x:Key="Bool2EnableForStart"/>
     </UserControl.Resources>
     <Grid Name="root">
         <Grid.RowDefinitions>
@@ -20,11 +21,11 @@
         </Grid.RowDefinitions>
         <ToolBar>
      
-            <Button Name="StartMonitor" ToolTip="Start monitor" Click="StartMonitor_Click">
+            <Button Name="StartMonitor" ToolTip="Start monitor" Click="StartMonitor_Click" IsEnabled="{Binding IsMonitor , Converter={StaticResource Bool2EnableForStart}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
                 <Image Source="../Images/start.png" Stretch="Fill"/>
             </Button>
             <Separator/>
-            <Button Name="StopMonitor" ToolTip="Stop monitor" Click="StopMonitor_Click">
+            <Button Name="StopMonitor" ToolTip="Stop monitor" Click="StopMonitor_Click" IsEnabled="{Binding IsMonitor, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
                 <Image Source="../Images/stop.png" Stretch="Fill"/>
             </Button>
             <Separator/>

@@ -51,7 +51,7 @@ namespace NetView
         ManualResetEvent EventMonitorController = new ManualResetEvent(false);
         ManualResetEvent EventHeartBeat = new ManualResetEvent(false);
 
-        ObservableCollection<MonitorVarModel> VarCollect = null;
+		ObservableCollection<MonitorVarModel> VarCollect = null;
         //
         List<UInt32> OutputValueRecv_List = new List<UInt32>();
         List<UInt32> InputValueRecv_List = new List<UInt32>();
@@ -169,19 +169,6 @@ namespace NetView
             ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
 
             VarCollect = ucMonitor.VarCollect;
-
-            //for (int i = 0; i < 3; i++)
-            //{
-            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-            //VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.OUT });
-            //    VarCollect.Add(new MonitorVarModel() { IoType = Definations.EnumModuleIOType.IN });
-            //}
 
             this.elementHost1.BackColorTransparent = true;
             this.elementHost2.BackColorTransparent = true;
@@ -554,6 +541,7 @@ namespace NetView
         private void UcMonitor_OnStopMonitorEventHandler(object sender, EventArgs e)
         {
             this.EventMonitorController.Reset();
+		
             this.EventHeartBeat.Set();
         }
 
@@ -561,7 +549,8 @@ namespace NetView
         {
             this.EventMonitorController.Set();
             this.EventHeartBeat.Reset();
-            OnFirstCircle = true;
+			
+			OnFirstCircle = true;
         }
 
         private void DockPanelVarMonitor_VisibilityChanged(object sender, VisibilityChangedEventArgs e)

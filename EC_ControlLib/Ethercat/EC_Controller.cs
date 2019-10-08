@@ -125,11 +125,17 @@ namespace ControllerLib.Ethercat
             List<byte> FinalCmd = new List<byte>(Cmd);
             FinalCmd.Add(Crc[1]);
             FinalCmd.Add(Crc[0]);
-            lock (ComportLock)
-            {
-                Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                return ReadModuleListAck();
-            }
+			for (int i = 0; i < 3; i++)
+			{
+				lock (ComportLock)
+				{
+					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+					var list = ReadModuleListAck();
+					if (list != null)
+						return list;
+				}
+			}
+			return null;
         }
 
 
@@ -378,7 +384,7 @@ namespace ControllerLib.Ethercat
         /// <returns></returns>
         List<ModuleConfigModleBase> ReadModuleListAck(int Timeout=1000)
         {
-            var ModuleList = new List<ModuleConfigModleBase>();
+			ModuleList.Clear();
             var StartTime = DateTime.Now.Ticks;
             List<byte> Recv = new List<byte>();
             bool IsHeaderFound = false;

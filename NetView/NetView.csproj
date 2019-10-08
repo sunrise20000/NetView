@@ -72,6 +72,7 @@
     <Compile Include="Class\XmlParse.cs" />
     <Compile Include="Config\ConfigMgr.cs" />
     <Compile Include="Config\DeviceConfigEntry.cs" />
+    <Compile Include="Converts\Bool2EnableForStart.cs" />
     <Compile Include="Converts\EnumFormat2Text.cs" />
     <Compile Include="Converts\DateTime2Text.cs" />
     <Compile Include="Converts\IOType2Bool.cs" />
