@@ -469,7 +469,7 @@ namespace ControllerLib.Ethercat
 						Recv.Add(bt);
 						if (Recv.Count == 2)
 							Length = Recv[1];
-						if (Length == Recv.Count - 2 && Length - 2 == OutputBtLen + InputBtLen)   //接受完毕
+						if (Length == Recv.Count - 2 && Length == OutputBtLen + InputBtLen +6)   //接受完毕
 						{
 							var CrcCal = CRC16(Recv.ToArray(), 0, Length);
 							if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
@@ -514,9 +514,9 @@ namespace ControllerLib.Ethercat
 						}
 					}
 				}
-                if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
-                    return false;
-            }
+				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+					return false;
+			}
         }
 
 

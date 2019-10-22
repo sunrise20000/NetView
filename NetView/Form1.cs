@@ -188,9 +188,9 @@ namespace NetView
                 {
                     EventMonitorController.WaitOne();
                     Thread.Sleep(200);
-                    if (BusController.IsConnected)
+                    //if (BusController.IsConnected)
                     {
-                        if (OnFirstCircle)
+                        //if (OnFirstCircle)
                         {
                             OnFirstCircle = false;
                             //首次不修改输出模块的值，只是在需要修改的时候才修改
@@ -206,7 +206,7 @@ namespace NetView
                             }
                         }
 
-                        BusController.GetModuleValue(ModifyValueList, out OutputValueRecv_List, out InputValueRecv_List);
+                        BusController.GetModuleValue(ModifyValueList,out InputValueRecv_List, out OutputValueRecv_List);
                         var OutputMonitorModule = VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
                         var InputMonitorModule = VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
                         if (OutputMonitorModule != null && OutputMonitorModule.Count() == OutputValueRecv_List.Count)
@@ -389,7 +389,7 @@ namespace NetView
                         {
                             UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
                             //打开心跳
-                            EventHeartBeat.Set();
+                            //EventHeartBeat.Set();
 							MessageBox.Show("Connect sucessfully");
                         }
                         else
