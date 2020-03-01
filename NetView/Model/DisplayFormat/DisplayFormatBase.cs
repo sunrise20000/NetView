@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace NetView.Model.DisplayFormat
 {
-    class DisplayFormatBase
+    public class DisplayFormatBase
     {
-
+		public int Base { get; protected set; }
         protected UInt32 RawData = 0;
         protected UInt32 GenUint32FromBit(int BitSize)
         {
@@ -27,7 +27,7 @@ namespace NetView.Model.DisplayFormat
             throw new NotImplementedException();
         }
 
-        public virtual UInt32 FromString(string StrDisplay, EnumType DataType)
+        public virtual UInt32 FromString(string StrDisplay, EnumType DataType, int Base)
         {
             throw new NotImplementedException();
         }

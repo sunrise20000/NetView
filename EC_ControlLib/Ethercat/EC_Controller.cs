@@ -13,7 +13,7 @@ namespace ControllerLib.Ethercat
 		#region Field
 		SerialPort Comport = new SerialPort();
 		object ComportLock = new object();
-		List<ModuleConfigModleBase> ModuleList = new List<ModuleConfigModleBase>();
+		List<ModuleConfigModleBase> m_ModuleList = new List<ModuleConfigModleBase>();
 		private bool isConnected = false;
 
 		public override event EventHandler<bool> OnConnectStateChanged;
@@ -140,7 +140,7 @@ namespace ControllerLib.Ethercat
 
 
         /// <summary>
-        /// PureNameList， 将配置信息发送给控制器
+        /// PureNameList， 将配置信息发送给控制器，Download
         /// 68 N 01 02 68 05 96 69 模块 1 参数 … 模块 N 参数 CRC（05 表示 EtherCAT，其他总线其他值）
         /// </summary>
         /// <param name="ModuleInfoList"></param>
@@ -167,7 +167,10 @@ namespace ControllerLib.Ethercat
 				{
 					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
 					if (ReadVoidAck(new byte[] { 0x68, 0x08, 0x01, 0x02, 0x68, ControllerID, 0x69, 0x96 }))
+					{
+						m_ModuleList = ModuleInfoList;	
 						return true;
+					}
 				}
 			}
 			return false;
@@ -190,18 +193,25 @@ namespace ControllerLib.Ethercat
             byte M = 0;
             byte Len = 0;
 
-            //说明已经获取到Module的列表
-            foreach (var it in ModuleList)
+
+			var SubModuleInList = new List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase>();
+			var SubModuleOutList = new List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase>();
+
+			//说明已经获取到Module的列表
+			foreach (var it in m_ModuleList)
             {
-                foreach (var Sub in it.ModuleSubInfoList)
-                {
+                foreach (var Sub in it.ModuleSubInfoList)   //ModuleSubInfoList是每个模块包含的通道数
+				{
                     if (Sub.IOType == EnumModuleIoType.IN)
                     {
                         M += (byte)(Sub.BitSize / 8);
-                    }
+						SubModuleInList.Add(Sub);
+
+					}
                     else
                     {
                         N += (byte)(Sub.BitSize / 8);
+						SubModuleOutList.Add(Sub);
                     }        
                 }
             }
@@ -223,13 +233,11 @@ namespace ControllerLib.Ethercat
 				lock (ComportLock)
 				{
 					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-					if (GetValueAck(out OutputValueList, out InputValueList))
+					if (GetValueAck(SubModuleInList,SubModuleOutList, out OutputValueList, out InputValueList))
 						return true;
 				}
 			}
-
-			return false;
-           
+			return false;       
         }
 
         /// <summary>
@@ -241,7 +249,7 @@ namespace ControllerLib.Ethercat
             byte N = 0;
             byte M = 0;
             byte Len = 0;
-            foreach (var it in ModuleList)
+            foreach (var it in m_ModuleList)
             {
                 foreach (var Sub in it.ModuleSubInfoList)
                 {
@@ -384,7 +392,7 @@ namespace ControllerLib.Ethercat
         /// <returns></returns>
         List<ModuleConfigModleBase> ReadModuleListAck(int Timeout=1000)
         {
-			ModuleList.Clear();
+			m_ModuleList.Clear();
             var StartTime = DateTime.Now.Ticks;
             List<byte> Recv = new List<byte>();
             bool IsHeaderFound = false;
@@ -411,8 +419,8 @@ namespace ControllerLib.Ethercat
 							if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
 							{
 								//68 0C 01 02 68 05 96 69 11 01 01 00 34 75
-								ModuleList = GetModuleFromByteArr(Recv.ToArray(), 8, Recv.Count - 10);
-								return ModuleList;
+								m_ModuleList = GetModuleFromByteArr(Recv.ToArray(), 8, Recv.Count - 10);
+								return m_ModuleList;
 							}
 							else
 								return null;
@@ -424,7 +432,8 @@ namespace ControllerLib.Ethercat
 			}
         }
 
-        bool GetValueAck(out List<UInt32> OutputValueRecv,out List<UInt32> InputValueRecv, int Timeout=1000)
+        bool GetValueAck(List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase> SubModuleInList, List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase> SubModuleOutList,
+			out List<UInt32> OutputValueRecv,out List<UInt32> InputValueRecv, int Timeout=1000)
         {
             OutputValueRecv = new List<uint>();
             InputValueRecv = new List<uint>();
@@ -432,7 +441,7 @@ namespace ControllerLib.Ethercat
 
             byte OutputBtLen = 0;
             byte InputBtLen = 0;
-            foreach (var it in ModuleList)
+            foreach (var it in m_ModuleList)
             {
                 foreach (var Sub in it.ModuleSubInfoList)
                 {
@@ -456,8 +465,6 @@ namespace ControllerLib.Ethercat
 				byte bt = 0;
 				if (Comport.BytesToRead > 0)
 				{
-					//var buff = new Byte[20];
-					//Comport.Read(buff, 0, 20);
 					bt = (byte)Comport.ReadByte();
 
 
@@ -475,48 +482,43 @@ namespace ControllerLib.Ethercat
 							var CrcCal = CRC16(Recv.ToArray(), 0, Length);
 							if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
 							{
-
-								int OutputStartPos = 2;
-								int InputStartPos = 2 + OutputBtLen;
-
-								//读取完毕赋值
-								foreach (var it in ModuleList)
+								int OutputStartPos = 6;
+								int InputStartPos = OutputStartPos + OutputBtLen;
+								//开始解析输入
+								foreach (var moduleOut in SubModuleOutList)
 								{
-									List<byte> BtArrTotalInModule = new List<byte>();
-									foreach (var Sub in it.ModuleSubInfoList)
+									var datalen = moduleOut.BitSize / 8;
+									uint v = 0;
+									for (int i = 0; i < datalen; i++)
 									{
-										if (Sub.IOType == EnumModuleIoType.IN)
-										{
-											for (int i = 0; i < Sub.BitSize / 8; i++)
-												BtArrTotalInModule.Add(Recv[InputStartPos++ + i]);
-										}
-										else
-										{
-											for (int i = 0; i < Sub.BitSize / 8; i++)
-												BtArrTotalInModule.Add(Recv[OutputStartPos++ + i]);
-										}
+										v += Recv[OutputStartPos++];
 									}
-									it.GetSubModuleListValueFromBtArr(BtArrTotalInModule.ToArray(), 0, BtArrTotalInModule.Count);
-
-									//返回值赋值
-									foreach (var xx in it.ModuleSubInfoList)
+									OutputValueRecv.Add(v);
+								}
+								//解析输出
+								foreach (var moduleIn in SubModuleInList)
+								{
+									var datalen = moduleIn.BitSize / 8;
+									uint v = 0;
+									for (int i = 0; i < datalen; i++)
 									{
-										if (xx.IOType == EnumModuleIoType.IN)
-											InputValueRecv.Add(xx.RawData);
-										else
-											OutputValueRecv.Add(xx.RawData);
+										v += Recv[InputStartPos++];
 									}
-
+									InputValueRecv.Add(v);
 								}
 								return true;
 							}
 							else
+							{
 								return false;
+							}
 						}
 					}
 				}
-				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+				if (false && TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+				{
 					return false;
+				}
 			}
         }
 

@@ -57,6 +57,8 @@ namespace NetView
         List<UInt32> G_InputValueRecv_List = new List<UInt32>();
 		List<ModuleConfigModleBase> G_ModuleList = new List<ModuleConfigModleBase>();
 		List<ModuleInfoBase> G_MonitorList = new List<ModuleInfoBase>();
+		Model.DisplayFormat.DisplayFormatBase G_DisplayFormat = new Model.DisplayFormat.DisplayFormatHex();
+		int G_OldBase = 16;
 		bool OnFirstCircle = true;
 
         public Form1()
@@ -91,8 +93,8 @@ namespace NetView
                 Close();
             }
         }
-        private void InitCtrl()
-        {
+		private void InitCtrl()
+		{
 			BusController.OnConnectStateChanged += BusController_OnConnectStateChanged;
 			barButtonItemConnect.Enabled = true;
 			barButtonItem_Disconnect.Enabled = false;
@@ -102,125 +104,133 @@ namespace NetView
 
 			ImageList imgList = new ImageList();
 
-            imgList.Images.Add(new Bitmap(@"images/Category.png"));
-            imgList.Images.Add(new Bitmap(@"images/Bus.png"));
-            imgList.Images.Add(new Bitmap(@"images/SlaveMaster.png"));
-            imgList.Images.Add(new Bitmap(@"images/Company.png"));
-            imgList.Images.Add(new Bitmap(@"images/Device.png"));
+			imgList.Images.Add(new Bitmap(@"images/Category.png"));
+			imgList.Images.Add(new Bitmap(@"images/Bus.png"));
+			imgList.Images.Add(new Bitmap(@"images/SlaveMaster.png"));
+			imgList.Images.Add(new Bitmap(@"images/Company.png"));
+			imgList.Images.Add(new Bitmap(@"images/Device.png"));
 
-            treeViewDevice.ImageList = imgList;
+			treeViewDevice.ImageList = imgList;
 
-            var BustypeList = new List<string>();
-            for (int i = 0; i < DeviceCfg.Length; i++)
-                BustypeList.Add(DeviceCfg[i].BusType);
+			var BustypeList = new List<string>();
+			for (int i = 0; i < DeviceCfg.Length; i++)
+				BustypeList.Add(DeviceCfg[i].BusType);
 
-            var RootNode = new TreeNode("Device");
-            RootNode.ImageIndex = 0;
-            foreach (var BusType in BustypeList.Distinct())
-            {
-                var BusRelationshipList = new List<string>();
-                var BusTypeNode = new TreeNode(BusType);
-                BusTypeNode.ImageIndex = 1;
-                var DevBusType = DeviceCfg.Where(d => d.BusType.Equals(BusType));
-                for (int i = 0; i < DevBusType.Count(); i++)
-                    BusRelationshipList.Add(DevBusType.ElementAt(i).Category);
-                foreach (var Relationship in BusRelationshipList.Distinct())
-                {
-                    var DeviceNameList = new List<string>();
-                    var BusRelationshipNode = new TreeNode(Relationship);
-                    BusRelationshipNode.ImageIndex = 2;
-                    var DevBusRelationship = DevBusType.Where(d => d.Category.Equals(Relationship));
-                    for (int i = 0; i < DevBusRelationship.Count(); i++)
-                        DeviceNameList.Add(DevBusRelationship.ElementAt(i).DeviceName);
-                    foreach (var Dev in DeviceNameList.Distinct())
-                    {
-                        var DeviceNameNode = new TreeNode(Dev);
-                        DeviceNameNode.ImageIndex = 4;
-                        BusRelationshipNode.Nodes.Add(DeviceNameNode);
-                    }
-                    BusTypeNode.Nodes.Add(BusRelationshipNode);
-                }
-                RootNode.Nodes.Add(BusTypeNode);
-            }
-            treeViewDevice.Nodes.Add(RootNode);
-            treeViewDevice.ExpandAll();
-            treeViewDevice.ItemDrag += TreeViewDevice_ItemDrag;
-            treeViewDevice.NodeMouseDoubleClick += TreeViewDevice_NodeMouseDoubleClick;
-            this.barSubIteExportFile.Popup += BarSubIteExportFile_Popup;
-
-
-            //添加中间控件
-            MiddleControl = new ProductContrainer();
-            this.dockPanelMiddle.Controls.Add(MiddleControl);
-            MiddleControl.Dock = DockStyle.Fill;
+			var RootNode = new TreeNode("Device");
+			RootNode.ImageIndex = 0;
+			foreach (var BusType in BustypeList.Distinct())
+			{
+				var BusRelationshipList = new List<string>();
+				var BusTypeNode = new TreeNode(BusType);
+				BusTypeNode.ImageIndex = 1;
+				var DevBusType = DeviceCfg.Where(d => d.BusType.Equals(BusType));
+				for (int i = 0; i < DevBusType.Count(); i++)
+					BusRelationshipList.Add(DevBusType.ElementAt(i).Category);
+				foreach (var Relationship in BusRelationshipList.Distinct())
+				{
+					var DeviceNameList = new List<string>();
+					var BusRelationshipNode = new TreeNode(Relationship);
+					BusRelationshipNode.ImageIndex = 2;
+					var DevBusRelationship = DevBusType.Where(d => d.Category.Equals(Relationship));
+					for (int i = 0; i < DevBusRelationship.Count(); i++)
+						DeviceNameList.Add(DevBusRelationship.ElementAt(i).DeviceName);
+					foreach (var Dev in DeviceNameList.Distinct())
+					{
+						var DeviceNameNode = new TreeNode(Dev);
+						DeviceNameNode.ImageIndex = 4;
+						BusRelationshipNode.Nodes.Add(DeviceNameNode);
+					}
+					BusTypeNode.Nodes.Add(BusRelationshipNode);
+				}
+				RootNode.Nodes.Add(BusTypeNode);
+			}
+			treeViewDevice.Nodes.Add(RootNode);
+			treeViewDevice.ExpandAll();
+			treeViewDevice.ItemDrag += TreeViewDevice_ItemDrag;
+			treeViewDevice.NodeMouseDoubleClick += TreeViewDevice_NodeMouseDoubleClick;
+			this.barSubIteExportFile.Popup += BarSubIteExportFile_Popup;
 
 
-            //添加侧面控件
-            LeftControl = new treeviewContrainer();
-            LeftControl.OnBusModulChanged += LeftControl_OnBusModulChanged;
-            this.dockPanelLeft.Controls.Add(LeftControl);
-            LeftControl.Dock = DockStyle.Fill;
-            LeftControl.ProductContrainer = MiddleControl;
+			//添加中间控件
+			MiddleControl = new ProductContrainer();
+			this.dockPanelMiddle.Controls.Add(MiddleControl);
+			MiddleControl.Dock = DockStyle.Fill;
 
 
-            //VarMonitor
-            UC_VarMonitor ucMonitor = new UC_VarMonitor();
-            elementHost2.Child = ucMonitor;
-            ucMonitor.OnStartMonitorEventHandler += UcMonitor_OnStartMonitorEventHandler;
-            ucMonitor.OnStopMonitorEventHandler += UcMonitor_OnStopMonitorEventHandler;
-            ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
-
-            G_VarCollect = ucMonitor.VarCollect;
-
-            this.elementHost1.BackColorTransparent = true;
-            this.elementHost2.BackColorTransparent = true;
-            dockManager1.ActivePanel = dockPanelMiddle;
-            dockPanelVarMonitor.VisibilityChanged += DockPanelVarMonitor_VisibilityChanged;
-
-            //dockManager1.RemovePanel(dockPanelVarMonitor);
-            ProjController.BusFileMgr = new EthercatFileMgr();
+			//添加侧面控件
+			LeftControl = new treeviewContrainer();
+			LeftControl.OnBusModulChanged += LeftControl_OnBusModulChanged;
+			this.dockPanelLeft.Controls.Add(LeftControl);
+			LeftControl.Dock = DockStyle.Fill;
+			LeftControl.ProductContrainer = MiddleControl;
 
 
-            //Start Task to monitor Controller
-            Task.Run(() =>
-            {
-                var ModifyValueList = new List<UInt32>();
-                //var ModuleInfoList = new List<ModuleInfoBase>();
-                while (!ctsMonitorController.IsCancellationRequested)
-                {
-                    EventMonitorController.WaitOne();
-                    Thread.Sleep(200);
-                    //if (BusController.IsConnected)
-                    {
-                        //if (OnFirstCircle)
-                        {
-                            OnFirstCircle = false;
-                            //首次不修改输出模块的值，只是在需要修改的时候才修改
-                            //UpdateMonitorVarCollect(out ModuleInfoList);
+			//VarMonitor
+			UC_VarMonitor ucMonitor = new UC_VarMonitor();
+			elementHost2.Child = ucMonitor;
+			ucMonitor.OnStartMonitorEventHandler += UcMonitor_OnStartMonitorEventHandler;
+			ucMonitor.OnStopMonitorEventHandler += UcMonitor_OnStopMonitorEventHandler;
+			ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
+			ucMonitor.OnChangeDisplayFormatHandler += UcMonitor_OnChangeDisplayFormatHandler;
 
-                            for (int i = 0; i < G_MonitorList.Count; i++)
-                            {
-                                var L = G_MonitorList[i].ModuleList.Where(m => m.IOType == EnumModuleIOType.OUT);
-                                if (L != null)
-                                {
-                                    foreach (var it in L)
-                                        ModifyValueList.Add(0x55);
-                                }
-                            }
-                        }
-						BusController.GetModuleValue(ModifyValueList, out G_InputValueRecv_List, out G_OutputValueRecv_List);
-						var OutputMonitorModule = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
-						var InputMonitorModule = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
-						if (OutputMonitorModule != null && OutputMonitorModule.Count() == G_OutputValueRecv_List.Count)
+			G_VarCollect = ucMonitor.VarCollect;
+
+			this.elementHost1.BackColorTransparent = true;
+			this.elementHost2.BackColorTransparent = true;
+			dockManager1.ActivePanel = dockPanelMiddle;
+			dockPanelVarMonitor.VisibilityChanged += DockPanelVarMonitor_VisibilityChanged;
+
+			//dockManager1.RemovePanel(dockPanelVarMonitor);
+			ProjController.BusFileMgr = new EthercatFileMgr();
+
+
+			//Start Task to monitor Controller
+			Task.Run(() =>
+			{
+			var ModifyValueList = new List<UInt32>();
+			//var ModuleInfoList = new List<ModuleInfoBase>();
+			while (!ctsMonitorController.IsCancellationRequested)
+			{
+				EventMonitorController.WaitOne();
+				Thread.Sleep(200);
+				if (BusController.IsConnected)
+				{
+					if (OnFirstCircle)
+					{
+						OnFirstCircle = false;
+						//首次不修改输出模块的值，只是在需要修改的时候才修改
+						for (int i = 0; i < G_MonitorList.Count; i++)
 						{
-							for (int i = 0; i < G_OutputValueRecv_List.Count; i++)
-								OutputMonitorModule.ElementAt(i).CurValue = $"{G_OutputValueRecv_List[i]}";
+							var L = G_MonitorList[i].ModuleList.Where(m => m.IOType == EnumModuleIOType.OUT);
+							if (L != null)
+							{
+								foreach (var it in L)
+									ModifyValueList.Add(0x55);
+							}
+						}
+					}
+					BusController.GetModuleValue(ModifyValueList, out G_InputValueRecv_List, out G_OutputValueRecv_List);
+					Console.WriteLine($"{G_InputValueRecv_List.Count},{G_OutputValueRecv_List.Count}");
+					var OutputMonitorModule = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
+					var InputMonitorModule = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
+					if (OutputMonitorModule != null && OutputMonitorModule.Count() == G_OutputValueRecv_List.Count)
+					{
+						for (int i = 0; i < G_OutputValueRecv_List.Count; i++)
+						{
+							var V = G_DisplayFormat.FromString($"{G_OutputValueRecv_List[i]}", EnumType.UINT, G_OldBase);
+							OutputMonitorModule.ElementAt(i).CurValue = G_DisplayFormat.GetString(V,EnumType.UINT);
+		}
 						}
 						if (InputMonitorModule != null && InputMonitorModule.Count() == G_InputValueRecv_List.Count)
 						{
 							for (int i = 0; i < G_InputValueRecv_List.Count; i++)
-								InputMonitorModule.ElementAt(i).CurValue = $"{G_InputValueRecv_List[i]}";
+							{
+								var V = G_DisplayFormat.FromString($"{G_InputValueRecv_List[i]}", EnumType.UINT, G_OldBase);
+								InputMonitorModule.ElementAt(i).CurValue = G_DisplayFormat.GetString(V,EnumType.UINT);
+							}
 						}
+						G_OldBase = G_DisplayFormat.Base;
+
 					}
                 }
             }, ctsMonitorController.Token);
@@ -258,16 +268,24 @@ namespace NetView
         }
 
 
+		//Display when change the format
+		private void UcMonitor_OnChangeDisplayFormatHandler(object sender, Model.DisplayFormat.DisplayFormatBase e)
+		{
+			G_DisplayFormat = e;
+
+		}
 
 
 
 
-        /// <summary>
-        /// 当总线改变的时候
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void LeftControl_OnBusModulChanged(object sender, SubBusContrainer.Model.ModuleAddedArgs e)
+
+
+		/// <summary>
+		/// 当总线改变的时候
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void LeftControl_OnBusModulChanged(object sender, SubBusContrainer.Model.ModuleAddedArgs e)
         {
             if (e.IsAdd)
             {

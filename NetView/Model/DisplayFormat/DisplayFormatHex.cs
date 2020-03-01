@@ -9,10 +9,14 @@ namespace NetView.Model.DisplayFormat
 {
     class DisplayFormatHex : DisplayFormatBase
     {
-        public override uint FromString(string StrDisplay, EnumType DataType)
+		public DisplayFormatHex()
+		{
+			Base = 16;
+		}
+        public override uint FromString(string StrDisplay, EnumType DataType, int Base)
         {
             var V = GenUint32FromBit((int)DataType);
-            this.RawData = Convert.ToUInt32(StrDisplay, 16) & V;
+            this.RawData = Convert.ToUInt32(StrDisplay, 10) & V;
             return this.RawData;
         }
         public override string GetString(uint RawData, EnumType DataType)
@@ -23,7 +27,7 @@ namespace NetView.Model.DisplayFormat
                 strMask.Append("F");
             }
             var V = Convert.ToUInt32(strMask.ToString(), 16);
-            return string.Format("{0:X2}", RawData & V);
+            return string.Format("0x{0:X2}", RawData & V);
         }
     }
 }

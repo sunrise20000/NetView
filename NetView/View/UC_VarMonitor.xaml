@@ -32,6 +32,12 @@
             <Button Name="ModifyValue" ToolTip="Modify value" Click="ModifyValue_Click">
                 <Image Source="../Images/modify.png" Stretch="Fill"/>
             </Button>
+            <ComboBox Margin="10,5,10,5" FontSize="10" Width="50" Name="CbDisplayFormat" SelectionChanged="DisplayFormat_SelectionChanged"
+                                      Background="Transparent" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                <ComboBoxItem FontSize="10" Content="Hex" Background="White"/>
+                                <ComboBoxItem FontSize="10" Content="Dec" Background="White"/>
+                                <ComboBoxItem FontSize="10" Content="Float" Background="White"/>
+            </ComboBox>
 
         </ToolBar>
         <Grid Grid.Row="1" Background="LightBlue">
@@ -68,12 +74,12 @@
                             </Grid.ColumnDefinitions>
                             <Image Grid.Column="0" Margin="10,0,0,0" Name="ImageIOType" Width="20" Source="{Binding IoType, Converter={StaticResource IOType2Image}}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="1" Name="ModuleName" Width="200"  Text="{Binding SubModelName}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                            <ComboBox Grid.Column="2" Margin="0,5,10,5" Width="100" Name="DisplayFormat" Text="{Binding DisplayFormat, Converter={StaticResource EnumFormat2Text}}"
+                            <!--<ComboBox Grid.Column="2" Margin="0,5,10,5" Width="100" Name="DisplayFormat" Text="{Binding DisplayFormat, Converter={StaticResource EnumFormat2Text}}"
                                       Background="Transparent" SelectedIndex="0" VerticalAlignment="Center" HorizontalAlignment="Left">
                                 <ComboBoxItem Content="Hex"/>
                                 <ComboBoxItem Content="Dec"/>
-                                <ComboBoxItem Content="Float"/>
-                            </ComboBox>
+                                <ComboBoxItem Content="Float"/>-->
+                            <!--</ComboBox>-->
                             <TextBlock Grid.Column="3" Name="CurValue" Width="400" Text="{Binding CurValue, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <TextBox Grid.Column="4" Name="ModifyValue" Width="200" VerticalAlignment="Center" Text="{Binding ModifyValue}" IsEnabled="{Binding IoType, Converter={StaticResource IOType2Bool}}"
                                      Background="{Binding IoType, Converter={StaticResource IOType2Brush}}" HorizontalAlignment="Left"/>

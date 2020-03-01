@@ -1,4 +1,6 @@
-﻿using NetView.Model;
+﻿using NetView.Definations;
+using NetView.Model;
+using NetView.Model.DisplayFormat;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,6 +29,7 @@ namespace NetView.View
         public event EventHandler OnStopMonitorEventHandler;
         public event EventHandler OnModifyValueEventHandler;
 		public event PropertyChangedEventHandler PropertyChanged;
+		public event EventHandler<DisplayFormatBase> OnChangeDisplayFormatHandler;
 
 		public bool isMonitor = false;
         public UC_VarMonitor()
@@ -70,5 +73,17 @@ namespace NetView.View
         {
             OnModifyValueEventHandler?.Invoke(this, null);
         }
-    }
+
+		private void DisplayFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+		{
+			DisplayFormatBase fmt = null;
+			if (CbDisplayFormat.SelectedIndex == 0)
+				fmt = new DisplayFormatHex();
+			else if (CbDisplayFormat.SelectedIndex == 1)
+				fmt = new DisplayFormatDec();
+			else
+				fmt = new DisplayFormatFloat();
+			OnChangeDisplayFormatHandler?.Invoke(this, fmt);
+		}
+	}
 }
