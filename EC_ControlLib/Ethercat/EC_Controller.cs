@@ -456,7 +456,8 @@ namespace ControllerLib.Ethercat
 				byte bt = 0;
 				if (Comport.BytesToRead > 0)
 				{
-
+					//var buff = new Byte[20];
+					//Comport.Read(buff, 0, 20);
 					bt = (byte)Comport.ReadByte();
 
 
@@ -520,6 +521,7 @@ namespace ControllerLib.Ethercat
         }
 
 
+		//获取模块列表
         List<ModuleConfigModleBase> GetModuleFromByteArr (byte[] BtArr, int StartPos, int length)
         {
             if (StartPos + length > BtArr.Length)

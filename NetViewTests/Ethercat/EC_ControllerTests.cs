@@ -15,11 +15,20 @@ namespace ControllerLib.Ethercat.Tests
         public void GetModuleListTest()
         {
             var model = new EC_Controller();
-            model.Open("COM1");
-            var x=model.GetModuleList();
+            model.Open("COM4");
+			model.Connect();
+			var x = model.GetModuleList();
+			if (x.Count == 0)
+				Assert.Fail();
+			Console.WriteLine($"{x[0].ToByteArr()}  {x[0].DeviceName}");
+
+			for (var i = 0; i < 12; i++)
+			{
+				model.GetModuleValue(new List<uint>{ 0x55 }, out List<uint> inList, out List<uint> outList);
+				if (inList.Count != 1 && outList.Count != 1)
+					Assert.Fail();
+			}
             model.CLose();
-            if (x.Count == 0)
-                Assert.Fail();
 
         }
     }

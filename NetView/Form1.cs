@@ -51,11 +51,13 @@ namespace NetView
         ManualResetEvent EventMonitorController = new ManualResetEvent(false);
         ManualResetEvent EventHeartBeat = new ManualResetEvent(false);
 
-		ObservableCollection<MonitorVarModel> VarCollect = null;
+		ObservableCollection<MonitorVarModel> G_VarCollect = null;
         //
-        List<UInt32> OutputValueRecv_List = new List<UInt32>();
-        List<UInt32> InputValueRecv_List = new List<UInt32>();
-        bool OnFirstCircle = true;
+        List<UInt32> G_OutputValueRecv_List = new List<UInt32>();
+        List<UInt32> G_InputValueRecv_List = new List<UInt32>();
+		List<ModuleConfigModleBase> G_ModuleList = new List<ModuleConfigModleBase>();
+		List<ModuleInfoBase> G_MonitorList = new List<ModuleInfoBase>();
+		bool OnFirstCircle = true;
 
         public Form1()
         {
@@ -168,7 +170,7 @@ namespace NetView
             ucMonitor.OnStopMonitorEventHandler += UcMonitor_OnStopMonitorEventHandler;
             ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
 
-            VarCollect = ucMonitor.VarCollect;
+            G_VarCollect = ucMonitor.VarCollect;
 
             this.elementHost1.BackColorTransparent = true;
             this.elementHost2.BackColorTransparent = true;
@@ -183,7 +185,7 @@ namespace NetView
             Task.Run(() =>
             {
                 var ModifyValueList = new List<UInt32>();
-                var ModuleInfoList = new List<ModuleInfoBase>();
+                //var ModuleInfoList = new List<ModuleInfoBase>();
                 while (!ctsMonitorController.IsCancellationRequested)
                 {
                     EventMonitorController.WaitOne();
@@ -194,10 +196,11 @@ namespace NetView
                         {
                             OnFirstCircle = false;
                             //首次不修改输出模块的值，只是在需要修改的时候才修改
-                            UpdateMonitorVarCollect(out ModuleInfoList);
-                            for (int i = 0; i < ModuleInfoList.Count; i++)
+                            //UpdateMonitorVarCollect(out ModuleInfoList);
+
+                            for (int i = 0; i < G_MonitorList.Count; i++)
                             {
-                                var L = ModuleInfoList[i].ModuleList.Where(m => m.IOType == EnumModuleIOType.OUT);
+                                var L = G_MonitorList[i].ModuleList.Where(m => m.IOType == EnumModuleIOType.OUT);
                                 if (L != null)
                                 {
                                     foreach (var it in L)
@@ -205,21 +208,20 @@ namespace NetView
                                 }
                             }
                         }
-
-                        BusController.GetModuleValue(ModifyValueList,out InputValueRecv_List, out OutputValueRecv_List);
-                        var OutputMonitorModule = VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
-                        var InputMonitorModule = VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
-                        if (OutputMonitorModule != null && OutputMonitorModule.Count() == OutputValueRecv_List.Count)
-                        {
-                            for (int i = 0; i < OutputValueRecv_List.Count; i++)
-                                OutputMonitorModule.ElementAt(i).CurValue = $"{OutputValueRecv_List[i]}";
-                        }
-                        if (InputMonitorModule != null && InputMonitorModule.Count() == InputValueRecv_List.Count)
-                        {
-                            for (int i = 0; i < InputValueRecv_List.Count; i++)
-                                InputMonitorModule.ElementAt(i).CurValue = $"{InputValueRecv_List[i]}";
-                        }
-                    }
+						BusController.GetModuleValue(ModifyValueList, out G_InputValueRecv_List, out G_OutputValueRecv_List);
+						var OutputMonitorModule = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
+						var InputMonitorModule = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
+						if (OutputMonitorModule != null && OutputMonitorModule.Count() == G_OutputValueRecv_List.Count)
+						{
+							for (int i = 0; i < G_OutputValueRecv_List.Count; i++)
+								OutputMonitorModule.ElementAt(i).CurValue = $"{G_OutputValueRecv_List[i]}";
+						}
+						if (InputMonitorModule != null && InputMonitorModule.Count() == G_InputValueRecv_List.Count)
+						{
+							for (int i = 0; i < G_InputValueRecv_List.Count; i++)
+								InputMonitorModule.ElementAt(i).CurValue = $"{G_InputValueRecv_List[i]}";
+						}
+					}
                 }
             }, ctsMonitorController.Token);
 
@@ -387,7 +389,7 @@ namespace NetView
                     {
                         if (BusController.Connect())
                         {
-                            UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
+                            //UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
                             //打开心跳
                             //EventHeartBeat.Set();
 							MessageBox.Show("Connect sucessfully");
@@ -444,7 +446,10 @@ namespace NetView
         {
             try
             {
-                UpdateUI(BusController.GetModuleList());
+				G_ModuleList = BusController.GetModuleList();
+				UpdateUI(G_ModuleList);
+				UpdateMonitorVarCollect(out G_MonitorList);
+
             }
             catch (Exception ex)
             {
@@ -467,8 +472,9 @@ namespace NetView
             try
             {
                 UpdateProjController();
-                var Modules = ProjController.ModuleConfigList;
-				if (BusController.SendModuleList(Modules))
+                G_ModuleList = ProjController.ModuleConfigList;
+				UpdateMonitorVarCollect(out G_MonitorList);
+				if (BusController.SendModuleList(G_ModuleList))
 					MessageBox.Show("Download success","Info", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
 				else
 					MessageBox.Show("Download failed","Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Error);
@@ -506,11 +512,11 @@ namespace NetView
         {
             try
             {
-                var OutputValueList = VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
+                var OutputValueList = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
                 if (OutputValueList != null)
                 {
                     List<UInt32> list = new List<UInt32>();
-                    if (OutputValueList.Count() == OutputValueRecv_List.Count)
+                    if (OutputValueList.Count() == G_OutputValueRecv_List.Count)
                     {
                         for (int i = 0; i < OutputValueList.Count(); i++)
                         {
@@ -521,7 +527,7 @@ namespace NetView
                             }
                             else
                             {
-                                list.Add(OutputValueRecv_List[i]);
+                                list.Add(G_OutputValueRecv_List[i]);
                             }
                         }
 
@@ -542,7 +548,7 @@ namespace NetView
         {
             this.EventMonitorController.Reset();
 		
-            this.EventHeartBeat.Set();
+            //this.EventHeartBeat.Set();
         }
 
         private void UcMonitor_OnStartMonitorEventHandler(object sender, EventArgs e)
@@ -612,51 +618,51 @@ namespace NetView
         private void UpdateMonitorVarCollect(out List<ModuleInfoBase> listMonitorModule)
         {
             listMonitorModule = new List<ModuleInfoBase>();
-            var ModuleInfoList = BusController.GetModuleList();
-            if (ModuleInfoList != null)
-            {             
-                var t = typeof(ModuleInfoBase);
-                foreach (var it in ModuleInfoList)
-                {
-                    var obj = t.Assembly.CreateInstance($"NetView.Model.ModuleInfo.ModuleInfo_{it.DeviceName}") as ModuleInfoBase;
-                    listMonitorModule.Add(obj);
-                }
-                if (InvokeRequired)
-                {
-                    Invoke(new Action(() => { VarCollect.Clear(); }));
-                }
-                else
-                {
-                    VarCollect.Clear();
-                }
-                foreach (var it in listMonitorModule)
-                {
-                    foreach (var c in it.ModuleList)
-                    {
-                        if (InvokeRequired)
-                        {
-                            Invoke(new Action(()=> {
-                                VarCollect.Add(new MonitorVarModel()
-                                {
-                                    IoType = c.IOType,
-                                    SubModelName = c.Name,
-                                });
+			if (G_ModuleList != null)
+			{
+				var t = typeof(ModuleInfoBase);
+				foreach (var it in G_ModuleList)
+				{
+					var obj = t.Assembly.CreateInstance($"NetView.Model.ModuleInfo.ModuleInfo_{it.DeviceName}") as ModuleInfoBase;
+					listMonitorModule.Add(obj);
+				}
+				if (InvokeRequired)
+				{
+					Invoke(new Action(() => { G_VarCollect.Clear(); }));
+				}
+				else
+				{
+					G_VarCollect.Clear();
+				}
+				foreach (var it in listMonitorModule)
+				{
+					foreach (var c in it.ModuleList)
+					{
+						if (InvokeRequired)
+						{
+							Invoke(new Action(() =>
+							{
+								G_VarCollect.Add(new MonitorVarModel()
+								{
+									IoType = c.IOType,
+									SubModelName = c.Name,
+								});
 
-                            }));
-                        }
-                        else
-                        {
-                            VarCollect.Add(new MonitorVarModel()
-                            {
-                                IoType = c.IOType,
-                                SubModelName = c.Name,
-                            });
-                        }
-                    }
-                }
-            }
-        }
+							}));
+						}
+						else
+						{
+							G_VarCollect.Add(new MonitorVarModel()
+							{
+								IoType = c.IOType,
+								SubModelName = c.Name,
+							});
+						}
+					}
+				}
+			}
+		}
 
-   
-    }
+
+	}
 }
