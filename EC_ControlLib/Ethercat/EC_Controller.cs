@@ -491,7 +491,7 @@ namespace ControllerLib.Ethercat
 									uint v = 0;
 									for (int i = 0; i < datalen; i++)
 									{
-										v += Recv[OutputStartPos++];
+										v += Recv[OutputStartPos++]*(uint)(1<<8*(datalen-i-1));
 									}
 									OutputValueRecv.Add(v);
 								}
@@ -502,7 +502,7 @@ namespace ControllerLib.Ethercat
 									uint v = 0;
 									for (int i = 0; i < datalen; i++)
 									{
-										v += Recv[InputStartPos++];
+										v += Recv[InputStartPos++]* (uint)(1 << 8 * (datalen - i - 1));
 									}
 									InputValueRecv.Add(v);
 								}
