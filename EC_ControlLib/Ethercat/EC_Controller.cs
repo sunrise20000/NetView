@@ -515,7 +515,7 @@ namespace ControllerLib.Ethercat
 						}
 					}
 				}
-				if (false && TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
 				{
 					return false;
 				}
