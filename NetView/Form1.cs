@@ -217,16 +217,16 @@ namespace NetView
 					{
 						for (int i = 0; i < G_OutputValueRecv_List.Count; i++)
 						{
-							var V = G_DisplayFormat.FromString($"{G_OutputValueRecv_List[i]}", EnumType.UINT, G_OldBase);
-							OutputMonitorModule.ElementAt(i).CurValue = G_DisplayFormat.GetString(V,EnumType.UINT);
+							var V = G_DisplayFormat.FromString($"{G_OutputValueRecv_List[i]}", EnumType.UDINT, G_OldBase);
+							OutputMonitorModule.ElementAt(i).CurValue = G_DisplayFormat.GetString(V,EnumType.UDINT);
 		}
 						}
 						if (InputMonitorModule != null && InputMonitorModule.Count() == G_InputValueRecv_List.Count)
 						{
 							for (int i = 0; i < G_InputValueRecv_List.Count; i++)
 							{
-								var V = G_DisplayFormat.FromString($"{G_InputValueRecv_List[i]}", EnumType.UINT, G_OldBase);
-								InputMonitorModule.ElementAt(i).CurValue = G_DisplayFormat.GetString(V,EnumType.UINT);
+								var V = G_DisplayFormat.FromString($"{G_InputValueRecv_List[i]}", EnumType.UDINT, G_OldBase);
+								InputMonitorModule.ElementAt(i).CurValue = G_DisplayFormat.GetString(V,EnumType.UDINT);
 							}
 						}
 						G_OldBase = G_DisplayFormat.Base;

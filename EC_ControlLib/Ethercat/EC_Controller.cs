@@ -484,7 +484,7 @@ namespace ControllerLib.Ethercat
 							{
 								int OutputStartPos = 6;
 								int InputStartPos = OutputStartPos + OutputBtLen;
-								//开始解析输入
+								//开始解析输出
 								foreach (var moduleOut in SubModuleOutList)
 								{
 									var datalen = moduleOut.BitSize / 8;
@@ -495,7 +495,7 @@ namespace ControllerLib.Ethercat
 									}
 									OutputValueRecv.Add(v);
 								}
-								//解析输出
+								//解析输入
 								foreach (var moduleIn in SubModuleInList)
 								{
 									var datalen = moduleIn.BitSize / 8;
@@ -515,7 +515,7 @@ namespace ControllerLib.Ethercat
 						}
 					}
 				}
-				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+				if (false && TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
 				{
 					return false;
 				}

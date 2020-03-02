@@ -17,7 +17,7 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
         Dictionary<byte, string> RevolutionDic = new Dictionary<byte, string>();
 
         protected override int GuiStringListNumber { get; } = 11;
-        public override int ByteArrayExpectLength { get; } = 14;
+        public override int ByteArrayExpectLength { get; } = 11;
         public ModuleConfig_HL5002()
         {
             DeviceName = EnumDeviceName.HL5002;
@@ -46,7 +46,7 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
 
         public byte Revolution { get; set; }
 
-        public UInt32 PresetValue { get; set;}
+        public byte PresetValue { get; set;}
 
         public byte[] ResParaArr { get; } = new byte[5];
 
@@ -90,7 +90,7 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
             Revolution = RevolutionDic.Where(a => a.Value.Equals(GuiStringList[4])).First().Key;
 
             //PresetValue
-            if (UInt32.TryParse(GuiStringList[5], out UInt32 presetValue))
+            if (byte.TryParse(GuiStringList[5], out byte presetValue))
                 PresetValue = presetValue;
             else
                 PresetValue = 0;
@@ -134,10 +134,7 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
             base.ToByteArr();   
             BtArr.Add(Resolution);
             BtArr.Add(Revolution);
-            BtArr.Add((byte)((PresetValue>>24)& 0xFF));
-            BtArr.Add((byte)((PresetValue >> 16) & 0xFF));
-            BtArr.Add((byte)((PresetValue >> 8) & 0xFF));
-            BtArr.Add((byte)((PresetValue >> 0) & 0xFF));
+            BtArr.Add(PresetValue);
             for (int i = 0; i < 5; i++)
                 BtArr.Add(ResParaArr[i]);
 
@@ -150,9 +147,9 @@ namespace ControllerLib.Ethercat.ModuleConfigModle
             base.FromByteArray(BtArr);
             Resolution = BtArr[3];
             Revolution = BtArr[4];
-            PresetValue = (uint)((BtArr[5] << 24) + (BtArr[6] << 16) + (BtArr[7] << 8) + BtArr[8]);
-            for (int i = 0; i < 5; i++)
-                ResParaArr[i] = BtArr[i + 9];
+			PresetValue = BtArr[5];
+			for (int i = 0; i < 5; i++)
+                ResParaArr[i] = BtArr[i + 6];
         }
         protected ModuleConfig_HL5002(SerializationInfo info, StreamingContext context) : base(info, context)
         {
