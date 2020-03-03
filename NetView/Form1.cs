@@ -534,7 +534,7 @@ namespace NetView
                 if (OutputValueList != null)
                 {
                     List<UInt32> list = new List<UInt32>();
-                    if (OutputValueList.Count() == G_OutputValueRecv_List.Count)
+                    if (true || OutputValueList.Count() == G_OutputValueRecv_List.Count)
                     {
                         for (int i = 0; i < OutputValueList.Count(); i++)
                         {
