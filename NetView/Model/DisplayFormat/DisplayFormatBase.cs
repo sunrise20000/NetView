@@ -11,26 +11,26 @@ namespace NetView.Model.DisplayFormat
     {
 		public int Base { get; protected set; }
         protected UInt32 RawData = 0;
-        protected UInt32 GenUint32FromBit(int BitSize)
+		public DisplayFormatBase(UInt32 rawData)
+		{
+			this.RawData = rawData;
+		}
+		public void SetRawDataFromInt(UInt32 rawData)
+		{
+			this.RawData = rawData;
+		}
+		public void SetRawDataFromString(string strData,int BaseFrom)
+		{
+			this.RawData = Convert.ToUInt32(strData,BaseFrom);
+		}
+		public virtual string GetString()
         {
-            StringBuilder strMask = new StringBuilder();
-            for (int i = 0; i < (int)BitSize / 4; i++)
-            {
-                strMask.Append("F");
-            }
-            return Convert.ToUInt32(strMask.ToString(), 16);
-        }
-        public EnumDisplayFormat DataFormat { get; } = EnumDisplayFormat.Hex;
-
-        public virtual string GetString(UInt32 RawData, EnumType DataType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual UInt32 FromString(string StrDisplay, EnumType DataType, int Base)
-        {
-            throw new NotImplementedException();
-        }
+			return RawData.ToString();
+		}
+		public UInt32 GetRawData()
+		{
+			return this.RawData;
+		}
 
     }
 }

@@ -9,20 +9,9 @@ namespace NetView.Model.DisplayFormat
 {
     class DisplayFormatDec : DisplayFormatBase
     {
-		public DisplayFormatDec()
+		public DisplayFormatDec(UInt32 rawData): base(rawData)
 		{
 			Base = 10;
 		}
-        public override uint FromString(string StrDisplay, EnumType DataType, int Base)
-        {
-            var V = GenUint32FromBit((int)DataType);
-            this.RawData = Convert.ToUInt32(StrDisplay, 10) & V;
-            return this.RawData; 
-        }
-        public override string GetString(uint RawData, EnumType DataType)
-        {
-            var V = GenUint32FromBit((int)DataType);
-            return string.Format("{0}", RawData & V);
-        }
     }
 }

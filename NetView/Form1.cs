@@ -30,47 +30,48 @@ using NetView.Model.ModuleInfo;
 
 namespace NetView
 {
-    public partial class Form1 : DevExpress.XtraEditors.XtraForm
-    {
-        AvilableDeviceModel[] DeviceCfg = null;
-        string FileOpenPath = @"C:\";
+	public partial class Form1 : DevExpress.XtraEditors.XtraForm
+	{
+		AvilableDeviceModel[] DeviceCfg = null;
+		string FileOpenPath = @"C:\";
 
-        ProductContrainer MiddleControl = null;
-        treeviewContrainer LeftControl = null;
-        DataTable DTVarMonitor = new DataTable();
+		ProductContrainer MiddleControl = null;
+		treeviewContrainer LeftControl = null;
+		DataTable DTVarMonitor = new DataTable();
 
-        ControllerBase BusController = new EC_Controller();
-        ProjectController ProjController = new ProjectController();
+		ControllerBase BusController = new EC_Controller();
+		ProjectController ProjController = new ProjectController();
 
-        const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
-        ComportSettingModel ComSettingCfgModel = null;
+		const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
+		ComportSettingModel ComSettingCfgModel = null;
 
 
-        CancellationTokenSource ctsMonitorController = new CancellationTokenSource();
-        CancellationTokenSource ctsHeartBeat = new CancellationTokenSource();
-        ManualResetEvent EventMonitorController = new ManualResetEvent(false);
-        ManualResetEvent EventHeartBeat = new ManualResetEvent(false);
+		CancellationTokenSource ctsMonitorController = new CancellationTokenSource();
+		CancellationTokenSource ctsHeartBeat = new CancellationTokenSource();
+		ManualResetEvent EventMonitorController = new ManualResetEvent(false);
+		ManualResetEvent EventHeartBeat = new ManualResetEvent(false);
 
-		ObservableCollection<MonitorVarModel> G_VarCollect = null;
-        //
-        List<UInt32> G_OutputValueRecv_List = new List<UInt32>();
-        List<UInt32> G_InputValueRecv_List = new List<UInt32>();
-		List<ModuleConfigModleBase> G_ModuleList = new List<ModuleConfigModleBase>();
-		List<ModuleInfoBase> G_MonitorList = new List<ModuleInfoBase>();
-		Model.DisplayFormat.DisplayFormatBase G_DisplayFormat = new Model.DisplayFormat.DisplayFormatHex();
-		int G_OldBase = 16;
-		bool OnFirstCircle = true;
+		ObservableCollection<MonitorVarModel> m_VarCollect = null;
+		//
+		List<UInt32> m_OutputValueRecv_List = new List<UInt32>();
+		List<UInt32> m_InputValueRecv_List = new List<UInt32>();
+		List<ModuleConfigModleBase> m_ModuleList = new List<ModuleConfigModleBase>();
+		List<ModuleInfoBase> m_MonitorList = new List<ModuleInfoBase>();
+		Model.DisplayFormat.DisplayFormatBase m_DisplayFormat = new Model.DisplayFormat.DisplayFormatHex(0);
+		int m_OldBase = 16;
+		bool m_OnFirstCircle = true;
+		object m_SetGetLock = new object();
+		List<UInt32>  m_ModifyValueList = new List<UInt32>();
+		public Form1()
+		{
+			InitializeComponent();
+			LoadCfg();
+			InitCtrl();
 
-        public Form1()
-        {
-            InitializeComponent();
-            LoadCfg();
-            InitCtrl();
-			
-		
+
 
 		}
-		
+
 		private void BusController_OnConnectStateChanged(object sender, bool e)
 		{
 
@@ -81,18 +82,18 @@ namespace NetView
 		}
 
 		private void LoadCfg()
-        {
-            try
-            {
-                Config.ConfigMgr.Instance.LoadConfig();
-                DeviceCfg = ConfigMgr.Instance.DeviceCfgEntry.Device;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                Close();
-            }
-        }
+		{
+			try
+			{
+				Config.ConfigMgr.Instance.LoadConfig();
+				DeviceCfg = ConfigMgr.Instance.DeviceCfgEntry.Device;
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+				Close();
+			}
+		}
 		private void InitCtrl()
 		{
 			BusController.OnConnectStateChanged += BusController_OnConnectStateChanged;
@@ -173,7 +174,7 @@ namespace NetView
 			ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
 			ucMonitor.OnChangeDisplayFormatHandler += UcMonitor_OnChangeDisplayFormatHandler;
 
-			G_VarCollect = ucMonitor.VarCollect;
+			m_VarCollect = ucMonitor.VarCollect;
 
 			this.elementHost1.BackColorTransparent = true;
 			this.elementHost2.BackColorTransparent = true;
@@ -185,93 +186,99 @@ namespace NetView
 
 
 			//Start Task to monitor Controller
+			m_OldBase = m_DisplayFormat.Base;
 			Task.Run(() =>
 			{
-			var ModifyValueList = new List<UInt32>();
-			//var ModuleInfoList = new List<ModuleInfoBase>();
-			while (!ctsMonitorController.IsCancellationRequested)
-			{
-				EventMonitorController.WaitOne();
-				Thread.Sleep(200);
-				if (BusController.IsConnected)
+
+				//var ModuleInfoList = new List<ModuleInfoBase>();
+				while (!ctsMonitorController.IsCancellationRequested)
 				{
-					if (OnFirstCircle)
+					EventMonitorController.WaitOne();
+					Thread.Sleep(200);
+					if (BusController.IsConnected)
 					{
-						OnFirstCircle = false;
-						//首次不修改输出模块的值，只是在需要修改的时候才修改
-						for (int i = 0; i < G_MonitorList.Count; i++)
+						if (m_OnFirstCircle)
 						{
-							var L = G_MonitorList[i].ModuleList.Where(m => m.IOType == EnumModuleIOType.OUT);
-							if (L != null)
+							m_OnFirstCircle = false;
+							//首次不修改输出模块的值，只是在需要修改的时候才修改
+							m_ModifyValueList.Clear();
+							for (int i = 0; i < m_MonitorList.Count; i++)
 							{
-								foreach (var it in L)
-									ModifyValueList.Add(0x55);
+								var L = m_MonitorList[i].ModuleList.Where(m => m.IOType == EnumModuleIOType.OUT);
+								if (L != null)
+								{
+									foreach (var it in L)
+										m_ModifyValueList.Add(0x55);
+								}
 							}
 						}
-					}
-					BusController.GetModuleValue(ModifyValueList, out G_InputValueRecv_List, out G_OutputValueRecv_List);
-					Console.WriteLine($"{G_InputValueRecv_List.Count},{G_OutputValueRecv_List.Count}");
-					var OutputMonitorModule = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
-					var InputMonitorModule = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
-					if (OutputMonitorModule != null && OutputMonitorModule.Count() == G_OutputValueRecv_List.Count)
-					{
-						for (int i = 0; i < G_OutputValueRecv_List.Count; i++)
+						lock (m_SetGetLock)
 						{
-							var V = G_DisplayFormat.FromString($"{G_OutputValueRecv_List[i]}", EnumType.UDINT, G_OldBase);
-							OutputMonitorModule.ElementAt(i).CurValue = G_DisplayFormat.GetString(V,EnumType.UDINT);
-		}
+							BusController.GetModuleValue(m_ModifyValueList, out m_InputValueRecv_List, out List<uint> outputValueList);
+							m_OutputValueRecv_List = outputValueList;
+							m_ModifyValueList = m_OutputValueRecv_List;
 						}
-						if (InputMonitorModule != null && InputMonitorModule.Count() == G_InputValueRecv_List.Count)
+						Console.WriteLine($"{m_InputValueRecv_List.Count},{m_OutputValueRecv_List.Count}");
+						var OutputMonitorModule = m_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
+						var InputMonitorModule = m_VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
+						if (OutputMonitorModule != null && OutputMonitorModule.Count() == m_OutputValueRecv_List.Count)
 						{
-							for (int i = 0; i < G_InputValueRecv_List.Count; i++)
+							for (int i = 0; i < m_OutputValueRecv_List.Count; i++)
 							{
-								var V = G_DisplayFormat.FromString($"{G_InputValueRecv_List[i]}", EnumType.UDINT, G_OldBase);
-								InputMonitorModule.ElementAt(i).CurValue = G_DisplayFormat.GetString(V,EnumType.UDINT);
+								m_DisplayFormat.SetRawDataFromInt(m_OutputValueRecv_List[i]);
+								OutputMonitorModule.ElementAt(i).CurValue = m_DisplayFormat.GetString();
 							}
 						}
-						G_OldBase = G_DisplayFormat.Base;
-
+						if (InputMonitorModule != null && InputMonitorModule.Count() == m_InputValueRecv_List.Count)
+						{
+							for (int i = 0; i < m_InputValueRecv_List.Count; i++)
+							{
+								m_DisplayFormat.SetRawDataFromInt(m_InputValueRecv_List[i]);
+								InputMonitorModule.ElementAt(i).CurValue = m_DisplayFormat.GetString();
+							}
+						}
+						m_OldBase = m_DisplayFormat.Base;
 					}
-                }
-            }, ctsMonitorController.Token);
+				}
+			}, ctsMonitorController.Token);
 
-            //HeartBeat
-            Task.Run(() =>
-            {
+			//HeartBeat
+			Task.Run(() =>
+			{
 				int i = 0;
-                while (!ctsHeartBeat.IsCancellationRequested)
-                {
+				while (!ctsHeartBeat.IsCancellationRequested)
+				{
 					EventHeartBeat.WaitOne();
 					Thread.Sleep(500);
 					Console.WriteLine($"---------------Heart beat {i++}------------------");
 					if (BusController.IsConnected)
-                    {
-                        try
-                        {
-                            if (!BusController.Hearbeat())
-                            {
-                                EventHeartBeat.Reset();
-                                MessageBox.Show("Connection Timeout");
-                            }
-                        }
-                        catch(Exception ex)
-                        {
-                            EventHeartBeat.Reset();
-                            MessageBox.Show($"Connection Timeout:{ex.Message}");
+					{
+						try
+						{
+							if (!BusController.Hearbeat())
+							{
+								EventHeartBeat.Reset();
+								MessageBox.Show("Connection Timeout");
+							}
+						}
+						catch (Exception ex)
+						{
+							EventHeartBeat.Reset();
+							MessageBox.Show($"Connection Timeout:{ex.Message}");
 							Console.WriteLine($"Connection Timeout:{ex.StackTrace}");
 
-						}  
-                    }
-                }
-            }, ctsHeartBeat.Token);
+						}
+					}
+				}
+			}, ctsHeartBeat.Token);
 
-        }
+		}
 
 
 		//Display when change the format
 		private void UcMonitor_OnChangeDisplayFormatHandler(object sender, Model.DisplayFormat.DisplayFormatBase e)
 		{
-			G_DisplayFormat = e;
+			m_DisplayFormat = e;
 
 		}
 
@@ -286,371 +293,368 @@ namespace NetView
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void LeftControl_OnBusModulChanged(object sender, SubBusContrainer.Model.ModuleAddedArgs e)
-        {
-            if (e.IsAdd)
-            {
-                var T = typeof(BusConfigBase);
-                var ClassName = $"ControllerLib.BusConfigModle.BusConfig_{e.Module.Name}";
-                var obj = T.Assembly.CreateInstance(ClassName) as BusConfigBase;
-                ProjController.BusCfg = obj;
-            }
-            else
-            {
-                ProjController.BusCfg = null;
-            }
-
-            // e.Name
-            //ProjController.BusCfg=new 
-            //throw new NotImplementedException();
-        }
-
-        private void BarSubIteExportFile_Popup(object sender, EventArgs e)
-        {
-            if (ProjController.BusCfg != null)
-            {
-                var C = (sender as BarSubItem).LinksPersistInfo;
-                foreach (LinkPersistInfo it in C)
-                    it.Item.Enabled = it.Item.Caption.Contains(ProjController.BusCfg.ShortName);
-            }
-
-        }
-
-
-        private void TreeViewDevice_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {
-
-        }
-
-        private void TreeViewDevice_ItemDrag(object sender, ItemDragEventArgs e)
-        {
-            string ProductName = (e.Item as TreeNode).Text;
-            var list = ProductName.Split(' ');
-            var nLen = list.Length;
-            treeViewDevice.DoDragDrop(list[0].Replace("-", "_"), DragDropEffects.Copy);
-        }
-
-        private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            if(ProjController.OpenProject())
-				LeftControl.ReplaceNewList(ProjController.BusName, ProjController.SubBusNameWithIndexList());
-        }
-
-        private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            UpdateProjController();
-            ProjController.SaveProject();
-        }
-
-        private void UpdateProjController()
-        {
-            ProjController.ModuleConfigList.Clear();
-            foreach (var it in MiddleControl.Controls)
-            {
-                if (it is BusModel)
-                {
-                    //DoNothing
-                }
-                else if (it is SubBusModel)
-                {
-                    SubBusModel SB = it as SubBusModel;
-                    var SubBusClassName = $"ControllerLib.Ethercat.ModuleConfigModle.ModuleConfig_{SB.ModuleType.ToString()}";
-                    Type T = typeof(ModuleConfigModleBase);
-                    dynamic obj = T.Assembly.CreateInstance(SubBusClassName);
-                    ModuleConfigModleBase CfgBase = obj as ModuleConfigModleBase;
-                    var list = SB.Mcb.ToStringList().ToArray();
-                    CfgBase.FromString(list);
-                    ProjController.ModuleConfigList.Add(CfgBase);
-                }
-            }
-            ProjController.ModuleConfigList.Sort((a, b) => { return a.GlobalIndex - b.GlobalIndex; });
-        }
-
-        private void barButtonItemCut_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-
-        }
-
-        private void barButtonItemCopy_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-
-        }
-
-        private void barButtonItemPaste_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-
-        }
-
-        private void barButtonItemSetting_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-
-            Window_ComSetting window = new Window_ComSetting();
-            if (ComSettingCfgModel != null)
-                window.ComSetting = ComSettingCfgModel;
-            window.ShowDialog();
-            ComSettingCfgModel = window.ComSetting;
-        }
-
-        private void barButtonItemConnect_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            try
-            {
-                if (ComSettingCfgModel == null)
-                {
-                    MessageBox.Show("Please select comport", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                string RegStr = @"COM\d{1,2}";
-                if (Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr))
-                {
-                    BusController.Open(ComSettingCfgModel.ComportName);
-                    if (true || !BusController.IsConnected)
-                    {
-                        if (BusController.Connect())
-                        {
-                            //UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
-                            //打开心跳
-                            //EventHeartBeat.Set();
-							MessageBox.Show("Connect sucessfully");
-                        }
-                        else
-                            MessageBox.Show("Can't connect to the controller! Please check!");
-                    }
-                    else
-                    {
-                        //BusController.CLose();
-                        MessageBox.Show("Controller is already connected");
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("Please select a comport to connect controller");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error when connect to controller:{ex.StackTrace}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-            }
-        }
-        private void barButtonItem_Disconnect_ItemClick(object sender, ItemClickEventArgs e)
-        {
-            try
-            {
-                if (ComSettingCfgModel == null)
-                {
-                    MessageBox.Show("Please select comport", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                string RegStr = @"COM\d{1,2}";
-                if (Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr))
-                {
-                    BusController.Open(ComSettingCfgModel.ComportName);
-                        //BusController.CLose();
-                    EventHeartBeat.Reset();
-                    BusController.DisConnect();
-					MessageBox.Show("Disconnect controller");
-                    
-                }
-                else
-                {
-                    MessageBox.Show("Please select a comport to connect controller");
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error when Disconnect controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-            }
-        }
-        private void barButtonItemUpload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            try
-            {
-				G_ModuleList = BusController.GetModuleList();
-				UpdateUI(G_ModuleList);
-				UpdateMonitorVarCollect(out G_MonitorList);
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error when upload to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// 将读取到的模块信息显示在界面上
-        /// Controller自动判断属于哪种控制器
-        /// </summary>
-        private void UpdateUI(List<ModuleConfigModleBase> ModuleList)
-        {
-            ProjController.ModuleConfigList = ModuleList;
-            LeftControl.ReplaceNewList("EtherCAT", ProjController.SubBusNameWithIndexList(false));
-        }
-
-        private void barButtonItemDownLoad_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            try
-            {
-                UpdateProjController();
-                G_ModuleList = ProjController.ModuleConfigList;
-				UpdateMonitorVarCollect(out G_MonitorList);
-				if (BusController.SendModuleList(G_ModuleList))
-					MessageBox.Show("Download success","Info", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-				else
-					MessageBox.Show("Download failed","Error",MessageBoxButtons.OKCancel,MessageBoxIcon.Error);
+		{
+			if (e.IsAdd)
+			{
+				var T = typeof(BusConfigBase);
+				var ClassName = $"ControllerLib.BusConfigModle.BusConfig_{e.Module.Name}";
+				var obj = T.Assembly.CreateInstance(ClassName) as BusConfigBase;
+				ProjController.BusCfg = obj;
 			}
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error when download to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
-            }
-        }
+			else
+			{
+				ProjController.BusCfg = null;
+			}
 
-        private void barButtonItemMonitor_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            dockPanelVarMonitor.Visibility = dockPanelVarMonitor.Visibility == DockVisibility.Visible ? DockVisibility.Hidden : DockVisibility.Visible;
-            if (dockPanelVarMonitor.Visibility == DockVisibility.Visible)
-                dockManager1.ActivePanel = dockPanelVarMonitor;
+			// e.Name
+			//ProjController.BusCfg=new 
+			//throw new NotImplementedException();
+		}
 
-        }
+		private void BarSubIteExportFile_Popup(object sender, EventArgs e)
+		{
+			if (ProjController.BusCfg != null)
+			{
+				var C = (sender as BarSubItem).LinksPersistInfo;
+				foreach (LinkPersistInfo it in C)
+					it.Item.Enabled = it.Item.Caption.Contains(ProjController.BusCfg.ShortName);
+			}
 
-        private void MenuSaveAs_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
+		}
 
-        }
 
-        private void barButtonItemArrangWindow_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            this.dockPanelLeft.Show();
-            this.dockPanelMiddle.Show();
-            this.dockPanelRight.Show();
-            this.dockPanelDown.Show();
-        }
+		private void TreeViewDevice_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
 
-        #region VarMonitor
+		}
 
-        private void UcMonitor_OnModifyValueEventHandler(object sender, EventArgs e)
-        {
-            try
-            {
-                var OutputValueList = G_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
-                if (OutputValueList != null)
-                {
-                    List<UInt32> list = new List<UInt32>();
-                    if (true || OutputValueList.Count() == G_OutputValueRecv_List.Count)
-                    {
-                        for (int i = 0; i < OutputValueList.Count(); i++)
-                        {
+		private void TreeViewDevice_ItemDrag(object sender, ItemDragEventArgs e)
+		{
+			string ProductName = (e.Item as TreeNode).Text;
+			var list = ProductName.Split(' ');
+			var nLen = list.Length;
+			treeViewDevice.DoDragDrop(list[0].Replace("-", "_"), DragDropEffects.Copy);
+		}
 
-                            if (!string.IsNullOrEmpty(OutputValueList.ElementAt(i).ModifyValue.Trim()))
-                            {
-                                list.Add(UInt32.Parse(OutputValueList.ElementAt(i).ModifyValue));
-                            }
-                            else
-                            {
-                                list.Add(G_OutputValueRecv_List[i]);
-                            }
-                        }
+		private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			if (ProjController.OpenProject())
+				LeftControl.ReplaceNewList(ProjController.BusName, ProjController.SubBusNameWithIndexList());
+		}
 
-                    }
+		private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			UpdateProjController();
+			ProjController.SaveProject();
+		}
 
-                    //只看修改的值，如果没有修改就直接将原来读取的值拿过来
-                    BusController.SetModuleValue(list);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            
-        }
+		private void UpdateProjController()
+		{
+			ProjController.ModuleConfigList.Clear();
+			foreach (var it in MiddleControl.Controls)
+			{
+				if (it is BusModel)
+				{
+					//DoNothing
+				}
+				else if (it is SubBusModel)
+				{
+					SubBusModel SB = it as SubBusModel;
+					var SubBusClassName = $"ControllerLib.Ethercat.ModuleConfigModle.ModuleConfig_{SB.ModuleType.ToString()}";
+					Type T = typeof(ModuleConfigModleBase);
+					dynamic obj = T.Assembly.CreateInstance(SubBusClassName);
+					ModuleConfigModleBase CfgBase = obj as ModuleConfigModleBase;
+					var list = SB.Mcb.ToStringList().ToArray();
+					CfgBase.FromString(list);
+					ProjController.ModuleConfigList.Add(CfgBase);
+				}
+			}
+			ProjController.ModuleConfigList.Sort((a, b) => { return a.GlobalIndex - b.GlobalIndex; });
+		}
 
-        private void UcMonitor_OnStopMonitorEventHandler(object sender, EventArgs e)
-        {
-            this.EventMonitorController.Reset();
-		
-            //this.EventHeartBeat.Set();
-        }
+		private void barButtonItemCut_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
 
-        private void UcMonitor_OnStartMonitorEventHandler(object sender, EventArgs e)
-        {
-            this.EventMonitorController.Set();
-            this.EventHeartBeat.Reset();
-			
-			OnFirstCircle = true;
-        }
+		}
 
-        private void DockPanelVarMonitor_VisibilityChanged(object sender, VisibilityChangedEventArgs e)
-        {
-            if (e.Visibility == DockVisibility.Hidden && BusController.IsConnected)
-            {
-                this.EventMonitorController.Reset();
-                this.EventHeartBeat.Set();
-            }
-        }
+		private void barButtonItemCopy_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
 
-        #endregion
+		}
 
-        private void barButtonItemNewProject_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            //var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-", "_")}";
-            //MiddleControl.BusName = e.Item.Caption;
-            MiddleControl.ChangeBus(e.Item.Caption);
-            //BusConfigBase=new 
-        }
+		private void barButtonItemPaste_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
 
-        /// <summary>
-        /// 导出文件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void barButtonItemExportFile_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
-        {
-            SaveFileDialog sfd = new SaveFileDialog();
-            var strFilter = $"{ProjController.BusFileMgr.ExtString} File(*.{ProjController.BusFileMgr.ExtString})|*.{ProjController.BusFileMgr.ExtString}";
-            sfd.Filter = strFilter;
-            sfd.FilterIndex = 2;
-            sfd.RestoreDirectory = true;
-            sfd.InitialDirectory = FileOpenPath;
-            sfd.FileName = $"{ProjController.BusCfg.Name}.{ProjController.BusFileMgr.ExtString}";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                FileOpenPath = sfd.FileName;
-                var NameModelList = new List<ModuleNameModel>();
-                foreach (var it in LeftControl.PureNameList)
-                    NameModelList.Add(new ModuleNameModel()
-                    {
-                        PureName = it,
-                    });
-                ProjController.BusFileMgr.SaveFile(NameModelList, FileOpenPath);
-            }
-        }
+		}
 
-        private void ShowMessage(EnumMsgType MsgType, string Msg)
-        {
-            this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
-        }
+		private void barButtonItemSetting_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            //dockPanelVarMonitor.Visibility = DockVisibility.Hidden;
-        }
+			Window_ComSetting window = new Window_ComSetting();
+			if (ComSettingCfgModel != null)
+				window.ComSetting = ComSettingCfgModel;
+			window.ShowDialog();
+			ComSettingCfgModel = window.ComSetting;
+		}
 
-        private void UpdateMonitorVarCollect(out List<ModuleInfoBase> listMonitorModule)
-        {
-            listMonitorModule = new List<ModuleInfoBase>();
-			if (G_ModuleList != null)
+		private void barButtonItemConnect_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			try
+			{
+				if (ComSettingCfgModel == null)
+				{
+					MessageBox.Show("Please select comport", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					return;
+				}
+				string RegStr = @"COM\d{1,2}";
+				if (Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr))
+				{
+					BusController.Open(ComSettingCfgModel.ComportName);
+					if (true || !BusController.IsConnected)
+					{
+						if (BusController.Connect())
+						{
+							//UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
+							//打开心跳
+							//EventHeartBeat.Set();
+							MessageBox.Show("Connect sucessfully");
+						}
+						else
+							MessageBox.Show("Can't connect to the controller! Please check!");
+					}
+					else
+					{
+						//BusController.CLose();
+						MessageBox.Show("Controller is already connected");
+					}
+				}
+				else
+				{
+					MessageBox.Show("Please select a comport to connect controller");
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Error when connect to controller:{ex.StackTrace}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+			}
+		}
+		private void barButtonItem_Disconnect_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			try
+			{
+				if (ComSettingCfgModel == null)
+				{
+					MessageBox.Show("Please select comport", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+					return;
+				}
+				string RegStr = @"COM\d{1,2}";
+				if (Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr))
+				{
+					BusController.Open(ComSettingCfgModel.ComportName);
+					//BusController.CLose();
+					EventHeartBeat.Reset();
+					BusController.DisConnect();
+					MessageBox.Show("Disconnect controller");
+
+				}
+				else
+				{
+					MessageBox.Show("Please select a comport to connect controller");
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Error when Disconnect controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+			}
+		}
+		private void barButtonItemUpload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			try
+			{
+				m_ModuleList = BusController.GetModuleList();
+				UpdateUI(m_ModuleList);
+				UpdateMonitorVarCollect(out m_MonitorList);
+
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Error when upload to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+			}
+		}
+
+		/// <summary>
+		/// 将读取到的模块信息显示在界面上
+		/// Controller自动判断属于哪种控制器
+		/// </summary>
+		private void UpdateUI(List<ModuleConfigModleBase> ModuleList)
+		{
+			ProjController.ModuleConfigList = ModuleList;
+			LeftControl.ReplaceNewList("EtherCAT", ProjController.SubBusNameWithIndexList(false));
+		}
+
+		private void barButtonItemDownLoad_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			try
+			{
+				UpdateProjController();
+				m_ModuleList = ProjController.ModuleConfigList;
+				UpdateMonitorVarCollect(out m_MonitorList);
+				if (BusController.SendModuleList(m_ModuleList))
+					MessageBox.Show("Download success", "Info", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+				else
+					MessageBox.Show("Download failed", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show($"Error when download to controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+			}
+		}
+
+		private void barButtonItemMonitor_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			dockPanelVarMonitor.Visibility = dockPanelVarMonitor.Visibility == DockVisibility.Visible ? DockVisibility.Hidden : DockVisibility.Visible;
+			if (dockPanelVarMonitor.Visibility == DockVisibility.Visible)
+				dockManager1.ActivePanel = dockPanelVarMonitor;
+
+		}
+
+		private void MenuSaveAs_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+
+		}
+
+		private void barButtonItemArrangWindow_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			this.dockPanelLeft.Show();
+			this.dockPanelMiddle.Show();
+			this.dockPanelRight.Show();
+			this.dockPanelDown.Show();
+		}
+
+		#region VarMonitor
+
+		private void UcMonitor_OnModifyValueEventHandler(object sender, EventArgs e)
+		{
+			try
+			{
+				
+					var OutputValueList = m_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
+					if (OutputValueList != null)
+					{
+						List<UInt32> list = new List<UInt32>();
+						if (OutputValueList.Count() == m_OutputValueRecv_List.Count)
+						{
+							for (int i = 0; i < OutputValueList.Count(); i++)
+							{
+								m_DisplayFormat.SetRawDataFromString(OutputValueList.ElementAt(i).ModifyValue, m_DisplayFormat.Base);
+								list.Add(m_DisplayFormat.GetRawData());
+							}
+
+						}
+					lock (m_SetGetLock)
+					{
+						//只看修改的值，如果没有修改就直接将原来读取的值拿过来
+						BusController.SetModuleValue(list);
+						m_ModifyValueList = list;
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
+
+		}
+
+		private void UcMonitor_OnStopMonitorEventHandler(object sender, EventArgs e)
+		{
+			this.EventMonitorController.Reset();
+
+			//this.EventHeartBeat.Set();
+		}
+
+		private void UcMonitor_OnStartMonitorEventHandler(object sender, EventArgs e)
+		{
+			this.EventMonitorController.Set();
+			this.EventHeartBeat.Reset();
+
+			m_OnFirstCircle = true;
+		}
+
+		private void DockPanelVarMonitor_VisibilityChanged(object sender, VisibilityChangedEventArgs e)
+		{
+			if (e.Visibility == DockVisibility.Hidden && BusController.IsConnected)
+			{
+				this.EventMonitorController.Reset();
+				this.EventHeartBeat.Set();
+			}
+		}
+
+		#endregion
+
+		private void barButtonItemNewProject_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			//var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-", "_")}";
+			//MiddleControl.BusName = e.Item.Caption;
+			MiddleControl.ChangeBus(e.Item.Caption);
+			//BusConfigBase=new 
+		}
+
+		/// <summary>
+		/// 导出文件
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void barButtonItemExportFile_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
+		{
+			SaveFileDialog sfd = new SaveFileDialog();
+			var strFilter = $"{ProjController.BusFileMgr.ExtString} File(*.{ProjController.BusFileMgr.ExtString})|*.{ProjController.BusFileMgr.ExtString}";
+			sfd.Filter = strFilter;
+			sfd.FilterIndex = 2;
+			sfd.RestoreDirectory = true;
+			sfd.InitialDirectory = FileOpenPath;
+			sfd.FileName = $"{ProjController.BusCfg.Name}.{ProjController.BusFileMgr.ExtString}";
+			if (sfd.ShowDialog() == DialogResult.OK)
+			{
+				FileOpenPath = sfd.FileName;
+				var NameModelList = new List<ModuleNameModel>();
+				foreach (var it in LeftControl.PureNameList)
+					NameModelList.Add(new ModuleNameModel()
+					{
+						PureName = it,
+					});
+				ProjController.BusFileMgr.SaveFile(NameModelList, FileOpenPath);
+			}
+		}
+
+		private void ShowMessage(EnumMsgType MsgType, string Msg)
+		{
+			this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
+		}
+
+		private void Form1_Load(object sender, EventArgs e)
+		{
+			//dockPanelVarMonitor.Visibility = DockVisibility.Hidden;
+		}
+
+		private void UpdateMonitorVarCollect(out List<ModuleInfoBase> listMonitorModule)
+		{
+			listMonitorModule = new List<ModuleInfoBase>();
+			if (m_ModuleList != null)
 			{
 				var t = typeof(ModuleInfoBase);
-				foreach (var it in G_ModuleList)
+				foreach (var it in m_ModuleList)
 				{
 					var obj = t.Assembly.CreateInstance($"NetView.Model.ModuleInfo.ModuleInfo_{it.DeviceName}") as ModuleInfoBase;
 					listMonitorModule.Add(obj);
 				}
 				if (InvokeRequired)
 				{
-					Invoke(new Action(() => { G_VarCollect.Clear(); }));
+					Invoke(new Action(() => { m_VarCollect.Clear(); }));
 				}
 				else
 				{
-					G_VarCollect.Clear();
+					m_VarCollect.Clear();
 				}
 				foreach (var it in listMonitorModule)
 				{
@@ -660,7 +664,7 @@ namespace NetView
 						{
 							Invoke(new Action(() =>
 							{
-								G_VarCollect.Add(new MonitorVarModel()
+								m_VarCollect.Add(new MonitorVarModel()
 								{
 									IoType = c.IOType,
 									SubModelName = c.Name,
@@ -670,7 +674,7 @@ namespace NetView
 						}
 						else
 						{
-							G_VarCollect.Add(new MonitorVarModel()
+							m_VarCollect.Add(new MonitorVarModel()
 							{
 								IoType = c.IOType,
 								SubModelName = c.Name,

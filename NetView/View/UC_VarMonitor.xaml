@@ -81,7 +81,7 @@
                                 <ComboBoxItem Content="Float"/>-->
                             <!--</ComboBox>-->
                             <TextBlock Grid.Column="3" Name="CurValue" Width="400" Text="{Binding CurValue, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                            <TextBox Grid.Column="4" Name="ModifyValue" Width="200" VerticalAlignment="Center" Text="{Binding ModifyValue}" IsEnabled="{Binding IoType, Converter={StaticResource IOType2Bool}}"
+                            <TextBox Grid.Column="4" Name="ModifyValue" Width="200" VerticalAlignment="Center" Text="{Binding ModifyValue, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IoType, Converter={StaticResource IOType2Bool}}"
                                      Background="{Binding IoType, Converter={StaticResource IOType2Brush}}" HorizontalAlignment="Left"/>
                         </Grid>
                    </Border>

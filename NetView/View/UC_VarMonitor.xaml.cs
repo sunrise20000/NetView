@@ -78,11 +78,11 @@ namespace NetView.View
 		{
 			DisplayFormatBase fmt = null;
 			if (CbDisplayFormat.SelectedIndex == 0)
-				fmt = new DisplayFormatHex();
+				fmt = new DisplayFormatHex(0);
 			else if (CbDisplayFormat.SelectedIndex == 1)
-				fmt = new DisplayFormatDec();
+				fmt = new DisplayFormatDec(0);
 			else
-				fmt = new DisplayFormatFloat();
+				fmt = new DisplayFormatFloat(0);
 			OnChangeDisplayFormatHandler?.Invoke(this, fmt);
 		}
 	}

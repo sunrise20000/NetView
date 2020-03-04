@@ -197,6 +197,8 @@ namespace ControllerLib.Ethercat
 			var SubModuleInList = new List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase>();
 			var SubModuleOutList = new List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase>();
 
+			var byteList = new List<byte>();
+			int outIndex = 0;
 			//说明已经获取到Module的列表
 			foreach (var it in m_ModuleList)
             {
@@ -206,13 +208,20 @@ namespace ControllerLib.Ethercat
                     {
                         M += (byte)(Sub.BitSize / 8);
 						SubModuleInList.Add(Sub);
-
 					}
                     else
                     {
-                        N += (byte)(Sub.BitSize / 8);
 						SubModuleOutList.Add(Sub);
-                    }        
+						var outLen = Sub.BitSize / 8;
+						N += (byte)outLen;
+						var SetModuleValue = ModifyValueList[outIndex++];
+						for (int i = 0; i < outLen; i++)
+						{
+							byteList.Add((byte)((SetModuleValue >> ((outLen - i - 1) * 8)) & 0xFF));
+						}
+
+						
+					}        
                 }
             }
             Len = (byte)(N + 6);
@@ -220,7 +229,7 @@ namespace ControllerLib.Ethercat
             List<byte> CmdSend = new List<byte>(CmdHeader);
             for (int i = 0; i < N; i++)
             {
-                CmdSend.Add(0x55);
+                CmdSend.Add(byteList[i]);
             }
             
             var Crc = CRC16(CmdSend.ToArray(), 0, CmdSend.Count);
@@ -274,11 +283,10 @@ namespace ControllerLib.Ethercat
             Len = (byte)(N + 6);
             byte[] CmdHeader = new byte[] { 0x68, Len, 0x01, 0x02, N, M};
             List<byte> CmdSend = new List<byte>(CmdHeader);
+
+			//将值插入进去
 			foreach (var it in byteList)
 				CmdSend.Add(it);
-			//将值插入进去
-
-
 
             var Crc = CRC16(CmdSend.ToArray(), 0, CmdSend.Count);
             List<byte> FinalCmd = new List<byte>(CmdSend);
