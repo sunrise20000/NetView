@@ -77,6 +77,7 @@
     <Compile Include="Converts\DateTime2Text.cs" />
     <Compile Include="Converts\IOType2Bool.cs" />
     <Compile Include="Converts\IOType2Brush.cs" />
+    <Compile Include="Converts\Status2Image.cs" />
     <Compile Include="Converts\MsgType2Brush.cs" />
     <Compile Include="Converts\IOType2Image.cs" />
     <Compile Include="Converts\MsgType2Image.cs" />

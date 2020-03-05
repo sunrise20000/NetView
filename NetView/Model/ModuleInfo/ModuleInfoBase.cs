@@ -13,6 +13,8 @@ namespace NetView.Model.ModuleInfo
     {
         public EnumDeviceName DeviceType { get; set; }
         public string Name { get; set; }
+		public int LocalIndex { get; set; }
+		public int GlobalIndex { get; set; }
         public List<ModuleBase> ModuleList { get; }= new List<ModuleBase>();
 
     }

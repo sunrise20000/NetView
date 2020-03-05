@@ -79,6 +79,8 @@ namespace NetView
 			barButtonItem_Disconnect.Enabled = e;
 			MenuConnect.Enabled = barButtonItemConnect.Enabled;
 			MenuDisconnect.Enabled = barButtonItem_Disconnect.Enabled;
+			if(!e)
+				m_OnFirstCircle = true;
 		}
 
 		private void LoadCfg()
@@ -219,25 +221,7 @@ namespace NetView
 							m_ModifyValueList = m_OutputValueRecv_List;
 						}
 						Console.WriteLine($"{m_InputValueRecv_List.Count},{m_OutputValueRecv_List.Count}");
-						var OutputMonitorModule = m_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
-						var InputMonitorModule = m_VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
-						if (OutputMonitorModule != null && OutputMonitorModule.Count() == m_OutputValueRecv_List.Count)
-						{
-							for (int i = 0; i < m_OutputValueRecv_List.Count; i++)
-							{
-								m_DisplayFormat.SetRawDataFromInt(m_OutputValueRecv_List[i]);
-								OutputMonitorModule.ElementAt(i).CurValue = m_DisplayFormat.GetString();
-							}
-						}
-						if (InputMonitorModule != null && InputMonitorModule.Count() == m_InputValueRecv_List.Count)
-						{
-							for (int i = 0; i < m_InputValueRecv_List.Count; i++)
-							{
-								m_DisplayFormat.SetRawDataFromInt(m_InputValueRecv_List[i]);
-								InputMonitorModule.ElementAt(i).CurValue = m_DisplayFormat.GetString();
-							}
-						}
-						m_OldBase = m_DisplayFormat.Base;
+						UpdateChangeDisplayFormat();
 					}
 				}
 			}, ctsMonitorController.Token);
@@ -279,10 +263,32 @@ namespace NetView
 		private void UcMonitor_OnChangeDisplayFormatHandler(object sender, Model.DisplayFormat.DisplayFormatBase e)
 		{
 			m_DisplayFormat = e;
-
+			//可以刷新以下显示的数据
+			UpdateChangeDisplayFormat();
 		}
 
-
+		private void UpdateChangeDisplayFormat()
+		{
+			var OutputMonitorModule = m_VarCollect.Where(c => c.IoType == EnumModuleIOType.OUT);
+			var InputMonitorModule = m_VarCollect.Where(c => c.IoType == EnumModuleIOType.IN);
+			if (OutputMonitorModule != null && OutputMonitorModule.Count() == m_OutputValueRecv_List.Count)
+			{
+				for (int i = 0; i < m_OutputValueRecv_List.Count; i++)
+				{
+					m_DisplayFormat.SetRawDataFromInt(m_OutputValueRecv_List[i]);
+					OutputMonitorModule.ElementAt(i).CurValue = m_DisplayFormat.GetString();
+				}
+			}
+			if (InputMonitorModule != null && InputMonitorModule.Count() == m_InputValueRecv_List.Count)
+			{
+				for (int i = 0; i < m_InputValueRecv_List.Count; i++)
+				{
+					m_DisplayFormat.SetRawDataFromInt(m_InputValueRecv_List[i]);
+					InputMonitorModule.ElementAt(i).CurValue = m_DisplayFormat.GetString();
+				}
+			}
+			m_OldBase = m_DisplayFormat.Base;
+		}
 
 
 
@@ -578,7 +584,6 @@ namespace NetView
 			this.EventMonitorController.Set();
 			this.EventHeartBeat.Reset();
 
-			m_OnFirstCircle = true;
 		}
 
 		private void DockPanelVarMonitor_VisibilityChanged(object sender, VisibilityChangedEventArgs e)
@@ -646,7 +651,10 @@ namespace NetView
 				foreach (var it in m_ModuleList)
 				{
 					var obj = t.Assembly.CreateInstance($"NetView.Model.ModuleInfo.ModuleInfo_{it.DeviceName}") as ModuleInfoBase;
+					obj.LocalIndex = it.GlobalIndex;
+					obj.LocalIndex = it.LocalIndex;
 					listMonitorModule.Add(obj);
+				
 				}
 				if (InvokeRequired)
 				{
@@ -667,7 +675,7 @@ namespace NetView
 								m_VarCollect.Add(new MonitorVarModel()
 								{
 									IoType = c.IOType,
-									SubModelName = c.Name,
+									SubModelName = $"{c.Name}_{it.LocalIndex}",
 								});
 
 							}));
@@ -677,7 +685,7 @@ namespace NetView
 							m_VarCollect.Add(new MonitorVarModel()
 							{
 								IoType = c.IOType,
-								SubModelName = c.Name,
+								SubModelName = $"{c.Name}_{it.LocalIndex}",
 							});
 						}
 					}
