@@ -57,6 +57,7 @@ namespace NetView
 		List<UInt32> m_InputValueRecv_List = new List<UInt32>();
 		List<ModuleConfigModleBase> m_ModuleList = new List<ModuleConfigModleBase>();
 		List<ModuleInfoBase> m_MonitorList = new List<ModuleInfoBase>();
+		ListBox m_DiagramOutputWindow = null;
 		Model.DisplayFormat.DisplayFormatBase m_DisplayFormat = new Model.DisplayFormat.DisplayFormatHex(0);
 		int m_OldBase = 16;
 		bool m_OnFirstCircle = true;
@@ -67,8 +68,6 @@ namespace NetView
 			InitializeComponent();
 			LoadCfg();
 			InitCtrl();
-
-
 
 		}
 
@@ -81,6 +80,7 @@ namespace NetView
 			MenuDisconnect.Enabled = barButtonItem_Disconnect.Enabled;
 			if(!e)
 				m_OnFirstCircle = true;
+			ShowMessage(EnumMsgType.Info, "控制器" + (e? "连接" : "断开连接"));
 		}
 
 		private void LoadCfg()
@@ -99,6 +99,7 @@ namespace NetView
 		private void InitCtrl()
 		{
 			BusController.OnConnectStateChanged += BusController_OnConnectStateChanged;
+			BusController.OnDataComeHandler += BusController_OnDataComeHandler;
 			barButtonItemConnect.Enabled = true;
 			barButtonItem_Disconnect.Enabled = false;
 			MenuConnect.Enabled = barButtonItemConnect.Enabled;
@@ -176,6 +177,16 @@ namespace NetView
 			ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
 			ucMonitor.OnChangeDisplayFormatHandler += UcMonitor_OnChangeDisplayFormatHandler;
 
+
+			//Add diagram output window
+			m_DiagramOutputWindow = new ListBox();
+			m_DiagramOutputWindow.Visible = true;
+			m_DiagramOutputWindow.Dock = DockStyle.Fill;
+			m_DiagramOutputWindow.Font = new Font("lisu",12);
+			this.dockPanelDiagram.SizeChanged += DockPanelDiagram_SizeChanged;
+			this.dockPanelDiagram.Controls.Add(m_DiagramOutputWindow);
+
+
 			m_VarCollect = ucMonitor.VarCollect;
 
 			this.elementHost1.BackColorTransparent = true;
@@ -191,7 +202,6 @@ namespace NetView
 			m_OldBase = m_DisplayFormat.Base;
 			Task.Run(() =>
 			{
-
 				//var ModuleInfoList = new List<ModuleInfoBase>();
 				while (!ctsMonitorController.IsCancellationRequested)
 				{
@@ -258,6 +268,50 @@ namespace NetView
 
 		}
 
+		private void DockPanelDiagram_SizeChanged(object sender, EventArgs e)
+		{
+			m_DiagramOutputWindow.Height = this.dockPanelDiagram.Height;
+			m_DiagramOutputWindow.Width = this.dockPanelDiagram.Width;
+		}
+
+		private void BusController_OnDataComeHandler(object sender, ControllerLib.Model.DataFromComport e)
+		{
+			UpdateDiagram(e);
+			AutoScrollListBox();
+		}
+
+		private void UpdateDiagram(ControllerLib.Model.DataFromComport data)
+		{
+			if (InvokeRequired)
+			{
+				Invoke(new Action(() =>
+				{
+					m_DiagramOutputWindow.Items.Add(data.TotalMsg);
+					if (m_DiagramOutputWindow.Items.Count > 5000)
+						m_DiagramOutputWindow.Items.RemoveAt(0);
+				}));
+			}
+			else
+			{
+				m_DiagramOutputWindow.Items.Add(data.TotalMsg);
+				if (m_DiagramOutputWindow.Items.Count > 5000)
+					m_DiagramOutputWindow.Items.RemoveAt(0);
+			}
+		}
+		private void AutoScrollListBox()
+		{
+			if (InvokeRequired)
+			{
+				Invoke(new Action(() =>
+				{
+					this.m_DiagramOutputWindow.TopIndex = this.m_DiagramOutputWindow.Items.Count - (int)(this.m_DiagramOutputWindow.Height / this.m_DiagramOutputWindow.ItemHeight);
+				}));
+			}
+			else
+			{
+				this.m_DiagramOutputWindow.TopIndex = this.m_DiagramOutputWindow.Items.Count - (int)(this.m_DiagramOutputWindow.Height / this.m_DiagramOutputWindow.ItemHeight);
+			}
+		}
 
 		//Display when change the format
 		private void UcMonitor_OnChangeDisplayFormatHandler(object sender, Model.DisplayFormat.DisplayFormatBase e)
@@ -535,6 +589,7 @@ namespace NetView
 			this.dockPanelMiddle.Show();
 			this.dockPanelRight.Show();
 			this.dockPanelDown.Show();
+			this.dockPanelDiagram.Show();
 		}
 
 		#region VarMonitor

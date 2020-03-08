@@ -1,4 +1,5 @@
 ﻿using ControllerLib.Ethercat.ModuleConfigModle;
+using ControllerLib.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace ControllerLib
         public abstract bool DisConnect();
         public abstract List<ModuleConfigModleBase> GetModuleList();
 		public abstract event EventHandler<bool> OnConnectStateChanged;
+		public abstract event EventHandler<DataFromComport> OnDataComeHandler;
 
         /// <summary>
         /// PureNameList

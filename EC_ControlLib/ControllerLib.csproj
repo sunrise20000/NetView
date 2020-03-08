@@ -67,6 +67,7 @@
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL4002.cs" />
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL5001.cs" />
     <Compile Include="Ethercat\ModuleConfigModle\ModuleConfig_HL5002.cs" />
+    <Compile Include="Model\DataFromComport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

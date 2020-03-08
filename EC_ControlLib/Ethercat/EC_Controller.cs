@@ -1,4 +1,5 @@
 ﻿using ControllerLib.Ethercat.ModuleConfigModle;
+using ControllerLib.Model;
 using System;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -17,6 +18,7 @@ namespace ControllerLib.Ethercat
 		private bool isConnected = false;
 
 		public override event EventHandler<bool> OnConnectStateChanged;
+		public override event EventHandler<DataFromComport> OnDataComeHandler;
 		#endregion
 
 		#region UserAPI
@@ -71,6 +73,7 @@ namespace ControllerLib.Ethercat
 					lock (ComportLock)
 					{
 						Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+						OnDataComeHandler?.Invoke(this,new DataFromComport(FinalCmd));
 						IsConnected = ReadVoidAck(new byte[] { 0x68, 0x06, 0x01, 0x02, 0x68, ControllerID });
 						if (IsConnected)
 							return true;
@@ -99,6 +102,7 @@ namespace ControllerLib.Ethercat
 				lock (ComportLock)
 				{
 					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+					OnDataComeHandler?.Invoke(this, new DataFromComport(FinalCmd));
 					IsConnected = false;
 					//Expected Ack
 					var ExpectedAck = new byte[] { 0x68, 0x06, 0x01, 0x02, 0x68, ControllerID };
@@ -130,6 +134,7 @@ namespace ControllerLib.Ethercat
 				lock (ComportLock)
 				{
 					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+					OnDataComeHandler?.Invoke(this, new DataFromComport(FinalCmd));
 					var list = ReadModuleListAck();
 					if (list != null)
 						return list;
@@ -166,6 +171,7 @@ namespace ControllerLib.Ethercat
 				lock (ComportLock)
 				{
 					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+					OnDataComeHandler?.Invoke(this, new DataFromComport(FinalCmd));
 					if (ReadVoidAck(new byte[] { 0x68, 0x08, 0x01, 0x02, 0x68, ControllerID, 0x69, 0x96 }))
 					{
 						m_ModuleList = ModuleInfoList;	
@@ -242,6 +248,7 @@ namespace ControllerLib.Ethercat
 				lock (ComportLock)
 				{
 					Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
+					OnDataComeHandler?.Invoke(this, new DataFromComport(FinalCmd));
 					if (GetValueAck(SubModuleInList,SubModuleOutList, out OutputValueList, out InputValueList))
 						return true;
 				}
@@ -295,8 +302,9 @@ namespace ControllerLib.Ethercat
             lock (ComportLock)
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
-                
-            }
+				OnDataComeHandler?.Invoke(this, new DataFromComport(FinalCmd));
+
+			}
         }
 
         public override bool Hearbeat()
@@ -388,7 +396,10 @@ namespace ControllerLib.Ethercat
 								{
 									var CrcCal = CRC16(Recv.ToArray(), 0, Length);
 									if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
+									{
+										OnDataComeHandler?.Invoke(this, new DataFromComport(Recv,false));
 										return true;
+									}
 									else
 										throw new Exception("CRC check error");
 								}
@@ -441,6 +452,7 @@ namespace ControllerLib.Ethercat
 							{
 								//68 0C 01 02 68 05 96 69 11 01 01 00 34 75
 								m_ModuleList = GetModuleFromByteArr(Recv.ToArray(), 8, Recv.Count - 10);
+								OnDataComeHandler?.Invoke(this, new DataFromComport(Recv, false));
 								return m_ModuleList;
 							}
 							else
@@ -503,6 +515,7 @@ namespace ControllerLib.Ethercat
 							var CrcCal = CRC16(Recv.ToArray(), 0, Length);
 							if (CrcCal[0] == Recv[Length + 1] && CrcCal[1] == Recv[Length])
 							{
+								OnDataComeHandler?.Invoke(this, new DataFromComport(Recv, false));
 								int OutputStartPos = 6;
 								int InputStartPos = OutputStartPos + OutputBtLen;
 								//开始解析输出

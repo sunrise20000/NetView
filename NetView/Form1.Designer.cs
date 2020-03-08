@@ -1,4 +1,6 @@
-﻿namespace NetView
+﻿using DevExpress.XtraBars.Docking;
+
+namespace NetView
 {
     partial class Form1
     {
@@ -74,12 +76,15 @@
             this.dockPanel2_Container = new DevExpress.XtraBars.Docking.ControlContainer();
             this.treeViewDevice = new System.Windows.Forms.TreeView();
             this.dockPanelDown = new DevExpress.XtraBars.Docking.DockPanel();
-            this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+			this.dockPanelDiagram = new DevExpress.XtraBars.Docking.DockPanel();
+			this.dockPanel3_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+			this.dockPanel6_Container = new DevExpress.XtraBars.Docking.ControlContainer();
+			this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.uC_Output1 = new NetView.View.UC_Output();
             this.dockPanelVarMonitor = new DevExpress.XtraBars.Docking.DockPanel();
             this.controlContainer1 = new DevExpress.XtraBars.Docking.ControlContainer();
-            this.elementHost2 = new System.Windows.Forms.Integration.ElementHost();
+	
+			this.elementHost2 = new System.Windows.Forms.Integration.ElementHost();
             this.dataGridViewVarMonitor = new System.Windows.Forms.DataGridView();
             this.dockPanelMiddle = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel4_Container = new DevExpress.XtraBars.Docking.ControlContainer();
@@ -191,9 +196,11 @@
             this.dockPanelRight.SuspendLayout();
             this.dockPanel2_Container.SuspendLayout();
             this.dockPanelDown.SuspendLayout();
+			this.dockPanelDiagram.SuspendLayout();
             this.dockPanel3_Container.SuspendLayout();
             this.dockPanelVarMonitor.SuspendLayout();
             this.controlContainer1.SuspendLayout();
+			this.dockPanel6_Container.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewVarMonitor)).BeginInit();
             this.dockPanelMiddle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.barManager2)).BeginInit();
@@ -556,6 +563,7 @@
             this.dockPanelLeft,
             this.dockPanelRight,
             this.dockPanelDown,
+			this.dockPanelDiagram,
             this.dockPanelVarMonitor,
             this.dockPanelMiddle});
             this.dockManager1.TopZIndexControls.AddRange(new string[] {
@@ -632,10 +640,32 @@
             this.dockPanelDown.OriginalSize = new System.Drawing.Size(200, 169);
             this.dockPanelDown.Size = new System.Drawing.Size(1324, 169);
             this.dockPanelDown.Text = "Output";
-            // 
-            // dockPanel3_Container
-            // 
-            this.dockPanel3_Container.Controls.Add(this.elementHost1);
+
+			// 
+			// dockPanelDiagram
+			// 
+			this.dockPanelDiagram.Controls.Add(this.dockPanel6_Container);
+			this.dockPanelDiagram.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
+			//this.dockPanelDiagram.ID = new System.Guid("5bfb6fc5-6130-4f60-8771-bd5b77e35cc0");
+			this.dockPanelDiagram.Location = new System.Drawing.Point(220, 803);
+			this.dockPanelDiagram.Margin = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dockPanelDiagram.Name = "dockPanelDiagram";
+			this.dockPanelDiagram.OriginalSize = new System.Drawing.Size(200, 169);
+			this.dockPanelDiagram.Size = new System.Drawing.Size(1324, 169);
+			this.dockPanelDiagram.Text = "Diagram output";
+			// 
+			// dockPanel6_Container
+			// 
+			this.dockPanel6_Container.Controls.Add(this.elementHost1);
+			this.dockPanel6_Container.Location = new System.Drawing.Point(4, 24);
+			this.dockPanel6_Container.Margin = new System.Windows.Forms.Padding(8, 6, 8, 6);
+			this.dockPanel6_Container.Name = "dockPanel6_Container";
+			this.dockPanel6_Container.Size = new System.Drawing.Size(1316, 141);
+			this.dockPanel6_Container.TabIndex = 0;
+			// 
+			// dockPanel3_Container
+			// 
+			this.dockPanel3_Container.Controls.Add(this.elementHost1);
             this.dockPanel3_Container.Location = new System.Drawing.Point(4, 24);
             this.dockPanel3_Container.Margin = new System.Windows.Forms.Padding(8, 6, 8, 6);
             this.dockPanel3_Container.Name = "dockPanel3_Container";
@@ -1527,6 +1557,7 @@
             this.dockPanelRight.ResumeLayout(false);
             this.dockPanel2_Container.ResumeLayout(false);
             this.dockPanelDown.ResumeLayout(false);
+			this.dockPanelDiagram.ResumeLayout(false);
             this.dockPanel3_Container.ResumeLayout(false);
             this.dockPanelVarMonitor.ResumeLayout(false);
             this.controlContainer1.ResumeLayout(false);
@@ -1551,7 +1582,8 @@
         private DevExpress.XtraBars.BarDockControl barDockControlRight;
         private DevExpress.XtraBars.Docking.DockManager dockManager1;
         private DevExpress.XtraBars.Docking.DockPanel dockPanelDown;
-        private DevExpress.XtraBars.Docking.ControlContainer dockPanel3_Container;
+		private DevExpress.XtraBars.Docking.DockPanel dockPanelDiagram;
+		private DevExpress.XtraBars.Docking.ControlContainer dockPanel3_Container;
         private DevExpress.XtraBars.Docking.DockPanel dockPanelRight;
         private DevExpress.XtraBars.Docking.ControlContainer dockPanel2_Container;
         private DevExpress.XtraBars.Docking.DockPanel dockPanelLeft;
@@ -1661,7 +1693,8 @@
         private DevExpress.XtraBars.BarButtonItem barButtonItem15;
         private DevExpress.XtraBars.Docking.DockPanel dockPanelVarMonitor;
         private DevExpress.XtraBars.Docking.ControlContainer controlContainer1;
-        private DevExpress.XtraBars.Docking2010.Views.Tabbed.Document document3;
+		private ControlContainer dockPanel6_Container;
+		private DevExpress.XtraBars.Docking2010.Views.Tabbed.Document document3;
         private System.Windows.Forms.DataGridView dataGridViewVarMonitor;
         private View.UC_Output uC_Output1;
         private System.Windows.Forms.Integration.ElementHost elementHost2;
