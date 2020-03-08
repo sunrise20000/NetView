@@ -713,7 +713,7 @@ namespace NetView
 				}
 				if (InvokeRequired)
 				{
-					Invoke(new Action(() => { m_VarCollect.Clear(); }));
+					BeginInvoke(new Action(() => { m_VarCollect.Clear(); }));
 				}
 				else
 				{
@@ -725,7 +725,7 @@ namespace NetView
 					{
 						if (InvokeRequired)
 						{
-							Invoke(new Action(() =>
+							BeginInvoke(new Action(() =>
 							{
 								m_VarCollect.Add(new MonitorVarModel()
 								{
