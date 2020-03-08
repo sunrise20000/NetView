@@ -48,6 +48,7 @@ namespace NetView
 
 		CancellationTokenSource ctsMonitorController = new CancellationTokenSource();
 		CancellationTokenSource ctsHeartBeat = new CancellationTokenSource();
+		CancellationTokenSource ctsPickMsg = new CancellationTokenSource();
 		ManualResetEvent EventMonitorController = new ManualResetEvent(false);
 		ManualResetEvent EventHeartBeat = new ManualResetEvent(false);
 
@@ -62,7 +63,10 @@ namespace NetView
 		int m_OldBase = 16;
 		bool m_OnFirstCircle = true;
 		object m_SetGetLock = new object();
+		object m_pickMsgLock = new object();
 		List<UInt32>  m_ModifyValueList = new List<UInt32>();
+		Queue<ControllerLib.Model.DataFromComport> m_msgQueue = new Queue<ControllerLib.Model.DataFromComport>();
+
 		public Form1()
 		{
 			InitializeComponent();
@@ -266,20 +270,47 @@ namespace NetView
 				}
 			}, ctsHeartBeat.Token);
 
+			//TaskPick Message
+			Task.Run(()=> {
+				while (!ctsPickMsg.IsCancellationRequested)
+				{
+					lock (m_pickMsgLock)
+					{
+						if (m_msgQueue.Count == 0)
+						{
+							Thread.Sleep(100);
+							continue;
+						}
+					}
+					if (m_msgQueue.Count != 0)
+					{
+						var data = m_msgQueue.Dequeue();
+						UpdateDiagram(data);
+						AutoScrollListBox();
+					}
+				}
+			});
+
 		}
 
 		private void DockPanelDiagram_SizeChanged(object sender, EventArgs e)
 		{
-			m_DiagramOutputWindow.Height = this.dockPanelDiagram.Height;
+			m_DiagramOutputWindow.Height = this.dockPanelDiagram.Height-10;
 			m_DiagramOutputWindow.Width = this.dockPanelDiagram.Width;
 		}
 
 		private void BusController_OnDataComeHandler(object sender, ControllerLib.Model.DataFromComport e)
 		{
-			UpdateDiagram(e);
-			AutoScrollListBox();
+			lock (m_pickMsgLock)
+			{
+				m_msgQueue.Enqueue(e);
+			}
 		}
 
+		/// <summary>
+		/// 添加列表项
+		/// </summary>
+		/// <param name="data"></param>
 		private void UpdateDiagram(ControllerLib.Model.DataFromComport data)
 		{
 			if (InvokeRequired)
@@ -297,7 +328,12 @@ namespace NetView
 				if (m_DiagramOutputWindow.Items.Count > 5000)
 					m_DiagramOutputWindow.Items.RemoveAt(0);
 			}
+
 		}
+
+		/// <summary>
+		/// 自动滚动
+		/// </summary>
 		private void AutoScrollListBox()
 		{
 			if (InvokeRequired)
@@ -689,12 +725,7 @@ namespace NetView
 
 		private void ShowMessage(EnumMsgType MsgType, string Msg)
 		{
-			if (InvokeRequired)
-				BeginInvoke(new Action(() => {
-					this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
-				}));
-			else
-				this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
+			this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
 		}
 
 		private void Form1_Load(object sender, EventArgs e)

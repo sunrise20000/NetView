@@ -303,7 +303,6 @@ namespace ControllerLib.Ethercat
             {
                 Comport.Write(FinalCmd.ToArray(), 0, FinalCmd.Count);
 				OnDataComeHandler?.Invoke(this, new DataFromComport(FinalCmd));
-
 			}
         }
 
