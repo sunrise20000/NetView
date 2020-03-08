@@ -689,7 +689,12 @@ namespace NetView
 
 		private void ShowMessage(EnumMsgType MsgType, string Msg)
 		{
-			this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
+			if (InvokeRequired)
+				BeginInvoke(new Action(() => {
+					this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
+				}));
+			else
+				this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
 		}
 
 		private void Form1_Load(object sender, EventArgs e)
