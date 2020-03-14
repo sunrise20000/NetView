@@ -16,7 +16,7 @@ namespace ControllerLib.Ethercat
 		object ComportLock = new object();
 		List<ModuleConfigModleBase> m_ModuleList = new List<ModuleConfigModleBase>();
 		private bool isConnected = false;
-
+		private uint timeout = 0;
 		public override event EventHandler<bool> OnConnectStateChanged;
 		public override event EventHandler<DataFromComport> OnDataComeHandler;
 		#endregion
@@ -28,7 +28,7 @@ namespace ControllerLib.Ethercat
 		public override bool IsConnected
 		{
 			get { return isConnected; }
-			protected set{
+			set{
 				if (isConnected != value)
 				{
 					OnConnectStateChanged?.Invoke(this, value);
@@ -363,7 +363,7 @@ namespace ControllerLib.Ethercat
         /// </summary>
         /// <param name="ExpectAckByteList"></param>
         /// <returns></returns>
-        bool ReadVoidAck(byte[] ExpectAckByteList, int Timeout=1000)
+        bool ReadVoidAck(byte[] ExpectAckByteList)
         {
             var StartTime = DateTime.Now.Ticks;
             List<byte> Recv = new List<byte>();
@@ -406,12 +406,8 @@ namespace ControllerLib.Ethercat
 						}
 					}
 				}
-				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > timeout)
 				{
-					//Console.WriteLine($"IsHeaderFound ={IsHeaderFound}, RecvFul的长度{RecvFul.Count}");
-					//foreach (var c in RecvFul)
-					//	Console.WriteLine(string.Format("%2X , ", c));
-					//throw new Exception($"Timeout to connect controller,recieve len;{RecvFul.Count}");
 					return false;
 				}
             }
@@ -421,7 +417,7 @@ namespace ControllerLib.Ethercat
         /// PureName
         /// </summary>
         /// <returns></returns>
-        List<ModuleConfigModleBase> ReadModuleListAck(int Timeout=1000)
+        List<ModuleConfigModleBase> ReadModuleListAck()
         {
 			m_ModuleList.Clear();
             var StartTime = DateTime.Now.Ticks;
@@ -459,13 +455,13 @@ namespace ControllerLib.Ethercat
 						}
 					}
 				}
-				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > timeout)
 					return null;
 			}
         }
 
         bool GetValueAck(List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase> SubModuleInList, List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase> SubModuleOutList,
-			out List<UInt32> OutputValueRecv,out List<UInt32> InputValueRecv, int Timeout=1000)
+			out List<UInt32> OutputValueRecv,out List<UInt32> InputValueRecv)
         {
             OutputValueRecv = new List<uint>();
             InputValueRecv = new List<uint>();
@@ -548,7 +544,7 @@ namespace ControllerLib.Ethercat
 						}
 					}
 				}
-				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > Timeout)
+				if (TimeSpan.FromTicks(DateTime.Now.Ticks - StartTime).TotalMilliseconds > timeout)
 				{
 					return false;
 				}
@@ -629,6 +625,11 @@ namespace ControllerLib.Ethercat
             return bRet;
         }
 
-        #endregion
-    }
+		public override void SetTimeout(uint timeout)
+		{
+			this.timeout = timeout;
+		}
+
+		#endregion
+	}
 }

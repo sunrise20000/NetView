@@ -11,7 +11,7 @@ namespace ControllerLib
     public abstract class ControllerBase
     {
         public abstract byte ControllerID { get;}  
-        public abstract bool IsConnected { get; protected set; }
+        public abstract bool IsConnected { get; set; }
         public abstract bool Open(string Port);
         public abstract bool Connect();
         public abstract bool DisConnect();
@@ -33,6 +33,8 @@ namespace ControllerLib
         public abstract bool Hearbeat();
 
         public abstract void CLose();
+
+		public abstract void SetTimeout(uint timeout);
 
     }
 }

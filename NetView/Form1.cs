@@ -64,6 +64,7 @@ namespace NetView
 		bool m_OnFirstCircle = true;
 		object m_SetGetLock = new object();
 		object m_pickMsgLock = new object();
+		UC_VarMonitor m_ucMonitor = null;
 		List<UInt32>  m_ModifyValueList = new List<UInt32>();
 		Queue<ControllerLib.Model.DataFromComport> m_msgQueue = new Queue<ControllerLib.Model.DataFromComport>();
 
@@ -82,9 +83,25 @@ namespace NetView
 			barButtonItem_Disconnect.Enabled = e;
 			MenuConnect.Enabled = barButtonItemConnect.Enabled;
 			MenuDisconnect.Enabled = barButtonItem_Disconnect.Enabled;
-			if(!e)
+			if (!e)
+			{
 				m_OnFirstCircle = true;
-			ShowMessage(EnumMsgType.Info, "控制器" + (e? "连接" : "断开连接"));
+				EventMonitorController.Reset();
+				UcMonitor_OnStopMonitorEventHandler(null, null);
+				m_ucMonitor.IsMonitor = false;
+				lock (m_pickMsgLock)
+				{
+					m_msgQueue.Clear();
+				}
+				ShowMessage(EnumMsgType.Error, "Controller Disconnected");
+				
+			}
+			else
+			{
+				ShowMessage(EnumMsgType.Info, "Controller Connected");
+			}
+
+			
 		}
 
 		private void LoadCfg()
@@ -174,12 +191,12 @@ namespace NetView
 
 
 			//VarMonitor
-			UC_VarMonitor ucMonitor = new UC_VarMonitor();
-			elementHost2.Child = ucMonitor;
-			ucMonitor.OnStartMonitorEventHandler += UcMonitor_OnStartMonitorEventHandler;
-			ucMonitor.OnStopMonitorEventHandler += UcMonitor_OnStopMonitorEventHandler;
-			ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
-			ucMonitor.OnChangeDisplayFormatHandler += UcMonitor_OnChangeDisplayFormatHandler;
+			m_ucMonitor = new UC_VarMonitor();
+			elementHost2.Child = m_ucMonitor;
+			m_ucMonitor.OnStartMonitorEventHandler += UcMonitor_OnStartMonitorEventHandler;
+			m_ucMonitor.OnStopMonitorEventHandler += UcMonitor_OnStopMonitorEventHandler;
+			m_ucMonitor.OnModifyValueEventHandler += UcMonitor_OnModifyValueEventHandler;
+			m_ucMonitor.OnChangeDisplayFormatHandler += UcMonitor_OnChangeDisplayFormatHandler;
 
 
 			//Add diagram output window
@@ -191,7 +208,7 @@ namespace NetView
 			this.dockPanelDiagram.Controls.Add(m_DiagramOutputWindow);
 
 
-			m_VarCollect = ucMonitor.VarCollect;
+			m_VarCollect = m_ucMonitor.VarCollect;
 
 			this.elementHost1.BackColorTransparent = true;
 			this.elementHost2.BackColorTransparent = true;
@@ -210,7 +227,7 @@ namespace NetView
 				while (!ctsMonitorController.IsCancellationRequested)
 				{
 					EventMonitorController.WaitOne();
-					Thread.Sleep(200);
+					Thread.Sleep(500);
 					if (BusController.IsConnected)
 					{
 						if (m_OnFirstCircle)
@@ -230,9 +247,18 @@ namespace NetView
 						}
 						lock (m_SetGetLock)
 						{
-							BusController.GetModuleValue(m_ModifyValueList, out m_InputValueRecv_List, out List<uint> outputValueList);
-							m_OutputValueRecv_List = outputValueList;
-							m_ModifyValueList = m_OutputValueRecv_List;
+							try
+							{
+								BusController.GetModuleValue(m_ModifyValueList, out m_InputValueRecv_List, out List<uint> outputValueList);
+								m_OutputValueRecv_List = outputValueList;
+								m_ModifyValueList = m_OutputValueRecv_List;
+							}
+							catch (Exception ex)
+							{
+								ShowMessage(EnumMsgType.Error, $"Controller Disconnected :{ex.Message}");
+								BusController.IsConnected = false;
+								MessageBox.Show("Controller Disconnected");
+							}
 						}
 						Console.WriteLine($"{m_InputValueRecv_List.Count},{m_OutputValueRecv_List.Count}");
 						UpdateChangeDisplayFormat();
@@ -682,7 +708,7 @@ namespace NetView
 			if (e.Visibility == DockVisibility.Hidden && BusController.IsConnected)
 			{
 				this.EventMonitorController.Reset();
-				this.EventHeartBeat.Set();
+				//this.EventHeartBeat.Set();
 			}
 		}
 
@@ -725,7 +751,12 @@ namespace NetView
 
 		private void ShowMessage(EnumMsgType MsgType, string Msg)
 		{
-			this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
+			if (!InvokeRequired)
+				this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
+			else
+				Invoke(new Action(()=> {
+					this.uC_Output1.MsgCollect.Add(new MessageModel(MsgType, Msg));
+				}));
 		}
 
 		private void Form1_Load(object sender, EventArgs e)

@@ -35,7 +35,12 @@ namespace NetView.Model
 
         public StopBits Stop { get; set; }
 
-        public void RefreshComport()
+		public uint TransmitDelay { get; set; } = 500;
+
+		public uint ReceiveTimeouty { get; set; } = 1000;
+
+
+		public void RefreshComport()
         {
             PortNames = SerialPort.GetPortNames();
         }
