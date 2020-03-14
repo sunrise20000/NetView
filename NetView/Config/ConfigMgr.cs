@@ -32,10 +32,10 @@ namespace NetView.Config
             #endregion
         }
 
-		public void SaveConfig(object obj)
+		public void SaveConfig()
 		{
-			JsonConvert.SerializeObject(obj);
-			
+			string strJson = JsonConvert.SerializeObject(ParaCfgEntry);
+			File.WriteAllText(FILE_PARA, strJson);	
 		}
         public DeviceConfigEntry DeviceCfgEntry { get; private set; } = null;
 

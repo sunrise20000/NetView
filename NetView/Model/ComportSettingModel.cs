@@ -13,31 +13,41 @@ namespace NetView.Model
     {
         [Browsable(false)]
         public int[] BaudrateList { get { return new int[] { 9600, 19200, 38400, 57600, 115200, 250000, 500000, 1000000 }; } }
-        
-        public ComportSettingModel()
+
+		[Category("Comport Setting")]
+		public ComportSettingModel()
         {
             PortNames=SerialPort.GetPortNames();
         }
-        [Browsable(false)]
+
+		[Browsable(false)]
         public string[] PortNames { get; private set; }
 
-        [TypeConverter(typeof(MyNameConverter))]
+		[Category("Comport Setting")]
+		[TypeConverter(typeof(MyNameConverter))]
         public string ComportName { get; set; } = "UnDefined";
 
 
-
-        [TypeConverter(typeof(MyIntConverter))]
+		[Category("Comport Setting")]
+		[TypeConverter(typeof(MyIntConverter))]
         public int Baudrate { get; set; } = 115200;
 
-        public byte Data { get; set; } = 8;
+		[Category("Comport Setting")]
+		public byte Data { get; set; } = 8;
 
-        public Parity Parity { get; set; }
+		[Category("Comport Setting")]
+		public Parity Parity { get; set; }
 
-        public StopBits Stop { get; set; }
+		[Category("Comport Setting")]
+		public StopBits Stop { get; set; }
 
+		[Category("Communication Setting")]
+		[Description("uinit is ms")]
 		public uint TransmitDelay { get; set; } = 500;
 
-		public uint ReceiveTimeouty { get; set; } = 1000;
+		[Category("Communication Setting")]
+		[Description("uinit is ms")]
+		public uint ReceiveTimeout { get; set; } = 1000;
 
 
 		public void RefreshComport()

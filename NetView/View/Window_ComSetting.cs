@@ -13,6 +13,7 @@ namespace NetView.View
 {
     public partial class Window_ComSetting : Form
     {
+		public bool IsOkClicked { get; private set; } = false;
         public Window_ComSetting()
         {
             InitializeComponent();
@@ -33,7 +34,8 @@ namespace NetView.View
 
         private void BtnOk_Click(object sender, EventArgs e)
         {
-            Close();
+			IsOkClicked = true;
+			Close();
         }
     }
 }

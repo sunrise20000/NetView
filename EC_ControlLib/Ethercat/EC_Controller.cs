@@ -16,7 +16,7 @@ namespace ControllerLib.Ethercat
 		object ComportLock = new object();
 		List<ModuleConfigModleBase> m_ModuleList = new List<ModuleConfigModleBase>();
 		private bool isConnected = false;
-		private uint timeout = 0;
+		private uint timeout = 1000;
 		public override event EventHandler<bool> OnConnectStateChanged;
 		public override event EventHandler<DataFromComport> OnDataComeHandler;
 		#endregion

@@ -143,19 +143,18 @@ namespace TreeviewContrainer
         /// <param name="ModuleInfoList">ModuleName, LocalIndex, GlobalIndex</param>
         public void ReplaceNewList(string BusName,List<Tuple<string,int,int, ModuleGUIBase>>ModuleInfoList)
         {
-
-            if (treeView_ProductInfo.Nodes.Count == 0)
+			if (treeView_ProductInfo.Nodes.Count == 0)
             {
-                treeView_ProductInfo.Nodes.Add(new TreeNode(BusName));
+                treeView_ProductInfo.Nodes.Add(new TreeNode(BusName.Replace("BusConfig_", "")));
             }
             else
             {
-                treeView_ProductInfo.Nodes[0].Text = BusName;
+                treeView_ProductInfo.Nodes[0].Text = BusName.Replace("BusConfig_", "");
             }
 
             foreach (TreeNode it in treeView_ProductInfo.Nodes)
             {
-                if (it.Text.Equals(BusName))
+                if (it.Text.Equals(BusName.Replace("BusConfig_","")))
                 {
                     while (it.Nodes.Count > 0)
                         it.Nodes.RemoveAt(0);

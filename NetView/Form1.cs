@@ -66,6 +66,7 @@ namespace NetView
 		object m_pickMsgLock = new object();
 		UC_VarMonitor m_ucMonitor = null;
 		List<UInt32>  m_ModifyValueList = new List<UInt32>();
+		uint m_TransmitDelay = 500;
 		Queue<ControllerLib.Model.DataFromComport> m_msgQueue = new Queue<ControllerLib.Model.DataFromComport>();
 
 		public Form1()
@@ -136,6 +137,8 @@ namespace NetView
 			imgList.Images.Add(new Bitmap(@"images/Device.png"));
 
 			treeViewDevice.ImageList = imgList;
+
+			this.FormClosed += Form1_FormClosed;
 
 			var BustypeList = new List<string>();
 			for (int i = 0; i < DeviceCfg.Length; i++)
@@ -227,7 +230,7 @@ namespace NetView
 				while (!ctsMonitorController.IsCancellationRequested)
 				{
 					EventMonitorController.WaitOne();
-					Thread.Sleep(500);
+					Thread.Sleep((int)m_TransmitDelay);
 					if (BusController.IsConnected)
 					{
 						if (m_OnFirstCircle)
@@ -317,6 +320,11 @@ namespace NetView
 				}
 			});
 
+		}
+
+		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			ConfigMgr.Instance.SaveConfig();
 		}
 
 		private void DockPanelDiagram_SizeChanged(object sender, EventArgs e)
@@ -515,8 +523,14 @@ namespace NetView
 			Window_ComSetting window = new Window_ComSetting();
 			if (ComSettingCfgModel != null)
 				window.ComSetting = ComSettingCfgModel;
-			window.ShowDialog();
+			var Res = window.ShowDialog();
 			ComSettingCfgModel = window.ComSetting;
+			if (window.IsOkClicked)
+			{
+				BusController.SetTimeout(ComSettingCfgModel.ReceiveTimeout);
+				m_TransmitDelay = ComSettingCfgModel.TransmitDelay;
+			}
+
 		}
 
 		private void barButtonItemConnect_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -716,12 +730,13 @@ namespace NetView
 
 		private void barButtonItemNewProject_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
 		{
-			//var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-", "_")}";
-			//MiddleControl.BusName = e.Item.Caption;
-			MiddleControl.ChangeBus(e.Item.Caption);
+			var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-", "_")}";
+			LeftControl.ReplaceNewList(BusClassName,new List<Tuple<string,int,int,ControlTest.ModuleConfigModle.ModuleGUIBase>>());
+			//MiddleControl.ChangeBus(e.Item.Caption);
 			//BusConfigBase=new 
 		}
 
+	
 		/// <summary>
 		/// 导出文件
 		/// </summary>

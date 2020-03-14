@@ -346,7 +346,7 @@ namespace SubBusContrainer
 
             if (BusModule == null)
             {
-                Enum.TryParse(BusName, out EnumBusType BusType);
+                Enum.TryParse(BusName.Replace("BusConfig_",""), out EnumBusType BusType);
                 BusModule = new BusModel(BusType,new Point(100, this.Height / 2 + 100));
                 this.Controls.Add(BusModule);
                 BusModule.BringToFront();
