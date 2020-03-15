@@ -15,7 +15,11 @@ namespace NetView.Model.DisplayFormat
 		}
 		public override string GetString()
 		{
-			return string.Format("0x{0:X}", RawData);
+			var sb = new StringBuilder();
+			sb.Append("0x{0:X");
+			sb.Append((this.ByteLen*2).ToString());
+			sb.Append("}");
+			return string.Format(sb.ToString(), RawData);
 		}
 	}
 }

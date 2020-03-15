@@ -190,10 +190,10 @@ namespace ControllerLib.Ethercat
         /// </summary>
         /// <param name="InputValueList"></param>
         /// <param name="OutputValueList"></param>
-        public override bool GetModuleValue(List<uint> ModifyValueList, out List<uint> InputValueList, out List<uint> OutputValueList)
+        public override bool GetModuleValue(List<uint> ModifyValueList, out List<DataRecieveModel> InputValueList, out List<DataRecieveModel> OutputValueList)
         {
-            InputValueList = new List<uint>();
-            OutputValueList = new List<uint>();
+            InputValueList = new List<DataRecieveModel>();
+            OutputValueList = new List<DataRecieveModel>();
 
             byte N = 0;
             byte M = 0;
@@ -461,10 +461,10 @@ namespace ControllerLib.Ethercat
         }
 
         bool GetValueAck(List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase> SubModuleInList, List<ModuleConfigModle.ConfigSubInfo.ModuleConfigBase> SubModuleOutList,
-			out List<UInt32> OutputValueRecv,out List<UInt32> InputValueRecv)
+			out List<DataRecieveModel> OutputValueRecv,out List<DataRecieveModel> InputValueRecv)
         {
-            OutputValueRecv = new List<uint>();
-            InputValueRecv = new List<uint>();
+            OutputValueRecv = new List<DataRecieveModel>();
+            InputValueRecv = new List<DataRecieveModel>();
             //首先获取需要读取的输入输出的字节长度
 
             byte OutputBtLen = 0;
@@ -522,7 +522,7 @@ namespace ControllerLib.Ethercat
 									{
 										v += Recv[OutputStartPos++]*(uint)(1<<8*(datalen-i-1));
 									}
-									OutputValueRecv.Add(v);
+									OutputValueRecv.Add(new DataRecieveModel((byte)datalen,v));
 								}
 								//解析输入
 								foreach (var moduleIn in SubModuleInList)
@@ -533,7 +533,7 @@ namespace ControllerLib.Ethercat
 									{
 										v += Recv[InputStartPos++]* (uint)(1 << 8 * (datalen - i - 1));
 									}
-									InputValueRecv.Add(v);
+									InputValueRecv.Add(new DataRecieveModel((byte)datalen,v));
 								}
 								return true;
 							}

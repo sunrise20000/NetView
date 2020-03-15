@@ -11,17 +11,20 @@ namespace NetView.Model.DisplayFormat
     {
 		public int Base { get; protected set; }
         protected UInt32 RawData = 0;
+		protected byte ByteLen = 1;
 		public DisplayFormatBase(UInt32 rawData)
 		{
 			this.RawData = rawData;
 		}
-		public void SetRawDataFromInt(UInt32 rawData)
+		public void SetRawDataFromInt(byte ByteLen,UInt32 rawData)
 		{
 			this.RawData = rawData;
+			this.ByteLen = ByteLen;
 		}
-		public void SetRawDataFromString(string strData,int BaseFrom)
+		public void SetRawDataFromString(byte ByteLen,string strData,int BaseFrom)
 		{
 			this.RawData = Convert.ToUInt32(strData,BaseFrom);
+			this.ByteLen = ByteLen;
 		}
 		public virtual string GetString()
         {

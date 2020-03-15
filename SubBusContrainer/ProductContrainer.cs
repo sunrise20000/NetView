@@ -100,7 +100,8 @@ namespace SubBusContrainer
                 if ((it as SubBusModel) != null)
                     ControlNameList.Add((it as SubBusModel).Name);
 
-            if (info.ToString().Contains("HL")) //子模块
+			//子模块
+			if (info.ToString().Contains("HL"))
             {
                 if (BusModule == null)
                 {
@@ -192,10 +193,8 @@ namespace SubBusContrainer
         {
             if (BusModule != null)
             {
-                if (BusModule.Name != Name && MessageBox.Show("Do you want to change bus type?", "Question", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+                if (BusModule.BusType.ToString() != Name && MessageBox.Show("Do you want to change bus type?", "Question", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
                     this.Controls.Remove(BusModule);
-                else
-                    return;
             }
 
             Enum.TryParse(Name, out EnumBusType BusType);

@@ -85,8 +85,11 @@ namespace NetView.Class
             }
         }
 
+		/// <summary>
+		/// Bus的名称，不是类的名称
+		/// </summary>
         public string BusName { get {
-                return BusCfg.Name.Split(' ')[0];
+                return BusCfg.Type.ToString();
             } }
         public List<Tuple<string, int, int, ModuleGUIBase>> SubBusNameWithIndexList(bool FromStringList=true)
         {

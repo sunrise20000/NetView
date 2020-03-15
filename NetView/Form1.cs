@@ -28,6 +28,7 @@ using System.Threading;
 using System.Collections.ObjectModel;
 using NetView.Model.ModuleInfo;
 using static DevExpress.XtraPrinting.Export.Pdf.PdfImageCache;
+using ControllerLib.Model;
 
 namespace NetView
 {
@@ -40,7 +41,7 @@ namespace NetView
 		treeviewContrainer LeftControl = null;
 		DataTable DTVarMonitor = new DataTable();
 
-		ControllerBase BusController = new EC_Controller();
+		ControllerBase ControllerCard = new EC_Controller();
 		ProjectController ProjController = new ProjectController();
 
 		const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
@@ -55,8 +56,8 @@ namespace NetView
 
 		ObservableCollection<MonitorVarModel> m_VarCollect = null;
 		//
-		List<UInt32> m_OutputValueRecv_List = new List<UInt32>();
-		List<UInt32> m_InputValueRecv_List = new List<UInt32>();
+		List<DataRecieveModel> m_OutputValueRecv_List = new List<DataRecieveModel>();
+		List<DataRecieveModel> m_InputValueRecv_List = new List<DataRecieveModel>();
 		List<ModuleConfigModleBase> m_ModuleList = new List<ModuleConfigModleBase>();
 		List<ModuleInfoBase> m_MonitorList = new List<ModuleInfoBase>();
 		ListBox m_DiagramOutputWindow = null;
@@ -121,8 +122,8 @@ namespace NetView
 		}
 		private void InitCtrl()
 		{
-			BusController.OnConnectStateChanged += BusController_OnConnectStateChanged;
-			BusController.OnDataComeHandler += BusController_OnDataComeHandler;
+			ControllerCard.OnConnectStateChanged += BusController_OnConnectStateChanged;
+			ControllerCard.OnDataComeHandler += BusController_OnDataComeHandler;
 			barButtonItemConnect.Enabled = true;
 			barButtonItem_Disconnect.Enabled = false;
 			MenuConnect.Enabled = barButtonItemConnect.Enabled;
@@ -188,7 +189,7 @@ namespace NetView
 
 			//添加侧面控件
 			LeftControl = new treeviewContrainer();
-			LeftControl.OnBusModulChanged += LeftControl_OnBusModulChanged;
+			LeftControl.OnBusModuleChanged += LeftControl_OnBusModuleChanged;
 			this.dockPanelLeft.Controls.Add(LeftControl);
 			LeftControl.Dock = DockStyle.Fill;
 			LeftControl.ProductContrainer = MiddleControl;
@@ -233,7 +234,7 @@ namespace NetView
 				{
 					EventMonitorController.WaitOne();
 					Thread.Sleep((int)m_TransmitDelay);
-					if (BusController.IsConnected)
+					if (ControllerCard.IsConnected)
 					{
 						if (m_OnFirstCircle)
 						{
@@ -254,14 +255,19 @@ namespace NetView
 						{
 							try
 							{
-								BusController.GetModuleValue(m_ModifyValueList, out m_InputValueRecv_List, out List<uint> outputValueList);
+								ControllerCard.GetModuleValue(m_ModifyValueList, out m_InputValueRecv_List, out List<DataRecieveModel> outputValueList);
 								m_OutputValueRecv_List = outputValueList;
-								m_ModifyValueList = m_OutputValueRecv_List;
+
+								if (m_OutputValueRecv_List.Count == m_ModifyValueList.Count)
+								{
+									for(int i =0; i< m_OutputValueRecv_List.Count; i++)
+										m_ModifyValueList[i] = m_OutputValueRecv_List[i].RawValue;
+								}
 							}
 							catch (Exception ex)
 							{
 								ShowMessage(EnumMsgType.Error, $"Controller Disconnected :{ex.Message}");
-								BusController.IsConnected = false;
+								ControllerCard.IsConnected = false;
 								MessageBox.Show("Controller Disconnected");
 							}
 						}
@@ -280,11 +286,11 @@ namespace NetView
 					EventHeartBeat.WaitOne();
 					Thread.Sleep(500);
 					Console.WriteLine($"---------------Heart beat {i++}------------------");
-					if (BusController.IsConnected)
+					if (ControllerCard.IsConnected)
 					{
 						try
 						{
-							if (!BusController.Hearbeat())
+							if (!ControllerCard.Hearbeat())
 							{
 								EventHeartBeat.Reset();
 								MessageBox.Show("Connection Timeout");
@@ -401,7 +407,7 @@ namespace NetView
 			{
 				for (int i = 0; i < m_OutputValueRecv_List.Count; i++)
 				{
-					m_DisplayFormat.SetRawDataFromInt(m_OutputValueRecv_List[i]);
+					m_DisplayFormat.SetRawDataFromInt(m_OutputValueRecv_List[i].ByteCount,m_OutputValueRecv_List[i].RawValue);
 					OutputMonitorModule.ElementAt(i).CurValue = m_DisplayFormat.GetString();
 				}
 			}
@@ -409,7 +415,7 @@ namespace NetView
 			{
 				for (int i = 0; i < m_InputValueRecv_List.Count; i++)
 				{
-					m_DisplayFormat.SetRawDataFromInt(m_InputValueRecv_List[i]);
+					m_DisplayFormat.SetRawDataFromInt(m_InputValueRecv_List[i].ByteCount,m_InputValueRecv_List[i].RawValue);
 					InputMonitorModule.ElementAt(i).CurValue = m_DisplayFormat.GetString();
 				}
 			}
@@ -424,7 +430,7 @@ namespace NetView
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void LeftControl_OnBusModulChanged(object sender, SubBusContrainer.Model.ModuleAddedArgs e)
+		private void LeftControl_OnBusModuleChanged(object sender, SubBusContrainer.Model.ModuleAddedArgs e)
 		{
 			if (e.IsAdd)
 			{
@@ -471,7 +477,7 @@ namespace NetView
 		private void barButtonItemOpen_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
 		{
 			if (ProjController.OpenProject())
-				LeftControl.ReplaceNewList(ProjController.BusName, ProjController.SubBusNameWithIndexList());
+				LeftControl.ReplaceNewList(ProjController.BusCfg.BusType.ToString(), ProjController.SubBusNameWithIndexList());
 		}
 
 		private void barButtonItemSave_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -528,12 +534,13 @@ namespace NetView
 
 			ComSettingCfgModel.Baudrate = (int)para.Bandarate;
 			ComSettingCfgModel.Data = (byte)para.Data;
-			if (Enum.TryParse(para.Parity.ToString(), out System.IO.Ports.Parity parity))
+			if (Enum.TryParse(para.Parity, out System.IO.Ports.Parity parity))
 			{
 				ComSettingCfgModel.Parity = parity;
 			}
 			ComSettingCfgModel.ReceiveTimeout = para.ReceiveTimeout;
-			if (Enum.TryParse(para.Parity.ToString(), out System.IO.Ports.StopBits stopbits))
+
+			if (Enum.TryParse(para.Stop, out System.IO.Ports.StopBits stopbits))
 			{
 				ComSettingCfgModel.Stop = stopbits;
 			}
@@ -547,14 +554,14 @@ namespace NetView
 			if (window.IsOkClicked)
 			{
 				ComSettingCfgModel = window.ComSetting;
-				BusController.SetTimeout(ComSettingCfgModel.ReceiveTimeout);
+				ControllerCard.SetTimeout(ComSettingCfgModel.ReceiveTimeout);
 				m_TransmitDelay = ComSettingCfgModel.TransmitDelay;
 
 				para.Bandarate = (uint)ComSettingCfgModel.Baudrate;
 				para.Data = ComSettingCfgModel.Data;
-				para.Parity = (uint)ComSettingCfgModel.Parity;
+				para.Parity = ComSettingCfgModel.Parity.ToString();
 				para.ReceiveTimeout = ComSettingCfgModel.ReceiveTimeout;
-				para.Stop = (uint)ComSettingCfgModel.Stop;
+				para.Stop = ComSettingCfgModel.Stop.ToString();
 				para.TransmitDelay = ComSettingCfgModel.TransmitDelay;
 
 				ConfigMgr.Instance.SaveConfig();
@@ -574,10 +581,10 @@ namespace NetView
 				string RegStr = @"COM\d{1,2}";
 				if (Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr))
 				{
-					BusController.Open(ComSettingCfgModel.ComportName);
-					if (true || !BusController.IsConnected)
+					ControllerCard.Open(ComSettingCfgModel.ComportName);
+					if (true || !ControllerCard.IsConnected)
 					{
-						if (BusController.Connect())
+						if (ControllerCard.Connect())
 						{
 							//UpdateMonitorVarCollect(out List<ModuleInfoBase> list);
 							//打开心跳
@@ -615,10 +622,10 @@ namespace NetView
 				string RegStr = @"COM\d{1,2}";
 				if (Regex.IsMatch(ComSettingCfgModel.ComportName, RegStr))
 				{
-					BusController.Open(ComSettingCfgModel.ComportName);
+					ControllerCard.Open(ComSettingCfgModel.ComportName);
 					//BusController.CLose();
 					EventHeartBeat.Reset();
-					BusController.DisConnect();
+					ControllerCard.DisConnect();
 					MessageBox.Show("Disconnect controller");
 
 				}
@@ -663,7 +670,8 @@ namespace NetView
 		{
 			try
 			{
-				m_ModuleList = BusController.GetModuleList();
+				m_ModuleList = ControllerCard.GetModuleList();
+			
 				UpdateUI(m_ModuleList);
 				UpdateMonitorVarCollect(out m_MonitorList);
 
@@ -680,8 +688,8 @@ namespace NetView
 		/// </summary>
 		private void UpdateUI(List<ModuleConfigModleBase> ModuleList)
 		{
-			ProjController.ModuleConfigList = ModuleList;
-			LeftControl.ReplaceNewList("EtherCAT", ProjController.SubBusNameWithIndexList(false));
+			ProjController.ModuleConfigList = ModuleList;	
+			LeftControl.ReplaceNewList(ProjController.BusName, ProjController.SubBusNameWithIndexList(false));
 		}
 
 		private void barButtonItemDownLoad_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -691,7 +699,7 @@ namespace NetView
 				UpdateProjController();
 				m_ModuleList = ProjController.ModuleConfigList;
 				UpdateMonitorVarCollect(out m_MonitorList);
-				if (BusController.SendModuleList(m_ModuleList))
+				if (ControllerCard.SendModuleList(m_ModuleList))
 					MessageBox.Show("Download success", "Info", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
 				else
 					MessageBox.Show("Download failed", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
@@ -739,7 +747,14 @@ namespace NetView
 						{
 							for (int i = 0; i < OutputValueList.Count(); i++)
 							{
-								m_DisplayFormat.SetRawDataFromString(OutputValueList.ElementAt(i).ModifyValue, m_DisplayFormat.Base);
+								var Bytelen = m_OutputValueRecv_List[i].ByteCount;
+								var ModifyValue= OutputValueList.ElementAt(i).CurValue;
+								if (!string.IsNullOrEmpty(OutputValueList.ElementAt(i).ModifyValue))
+								{
+									ModifyValue = OutputValueList.ElementAt(i).ModifyValue;
+									m_DisplayFormat.SetRawDataFromString(Bytelen, ModifyValue, m_DisplayFormat.Base);
+								}
+								m_DisplayFormat.SetRawDataFromString(Bytelen, ModifyValue, m_DisplayFormat.Base);
 								list.Add(m_DisplayFormat.GetRawData());
 							}
 
@@ -747,7 +762,7 @@ namespace NetView
 					lock (m_SetGetLock)
 					{
 						//只看修改的值，如果没有修改就直接将原来读取的值拿过来
-						BusController.SetModuleValue(list);
+						ControllerCard.SetModuleValue(list);
 						m_ModifyValueList = list;
 					}
 				}
@@ -775,7 +790,7 @@ namespace NetView
 
 		private void DockPanelVarMonitor_VisibilityChanged(object sender, VisibilityChangedEventArgs e)
 		{
-			if (e.Visibility == DockVisibility.Hidden && BusController.IsConnected)
+			if (e.Visibility == DockVisibility.Hidden && ControllerCard.IsConnected)
 			{
 				this.EventMonitorController.Reset();
 				//this.EventHeartBeat.Set();
@@ -788,6 +803,17 @@ namespace NetView
 		{
 			var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-", "_")}";
 			LeftControl.ReplaceNewList(BusClassName,new List<Tuple<string,int,int,ControlTest.ModuleConfigModle.ModuleGUIBase>>());
+
+			var BusName = e.Item.Caption.Replace("-", "_");
+			MiddleControl.ChangeBus(BusName);
+			//if (Enum.TryParse(BusName, out ControlTest.EnumBusType BusType))
+			//{
+			//	LeftControl_OnBusModuleChanged(this, new SubBusContrainer.Model.ModuleAddedArgs()
+			//	{
+			//		IsAdd = true,
+			//		Module = new BusModel(BusType,)
+			//	});
+			//}
 			//MiddleControl.ChangeBus(e.Item.Caption);
 			//BusConfigBase=new 
 		}

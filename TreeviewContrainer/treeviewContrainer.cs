@@ -16,7 +16,7 @@ namespace TreeviewContrainer
     public partial class treeviewContrainer: UserControl
     {
         private ProductContrainer productContrainer;
-        public event EventHandler<SubBusContrainer.Model.ModuleAddedArgs> OnBusModulChanged;
+        public event EventHandler<SubBusContrainer.Model.ModuleAddedArgs> OnBusModuleChanged;
         public List<string> PureNameList    
         {
             get
@@ -105,7 +105,7 @@ namespace TreeviewContrainer
                 {
                     treeView_ProductInfo.Nodes.Add(new TreeNode(e.Module.Name));
                 }
-                OnBusModulChanged?.Invoke(this,e);
+                OnBusModuleChanged?.Invoke(this,e);
             }
             treeView_ProductInfo.ExpandAll();
             //RenameTreeNode();

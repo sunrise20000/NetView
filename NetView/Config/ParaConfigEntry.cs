@@ -21,9 +21,11 @@ namespace NetView.Config
 
 		public uint  Data { get; set; }
 
-		public uint Parity { get; set; }
+		//Enum
+		public string Parity { get; set; }
 
-		public uint Stop { get; set; }
-		//public 
+		//Enum
+		public string Stop { get; set; }
+	
 	}
 }

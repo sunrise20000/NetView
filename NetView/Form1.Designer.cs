@@ -655,7 +655,7 @@ namespace NetView
 			this.dockPanelDiagram.Name = "dockPanelDiagram";
 			this.dockPanelDiagram.OriginalSize = new System.Drawing.Size(200, 169);
 			this.dockPanelDiagram.Size = new System.Drawing.Size(1324, 169);
-			this.dockPanelDiagram.Text = "Diagram output";
+			this.dockPanelDiagram.Text = "Telegram output";
 			// 
 			// dockPanel6_Container
 			// 
@@ -1333,7 +1333,7 @@ namespace NetView
 			// 
 			// MenuDiagram
 			// 
-			this.MenuDiagram.Caption = "Diagram";
+			this.MenuDiagram.Caption = "Telegram";
 			//this.MenuMonitor.Id = 30;
 			//this.MenuDiagram.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuMonitor.ImageOptions.Image")));
 			this.MenuDiagram.Name = "MenuDiagram";
