@@ -121,6 +121,12 @@
     <Compile Include="View\UC_VarMonitor.xaml.cs">
       <DependentUpon>UC_VarMonitor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Windows_CRC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Windows_CRC.Designer.cs">
+      <DependentUpon>Windows_CRC.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Window_ComSetting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +146,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="View\Windows_CRC.resx">
+      <DependentUpon>Windows_CRC.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Window_ComSetting.resx">
       <DependentUpon>Window_ComSetting.cs</DependentUpon>
     </EmbeddedResource>

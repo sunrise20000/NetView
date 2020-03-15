@@ -12,18 +12,18 @@ namespace NetView.Config
 		{
 			get; set;
 		}
-		public string TransmitDelay
+		public uint TransmitDelay
 		{
 			get; set;
 		}
 
-		public uint BandarateIndex { get; set; }
+		public uint Bandarate { get; set; }
 
 		public uint  Data { get; set; }
 
-		public uint ParityIndex { get; set; }
+		public uint Parity { get; set; }
 
-		public uint StopIndex { get; set; }
+		public uint Stop { get; set; }
 		//public 
 	}
 }

@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.ObjectModel;
 using NetView.Model.ModuleInfo;
+using static DevExpress.XtraPrinting.Export.Pdf.PdfImageCache;
 
 namespace NetView
 {
@@ -43,7 +44,7 @@ namespace NetView
 		ProjectController ProjController = new ProjectController();
 
 		const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
-		ComportSettingModel ComSettingCfgModel = null;
+		ComportSettingModel ComSettingCfgModel = new ComportSettingModel();
 
 
 		CancellationTokenSource ctsMonitorController = new CancellationTokenSource();
@@ -209,6 +210,7 @@ namespace NetView
 			m_DiagramOutputWindow.Font = new Font("lisu",12);
 			this.dockPanelDiagram.SizeChanged += DockPanelDiagram_SizeChanged;
 			this.dockPanelDiagram.Controls.Add(m_DiagramOutputWindow);
+			this.dockPanelDiagram.Visibility = DockVisibility.Hidden;
 
 
 			m_VarCollect = m_ucMonitor.VarCollect;
@@ -324,7 +326,7 @@ namespace NetView
 
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
 		{
-			ConfigMgr.Instance.SaveConfig();
+			
 		}
 
 		private void DockPanelDiagram_SizeChanged(object sender, EventArgs e)
@@ -519,16 +521,43 @@ namespace NetView
 
 		private void barButtonItemSetting_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
 		{
+			ConfigMgr.Instance.LoadConfig();
+			var para = ConfigMgr.Instance.ParaCfgEntry;
 
 			Window_ComSetting window = new Window_ComSetting();
+
+			ComSettingCfgModel.Baudrate = (int)para.Bandarate;
+			ComSettingCfgModel.Data = (byte)para.Data;
+			if (Enum.TryParse(para.Parity.ToString(), out System.IO.Ports.Parity parity))
+			{
+				ComSettingCfgModel.Parity = parity;
+			}
+			ComSettingCfgModel.ReceiveTimeout = para.ReceiveTimeout;
+			if (Enum.TryParse(para.Parity.ToString(), out System.IO.Ports.StopBits stopbits))
+			{
+				ComSettingCfgModel.Stop = stopbits;
+			}
+			ComSettingCfgModel.TransmitDelay = para.TransmitDelay;
+
 			if (ComSettingCfgModel != null)
 				window.ComSetting = ComSettingCfgModel;
 			var Res = window.ShowDialog();
-			ComSettingCfgModel = window.ComSetting;
+
+			
 			if (window.IsOkClicked)
 			{
+				ComSettingCfgModel = window.ComSetting;
 				BusController.SetTimeout(ComSettingCfgModel.ReceiveTimeout);
 				m_TransmitDelay = ComSettingCfgModel.TransmitDelay;
+
+				para.Bandarate = (uint)ComSettingCfgModel.Baudrate;
+				para.Data = ComSettingCfgModel.Data;
+				para.Parity = (uint)ComSettingCfgModel.Parity;
+				para.ReceiveTimeout = ComSettingCfgModel.ReceiveTimeout;
+				para.Stop = (uint)ComSettingCfgModel.Stop;
+				para.TransmitDelay = ComSettingCfgModel.TransmitDelay;
+
+				ConfigMgr.Instance.SaveConfig();
 			}
 
 		}
@@ -602,6 +631,33 @@ namespace NetView
 			{
 				MessageBox.Show($"Error when Disconnect controller:{ex.Message}", "Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
 			}
+		}
+		private void barButtonItemContacUs_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			System.Diagnostics.Process.Start(@".\help\contactus.html");
+		}
+		private void barButtonItemManual_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			try
+			{
+				System.Diagnostics.Process.Start(@".\help\manual.pdf");
+			}
+			catch
+			{
+				MessageBox.Show("Open manual.pdf error, please check");
+			}
+		}
+		private void barButtonItemCalCRC_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			var dlg = new Windows_CRC();
+			dlg.ShowDialog();
+		}
+
+		private void barButtonItemDiagram_ItemClick(object sender, ItemClickEventArgs e)
+		{
+			dockPanelDiagram.Visibility = dockPanelDiagram.Visibility == DockVisibility.Visible ? DockVisibility.Hidden : DockVisibility.Visible;
+			if (dockPanelDiagram.Visibility == DockVisibility.Visible)
+				dockManager1.ActivePanel = dockPanelDiagram;
 		}
 		private void barButtonItemUpload_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
 		{

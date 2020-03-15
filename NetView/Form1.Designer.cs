@@ -156,7 +156,10 @@ namespace NetView
             this.MenuDownLoad = new DevExpress.XtraBars.BarButtonItem();
             this.DownUpLoad = new DevExpress.XtraBars.BarButtonItem();
             this.MenuMonitor = new DevExpress.XtraBars.BarButtonItem();
-            this.barSubItem14 = new DevExpress.XtraBars.BarSubItem();
+			this.MenuAbout = new DevExpress.XtraBars.BarButtonItem();
+			this.MenuManual = new DevExpress.XtraBars.BarButtonItem();
+			this.MenuDiagram = new DevExpress.XtraBars.BarButtonItem();
+			this.barSubItem14 = new DevExpress.XtraBars.BarSubItem();
             this.MenuUpdateFirmware = new DevExpress.XtraBars.BarButtonItem();
             this.MenuCRC16Calculator = new DevExpress.XtraBars.BarButtonItem();
             this.barSubItem12 = new DevExpress.XtraBars.BarSubItem();
@@ -959,6 +962,9 @@ namespace NetView
             this.MenuStart,
             this.MenuStop,
             this.MenuMonitor,
+			this.MenuAbout,
+			this.MenuManual,
+			this.MenuDiagram,
             this.barSubItem14,
             this.MenuUpdateFirmware,
             this.MenuCRC16Calculator,
@@ -1273,7 +1279,8 @@ namespace NetView
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuCommunicationSetting),
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuDownLoad),
             new DevExpress.XtraBars.LinkPersistInfo(this.DownUpLoad),
-            new DevExpress.XtraBars.LinkPersistInfo(this.MenuMonitor)});
+            new DevExpress.XtraBars.LinkPersistInfo(this.MenuMonitor),
+			new DevExpress.XtraBars.LinkPersistInfo(this.MenuDiagram)});
             this.barSubItem13.Name = "barSubItem13";
             // 
             // MenuConnect
@@ -1289,7 +1296,7 @@ namespace NetView
             this.MenuDisconnect.Caption = "Disconnect";
             this.MenuDisconnect.Id = 22;
             this.MenuDisconnect.Name = "MenuDisconnect";
-            this.MenuDisconnect.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemConnect_ItemClick);
+            this.MenuDisconnect.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItem_Disconnect_ItemClick);
             // 
             // MenuCommunicationSetting
             // 
@@ -1322,10 +1329,20 @@ namespace NetView
             this.MenuMonitor.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuMonitor.ImageOptions.Image")));
             this.MenuMonitor.Name = "MenuMonitor";
             this.MenuMonitor.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemMonitor_ItemClick);
-            // 
-            // barSubItem14
-            // 
-            this.barSubItem14.Caption = "Tool";
+
+			// 
+			// MenuDiagram
+			// 
+			this.MenuDiagram.Caption = "Diagram";
+			//this.MenuMonitor.Id = 30;
+			//this.MenuDiagram.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuMonitor.ImageOptions.Image")));
+			this.MenuDiagram.Name = "MenuDiagram";
+			this.MenuDiagram.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemDiagram_ItemClick);
+			
+			// 
+			// barSubItem14
+			// 
+			this.barSubItem14.Caption = "Tool";
             this.barSubItem14.Id = 31;
             this.barSubItem14.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
             new DevExpress.XtraBars.LinkPersistInfo(this.MenuUpdateFirmware),
@@ -1343,16 +1360,40 @@ namespace NetView
             this.MenuCRC16Calculator.Caption = "CRC16 Calculator";
             this.MenuCRC16Calculator.Id = 33;
             this.MenuCRC16Calculator.Name = "MenuCRC16Calculator";
-            // 
-            // barSubItem12
-            // 
-            this.barSubItem12.Caption = "Help";
+			this.MenuCRC16Calculator.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemCalCRC_ItemClick);
+			// 
+			// barSubItem12
+			// 
+			this.barSubItem12.Caption = "Help";
             this.barSubItem12.Id = 18;
+			this.barSubItem12.LinksPersistInfo.AddRange(new DevExpress.XtraBars.LinkPersistInfo[] {
+				new DevExpress.XtraBars.LinkPersistInfo(this.MenuAbout),
+				new DevExpress.XtraBars.LinkPersistInfo(this.MenuManual),
+			});
             this.barSubItem12.Name = "barSubItem12";
-            // 
-            // barDockControl1
-            // 
-            this.barDockControl1.CausesValidation = false;
+
+
+			// 
+			// MenuAbout
+			// 
+			this.MenuAbout.Caption = "Contact us";
+			//this.MenuAbout.Id = 26;
+			//this.MenuAbout.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuDownLoad.ImageOptions.Image")));
+			this.MenuAbout.Name = "MenuAbout";
+			this.MenuAbout.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemContacUs_ItemClick);
+
+			// 
+			// MenuManual
+			// 
+			this.MenuManual.Caption = "Manual";
+			//this.MenuManual.Id = 26;
+			//this.MenuManual.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuDownLoad.ImageOptions.Image")));
+			this.MenuManual.Name = "MenuManual";
+			this.MenuManual.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemManual_ItemClick);
+			// 
+			// barDockControl1
+			// 
+			this.barDockControl1.CausesValidation = false;
             this.barDockControl1.Dock = System.Windows.Forms.DockStyle.Top;
             this.barDockControl1.Location = new System.Drawing.Point(0, 0);
             this.barDockControl1.Manager = this.barManager2;
@@ -1570,10 +1611,9 @@ namespace NetView
             this.PerformLayout();
 
         }
+		#endregion
 
-        #endregion
-
-        private DevExpress.XtraBars.BarManager barManager1;
+		private DevExpress.XtraBars.BarManager barManager1;
         private DevExpress.XtraBars.Bar bar1;
         private DevExpress.XtraBars.Bar bar3;
         private DevExpress.XtraBars.BarDockControl barDockControlTop;
@@ -1623,7 +1663,8 @@ namespace NetView
         private DevExpress.XtraBars.BarButtonItem barButtonItemStop;
         private DevExpress.XtraBars.BarButtonItem barButtonItemDownLoad;
         private DevExpress.XtraBars.BarButtonItem barButtonItemMonitor;
-        private System.Windows.Forms.TreeView treeViewDevice;
+	
+		private System.Windows.Forms.TreeView treeViewDevice;
         private DevExpress.XtraBars.BarHeaderItem barHeaderItem1;
         private DevExpress.XtraBars.BarHeaderItem barHeaderItem2;
         private DevExpress.XtraBars.BarHeaderItem barHeaderItem3;
@@ -1664,9 +1705,12 @@ namespace NetView
         private DevExpress.XtraBars.BarButtonItem MenuDownLoad;
         private DevExpress.XtraBars.BarButtonItem DownUpLoad;
         private DevExpress.XtraBars.BarButtonItem MenuStart;
-        private DevExpress.XtraBars.BarButtonItem MenuStop;
+		private DevExpress.XtraBars.BarButtonItem MenuAbout;
+		private DevExpress.XtraBars.BarButtonItem MenuManual;
+		private DevExpress.XtraBars.BarButtonItem MenuStop;
         private DevExpress.XtraBars.BarButtonItem MenuMonitor;
-        private DevExpress.XtraBars.BarCheckItem barCheckItem1;
+		private DevExpress.XtraBars.BarButtonItem MenuDiagram;
+		private DevExpress.XtraBars.BarCheckItem barCheckItem1;
         private DevExpress.XtraBars.BarSubItem barSubItem14;
         private DevExpress.XtraBars.BarButtonItem MenuUpdateFirmware;
         private DevExpress.XtraBars.BarButtonItem MenuCRC16Calculator;
