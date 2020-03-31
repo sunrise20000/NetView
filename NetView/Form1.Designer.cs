@@ -1223,7 +1223,9 @@ namespace NetView
             this.MenuCopy.Id = 13;
             this.MenuCopy.ImageOptions.Image = ((System.Drawing.Image)(resources.GetObject("MenuCopy.ImageOptions.Image")));
             this.MenuCopy.Name = "MenuCopy";
-            this.MenuCopy.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemCopy_ItemClick);
+			this.MenuCopy.ItemShortcut = new DevExpress.XtraBars.BarShortcut((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C));
+			this.MenuCopy.ShowItemShortcut = DevExpress.Utils.DefaultBoolean.True;
+			this.MenuCopy.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.barButtonItemCopy_ItemClick);
             // 
             // MenuPaste
             // 

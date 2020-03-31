@@ -115,7 +115,8 @@ namespace SubBusContrainer
                 SubBusModule.OnModleDelete += UserControl1_OnModleDelete;
                 this.Controls.Add(SubBusModule);
                 SubBusModule.BringToFront();
-                SubBusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
+				SubBusModule.ControlMoveEvent -= BusModule_ControlMoveEvent;
+				SubBusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
                 BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
 
                 OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() {Module= SubBusModule,IsAdd = true});
@@ -193,17 +194,25 @@ namespace SubBusContrainer
         {
             if (BusModule != null)
             {
-                if (BusModule.BusType.ToString() != Name && MessageBox.Show("Do you want to change bus type?", "Question", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
-                    this.Controls.Remove(BusModule);
+				if (BusModule.BusType.ToString() != Name)
+				{
+					if (MessageBox.Show("Do you want to change bus type?", "Question", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
+						return;
+				}
+				this.Controls.Remove(BusModule);
             }
+
+
 
             Enum.TryParse(Name, out EnumBusType BusType);
             BusModule = new BusModel(BusType, new Point(100, this.Height / 2 + 100));
 
             this.Controls.Add(BusModule);
             BusModule.BringToFront();
-            BusModule.OnModleDelete += UserControl1_OnModleDelete;
-            BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
+			BusModule.OnModleDelete -= UserControl1_OnModleDelete;
+			BusModule.OnModleDelete += UserControl1_OnModleDelete;
+			BusModule.ControlMoveEvent -= BusModule_ControlMoveEvent;
+			BusModule.ControlMoveEvent += BusModule_ControlMoveEvent;
             BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
             OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() { IsAdd = true, Module = BusModule });
 

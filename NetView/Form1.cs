@@ -209,19 +209,13 @@ namespace NetView
 			m_DiagramOutputWindow.Visible = true;
 			m_DiagramOutputWindow.HorizontalScrollbar = true;
 			m_DiagramOutputWindow.ScrollAlwaysVisible = true;
-
-			for (int i = 0; i < 20; i++)
-			{
-				m_DiagramOutputWindow.Items.Add($"{i}{i}ffff   fffff     ffff      fffff      ffff      fff     fffiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-			}
-
+			m_DiagramOutputWindow.MouseDoubleClick += M_DiagramOutputWindow_MouseDoubleClick;
 
 			//添加菜单一;
 			var ctx_copymenu = new MenuItem("copy");
 			ctx_copymenu.Click += Ctx_copymenu_Click;
-			var ctx_clearmenu = new MenuItem("clear");
-			ctx_clearmenu.Click += Ctx_clearmenu_Click;
-			var ctx_menu = new ContextMenu(new MenuItem[]{ ctx_copymenu, ctx_clearmenu});
+	
+			var ctx_menu = new ContextMenu(new MenuItem[]{ ctx_copymenu});
 			
 
 			m_DiagramOutputWindow.ContextMenu = ctx_menu;
@@ -348,18 +342,23 @@ namespace NetView
 
 		}
 
+		private void M_DiagramOutputWindow_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			CopyToClipboard();
+		}
+
 		/// <summary>
 		/// listbox  context menu
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 
-		private void Ctx_clearmenu_Click(object sender, EventArgs e)
+		private void Ctx_copymenu_Click(object sender, EventArgs e)
 		{
-			
+			CopyToClipboard();
 		}
 
-		private void Ctx_copymenu_Click(object sender, EventArgs e)
+		private void CopyToClipboard()
 		{
 			if (this.m_DiagramOutputWindow.SelectedIndex != -1)
 			{
@@ -367,7 +366,6 @@ namespace NetView
 				Clipboard.SetDataObject(text);
 			}
 		}
-
 
 
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -552,12 +550,17 @@ namespace NetView
 
 		private void barButtonItemCut_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
 		{
-
+			
 		}
 
+		/// <summary>
+		/// copy
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void barButtonItemCopy_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
 		{
-
+			CopyToClipboard();
 		}
 
 		private void barButtonItemPaste_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
@@ -846,16 +849,7 @@ namespace NetView
 
 			var BusName = e.Item.Caption.Replace("-", "_");
 			MiddleControl.ChangeBus(BusName);
-			//if (Enum.TryParse(BusName, out ControlTest.EnumBusType BusType))
-			//{
-			//	LeftControl_OnBusModuleChanged(this, new SubBusContrainer.Model.ModuleAddedArgs()
-			//	{
-			//		IsAdd = true,
-			//		Module = new BusModel(BusType,)
-			//	});
-			//}
-			//MiddleControl.ChangeBus(e.Item.Caption);
-			//BusConfigBase=new 
+			
 		}
 
 	
