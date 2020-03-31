@@ -207,6 +207,24 @@ namespace NetView
 			//Add diagram output window
 			m_DiagramOutputWindow = new ListBox();
 			m_DiagramOutputWindow.Visible = true;
+			m_DiagramOutputWindow.HorizontalScrollbar = true;
+			m_DiagramOutputWindow.ScrollAlwaysVisible = true;
+
+			for (int i = 0; i < 20; i++)
+			{
+				m_DiagramOutputWindow.Items.Add($"{i}{i}ffff   fffff     ffff      fffff      ffff      fff     fffiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+			}
+
+
+			//添加菜单一;
+			var ctx_copymenu = new MenuItem("copy");
+			ctx_copymenu.Click += Ctx_copymenu_Click;
+			var ctx_clearmenu = new MenuItem("clear");
+			ctx_clearmenu.Click += Ctx_clearmenu_Click;
+			var ctx_menu = new ContextMenu(new MenuItem[]{ ctx_copymenu, ctx_clearmenu});
+			
+
+			m_DiagramOutputWindow.ContextMenu = ctx_menu;
 			m_DiagramOutputWindow.Dock = DockStyle.Fill;
 			m_DiagramOutputWindow.Font = new Font("lisu",12);
 			this.dockPanelDiagram.SizeChanged += DockPanelDiagram_SizeChanged;
@@ -329,6 +347,28 @@ namespace NetView
 			});
 
 		}
+
+		/// <summary>
+		/// listbox  context menu
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+
+		private void Ctx_clearmenu_Click(object sender, EventArgs e)
+		{
+			
+		}
+
+		private void Ctx_copymenu_Click(object sender, EventArgs e)
+		{
+			if (this.m_DiagramOutputWindow.SelectedIndex != -1)
+			{
+				var text = m_DiagramOutputWindow.SelectedItem.ToString();
+				Clipboard.SetDataObject(text);
+			}
+		}
+
+
 
 		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
 		{
