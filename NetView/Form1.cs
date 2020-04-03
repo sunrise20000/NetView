@@ -190,6 +190,7 @@ namespace NetView
 			//添加侧面控件
 			LeftControl = new treeviewContrainer();
 			LeftControl.OnBusModuleChanged += LeftControl_OnBusModuleChanged;
+			LeftControl.OnBusMenuAddClicked += LeftControl_OnBusMenuAddClicked;
 			this.dockPanelLeft.Controls.Add(LeftControl);
 			LeftControl.Dock = DockStyle.Fill;
 			LeftControl.ProductContrainer = MiddleControl;
@@ -340,6 +341,11 @@ namespace NetView
 				}
 			});
 
+		}
+
+		private void LeftControl_OnBusMenuAddClicked(object sender, string e)
+		{
+			NewProject(e);
 		}
 
 		private void M_DiagramOutputWindow_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -844,14 +850,17 @@ namespace NetView
 
 		private void barButtonItemNewProject_ItemClick(object sender, DevExpress.XtraBars.ItemClickEventArgs e)
 		{
-			var BusClassName = $"BusConfig_{e.Item.Caption.Replace("-", "_")}";
-			LeftControl.ReplaceNewList(BusClassName,new List<Tuple<string,int,int,ControlTest.ModuleConfigModle.ModuleGUIBase>>());
 
-			var BusName = e.Item.Caption.Replace("-", "_");
-			MiddleControl.ChangeBus(BusName);
-			
+			NewProject(e.Item.Caption);
 		}
 
+		private void NewProject(string BusName)
+		{
+			var name = BusName.Replace("-", "_");
+			var BusClassName = $"BusConfig_{name}";
+			LeftControl.ReplaceNewList(BusClassName, new List<Tuple<string, int, int, ControlTest.ModuleConfigModle.ModuleGUIBase>>());	
+			MiddleControl.ChangeBus(name);
+		}
 	
 		/// <summary>
 		/// 导出文件

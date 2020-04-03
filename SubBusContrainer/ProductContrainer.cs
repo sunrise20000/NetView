@@ -331,7 +331,6 @@ namespace SubBusContrainer
                     }
                 }
             }
-
         }
         public void ReplaceNewList(string BusName, List<Tuple<string,int,int,ModuleGUIBase>> SubModuleInfoList)
         {

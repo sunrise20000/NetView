@@ -17,6 +17,7 @@ namespace TreeviewContrainer
     {
         private ProductContrainer productContrainer;
         public event EventHandler<SubBusContrainer.Model.ModuleAddedArgs> OnBusModuleChanged;
+		public event EventHandler<string> OnBusMenuAddClicked;
         public List<string> PureNameList    
         {
             get
@@ -92,8 +93,8 @@ namespace TreeviewContrainer
                     }
                 }
             }
-            else
-            {
+			else //if(e.Module is SubBusModel)
+			{
                 if (treeView_ProductInfo.Nodes.Count != 0)
                 {
                     if (e.IsAdd)
@@ -119,6 +120,7 @@ namespace TreeviewContrainer
                 if (it.Text.Equals(productContrainer.BusName))
                 {
                     DesNode = it;
+
                     Dictionary<int, string> NodeTextDic = new Dictionary<int, string>();
                     int i = 0;
                     foreach (TreeNode node in it.Nodes)
@@ -269,5 +271,41 @@ namespace TreeviewContrainer
             RenameTreeNode();
             
         }
-    }
+
+		private void Menu_ModbusRTU_Click(object sender, EventArgs e)
+		{
+
+			OnBusMenuAddClicked?.Invoke(this,(sender as ToolStripMenuItem).Text);
+		}
+
+		private void Menu_Profibus_DP_Click(object sender, EventArgs e)
+		{
+			OnBusMenuAddClicked?.Invoke(this, (sender as ToolStripMenuItem).Text);
+		}
+
+		private void Menu_PROFIBUS_IO_Click(object sender, EventArgs e)
+		{
+			OnBusMenuAddClicked?.Invoke(this, (sender as ToolStripMenuItem).Text);
+		}
+
+		private void Menu_ModbusTCP_Click(object sender, EventArgs e)
+		{
+			OnBusMenuAddClicked?.Invoke(this, (sender as ToolStripMenuItem).Text);
+		}
+
+		private void Menu_EatherCat_Click(object sender, EventArgs e)
+		{
+			OnBusMenuAddClicked?.Invoke(this, (sender as ToolStripMenuItem).Text);
+		}
+
+		private void Menu_Canopen_Click(object sender, EventArgs e)
+		{
+			OnBusMenuAddClicked?.Invoke(this, (sender as ToolStripMenuItem).Text);
+		}
+
+		private void Menu_DeviceNet_Click(object sender, EventArgs e)
+		{
+			OnBusMenuAddClicked?.Invoke(this, (sender as ToolStripMenuItem).Text);
+		}
+	}
 }
