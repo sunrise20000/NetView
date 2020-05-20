@@ -26,6 +26,17 @@ namespace ControlTest
             Bcb = T.Assembly.CreateInstance(ClassName) as BusGUI_Base;
             
         }
+		protected override string DisplayName
+		{
+			get
+			{
+				return this.label1.Text;
+			}
+			set {
+				label1.Text = value;
+			}
+		}
+	
         public override void ShowProperty()
         {
             WinPropertySetting = new Window_Property(Bcb.Name);

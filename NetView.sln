@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeviewContrainer", "Treev
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControllerLib", "EC_ControlLib\ControllerLib.csproj", "{43D5816D-DE56-46B9-A217-676615301425}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelLib", "ModelLib\ModelLib.csproj", "{5335A321-B537-4288-BB48-82DF89A10642}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{43D5816D-DE56-46B9-A217-676615301425}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43D5816D-DE56-46B9-A217-676615301425}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43D5816D-DE56-46B9-A217-676615301425}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5335A321-B537-4288-BB48-82DF89A10642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5335A321-B537-4288-BB48-82DF89A10642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5335A321-B537-4288-BB48-82DF89A10642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5335A321-B537-4288-BB48-82DF89A10642}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

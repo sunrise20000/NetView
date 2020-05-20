@@ -18,12 +18,21 @@ namespace ControlTest
         public event EventHandler OnModleDelete;
         #endregion
         #region 属性定义
+		/// <summary>
+		/// 模块名称
+		/// </summary>
         public new string Name
         {
             get;set;
         }
         
-        protected string DisplayName { get { return this.label1.Text; } set { this.label1.Text=value;} }
+		/// <summary>
+		/// 显示名称
+		/// </summary>
+        protected virtual string DisplayName
+		{
+			get;set;
+		}
         public int GlobalIndex { get; set; }
         public int LocalIndex { get; set; }
 
@@ -100,7 +109,10 @@ namespace ControlTest
         {
             
         }
+		public virtual void UpdateGUI()
+		{
 
+		}
         private void toolStripMenuItem_Property_Click(object sender, EventArgs e)
         {
             ShowProperty();

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using SubBusContrainer;
 using ControlTest;
 using ControlTest.ModuleConfigModle;
+using ModelLib;
 
 namespace TreeviewContrainer
 {
@@ -109,9 +110,15 @@ namespace TreeviewContrainer
                 OnBusModuleChanged?.Invoke(this,e);
             }
             treeView_ProductInfo.ExpandAll();
-            //RenameTreeNode();
-        }
+			if(treeView_ProductInfo.Nodes.Count!=0)
+				this.treeView_ProductInfo.ContextMenuStrip = this.contextMenuStrip1;
+			//RenameTreeNode();
+		}
 
+
+		/// <summary>
+		/// 重新命名模块，需要重新排序，别的都不需要变，Pending
+		/// </summary>
         private void RenameTreeNode()
         {
             TreeNode DesNode = null;
@@ -120,19 +127,30 @@ namespace TreeviewContrainer
                 if (it.Text.Equals(productContrainer.BusName))
                 {
                     DesNode = it;
-
-                    Dictionary<int, string> NodeTextDic = new Dictionary<int, string>();
+					List<ModifyNameInfoModel> RenameInfoList = new List<ModifyNameInfoModel>();
+                    List<string> NodeTextList = new List<string>();
                     int i = 0;
                     foreach (TreeNode node in it.Nodes)
                     {
-                        var ModuleName = node.Text.Split('_')[0];
-                        var ExistDic = NodeTextDic.Where(d=>d.Value.Contains(ModuleName));
-                        var NameInGui = $"{ModuleName}_{ExistDic.Count() + 1}";
-                        NodeTextDic.Add(i++, NameInGui);
-                        node.Text = NameInGui;
-                    }
+						NodeTextList.Add(node.Text);
+						var moduleName = node.Text.Split('_')[0];
+						int oldLocalIndex = int.Parse(node.Text.Split('_')[1]);
+						var ExistList = NodeTextList.Where(d=>d.Contains(moduleName));
+						int newGlobalIndex = ++i;
+						int newLocalIndex = ExistList.Count();
 
-                    ProductContrainer.ReName(NodeTextDic.Values.ToList());
+						ModifyNameInfoModel renameInfoModel = new ModifyNameInfoModel()
+						{
+							ModuleName = moduleName,
+							OldLocalIndex = oldLocalIndex,
+							NewGlobalIndex = newGlobalIndex,
+							NewLocalIndex = newLocalIndex
+						};
+						node.Text = renameInfoModel.NewName;
+						RenameInfoList.Add(renameInfoModel);
+
+					}
+                    ProductContrainer.Rename(RenameInfoList);
                     break;
                 }
             }     

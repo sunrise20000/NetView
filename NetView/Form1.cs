@@ -530,6 +530,9 @@ namespace NetView
 			ProjController.SaveProject();
 		}
 
+		/// <summary>
+		/// 可以考虑使用GUID
+		/// </summary>
 		private void UpdateProjController()
 		{
 			ProjController.ModuleConfigList.Clear();

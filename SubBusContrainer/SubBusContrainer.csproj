@@ -62,6 +62,10 @@
       <Project>{5dfd49d9-223b-4fcd-a0b7-800b003a2378}</Project>
       <Name>ControlTest</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ModelLib\ModelLib.csproj">
+      <Project>{5335A321-B537-4288-BB48-82DF89A10642}</Project>
+      <Name>ModelLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

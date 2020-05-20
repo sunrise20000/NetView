@@ -11,6 +11,7 @@ using ControlTest;
 using System.Diagnostics;
 using SubBusContrainer.Model;
 using ControlTest.ModuleConfigModle;
+using ModelLib;
 
 namespace SubBusContrainer
 {
@@ -387,6 +388,7 @@ namespace SubBusContrainer
                 LastSubModel.Focus();
                 LastSubModel.OnModleDelete += UserControl1_OnModleDelete;
                 LastSubModel.ControlMoveEvent += BusModule_ControlMoveEvent;
+
                 BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
             }
 
@@ -419,25 +421,45 @@ namespace SubBusContrainer
             }
             return controlBasesList;
         }
-        public void ReName(List<string> NameList)
-        {
-            List<Tuple<int, int, SubBusModel>> KpList = new List<Tuple<int, int, SubBusModel>>();
-            int i = 0;
-            foreach (var member in this.Controls)
-            {
-                SubBusModel SubBm = member as SubBusModel;
-                if (SubBm != null)
-                {
-                    KpList.Add(new Tuple<int, int, SubBusModel>(i++, SubBm.Location.X, SubBm));
-                }
-            }
-            KpList.Sort((a, b) => a.Item2.CompareTo(b.Item2));
+		public void Rename(List<ModifyNameInfoModel> RenameInfoList)
+		{
+			foreach (var member in this.Controls)
+			{
+				SubBusModel SubBm = member as SubBusModel;
+				if (SubBm!=null)
+				{
+					foreach (var renameInfo in RenameInfoList)
+					{
+						if (SubBm.Name == renameInfo.ModuleName && SubBm.LocalIndex == renameInfo.OldLocalIndex)
+						{
+							SubBm.LocalIndex = renameInfo.NewLocalIndex;
+							SubBm.GlobalIndex = renameInfo.NewGlobalIndex;
+							SubBm.UpdateGUI();
+							//BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
+						}
+					}
+				}
+			}	
+		}
+		//public void ReName(List<string> NameList)
+  //      {
+  //          List<Tuple<int, int, SubBusModel>> KpList = new List<Tuple<int, int, SubBusModel>>();
+  //          int i = 0;
+  //          foreach (var member in this.Controls)
+  //          {
+  //              SubBusModel SubBm = member as SubBusModel;
+  //              if (SubBm != null)
+  //              {
+  //                  KpList.Add(new Tuple<int, int, SubBusModel>(i++, SubBm.Location.X, SubBm));
+  //              }
+  //          }
+  //          KpList.Sort((a, b) => a.Item2.CompareTo(b.Item2));
 
-            for (i = 0; i < KpList.Count; i++)
-            {
-                KpList.ElementAt(i).Item3.Name = NameList[i];
-            }
-        }
+  //          for (i = 0; i < KpList.Count; i++)
+  //          {
+  //              KpList.ElementAt(i).Item3.Name = NameList[i];
+  //          }
+  //      }
     }
     public class HorizontalCenterLine
     {

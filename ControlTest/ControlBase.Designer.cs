@@ -91,7 +91,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        protected System.Windows.Forms.Label label1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Delete;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem_Property;
