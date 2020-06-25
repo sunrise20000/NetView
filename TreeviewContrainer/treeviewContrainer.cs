@@ -19,7 +19,10 @@ namespace TreeviewContrainer
         private ProductContrainer productContrainer;
         public event EventHandler<SubBusContrainer.Model.ModuleAddedArgs> OnBusModuleChanged;
 		public event EventHandler<string> OnBusMenuAddClicked;
-        public List<string> PureNameList    
+		public event EventHandler<string> OnBusMenuDeleteClicked;
+		
+
+		public List<string> PureNameList    
         {
             get
             {
@@ -192,9 +195,19 @@ namespace TreeviewContrainer
         public treeviewContrainer()
         {
             InitializeComponent();
-        }
+			SetButtonStyle(new Button[] { buttonUp, buttonDown, buttonDelete });
+		}
+		private void SetButtonStyle(Button[] buttons)
+		{
+			foreach (var bt in buttons)
+			{
+				bt.Font = new Font("lisu", 15);
+				bt.ForeColor = Color.Black;
+				bt.Size = new Size(35, 15);
+			}
+		}
 
-        private void treeView_ProductInfo_MouseClick(object sender, MouseEventArgs e)
+		private void treeView_ProductInfo_MouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
             {
@@ -255,16 +268,16 @@ namespace TreeviewContrainer
         /// <param name="e"></param>
         private void tSMItem_BusMedel_Add_Click(object sender, EventArgs e)
         {
-            TreeNode _treenode = treeView_ProductInfo.SelectedNode;
-            if (_treenode != null)
+            TreeNodeCollection _treenodes = treeView_ProductInfo.Nodes;
+            if (_treenodes != null)
             {
                 List<string> NameList = new List<string>();
-                foreach (TreeNode it in _treenode.Nodes)
+                foreach (TreeNode it in _treenodes[0].Nodes)
                     NameList.Add(it.Text);
 
                 var ExistNode = NameList.Where(n=>n.Contains((sender as ToolStripMenuItem).Text));
                 var Name = $"{(sender as ToolStripMenuItem).Text}_{ExistNode.Count() + 1}";
-                treeView_ProductInfo.SelectedNode.Nodes.Add(Name, Name);
+				_treenodes[0].Nodes.Add(Name, Name);
                 productContrainer.AddSubProduct((sender as ToolStripMenuItem).Text, ExistNode.Count() + 1, NameList.Count()+1);
             }
         }
@@ -324,6 +337,103 @@ namespace TreeviewContrainer
 		private void Menu_DeviceNet_Click(object sender, EventArgs e)
 		{
 			OnBusMenuAddClicked?.Invoke(this, (sender as ToolStripMenuItem).Text);
+		}
+
+
+		/// <summary>
+		/// 处理拖拽排序
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void treeView_ProductInfo_ItemDrag(object sender, ItemDragEventArgs e)
+		{
+			Console.WriteLine("Drag");
+			treeView_ProductInfo.DoDragDrop(this, DragDropEffects.Move);
+		}
+
+		private void treeView_ProductInfo_DragDrop(object sender, DragEventArgs e)
+		{
+			Console.WriteLine("Drop");
+		}
+
+		private void buttonUp_Click(object sender, EventArgs e)
+		{
+			var treeNodes = treeView_ProductInfo.Nodes;
+			if (treeNodes != null)
+			{
+				var productNodes = treeNodes[0].Nodes;
+				var selectNode = treeView_ProductInfo.SelectedNode;
+				if (productNodes.Contains(selectNode))
+				{
+					var index = selectNode.Index;
+					if (index > 0)
+					{
+						var tempNode = productNodes[index - 1];
+						var tempNode1 = productNodes[index];
+
+						productNodes.Remove(tempNode);
+						productNodes.Remove(tempNode1);
+						productNodes.Insert(index-1,tempNode1);
+						productNodes.Insert(index,tempNode);
+						treeView_ProductInfo.Select();
+						treeView_ProductInfo.SelectedNode = productNodes[index - 1];
+						//treeView_ProductInfo.Refresh();
+					}
+					else
+					{
+						treeView_ProductInfo.Select();
+						treeView_ProductInfo.SelectedNode = productNodes[index];
+					}
+				}
+			}
+		}
+
+		private void buttonDown_Click(object sender, EventArgs e)
+		{
+			var treeNodes = treeView_ProductInfo.Nodes;
+			if (treeNodes != null)
+			{
+				var productNodes = treeNodes[0].Nodes;
+				var selectNode = treeView_ProductInfo.SelectedNode;
+				if (productNodes.Contains(selectNode))
+				{
+					var index = selectNode.Index;
+					if (index < productNodes.Count - 1)
+					{
+						var tempNode = productNodes[index];
+						var tempNode1 = productNodes[index + 1];
+
+						productNodes.Remove(tempNode);
+						productNodes.Remove(tempNode1);
+						productNodes.Insert(index, tempNode1);
+						productNodes.Insert(index + 1, tempNode);
+						treeView_ProductInfo.Select();
+						treeView_ProductInfo.SelectedNode = productNodes[index + 1];
+						//treeView_ProductInfo.Refresh();
+					}
+					else
+					{
+						treeView_ProductInfo.Select();
+						treeView_ProductInfo.SelectedNode = productNodes[index];
+					}
+				}
+			}
+		}
+
+		private void buttonDelete_Click(object sender, EventArgs e)
+		{
+			//var treeNodes = treeView_ProductInfo.Nodes;
+			//if (treeNodes != null)
+			//{
+			//	var productNodes = treeNodes[0].Nodes;
+			//	var selectNode = treeView_ProductInfo.SelectedNode;
+			//	if (productNodes.Contains(selectNode))
+			//	{
+			//		var index = selectNode.Index;
+			//		productNodes.RemoveAt(index);
+			//	}
+			//}
+			OnBusMenuDeleteClicked?.Invoke(this, (sender as ToolStripMenuItem).Text);
 		}
 	}
 }

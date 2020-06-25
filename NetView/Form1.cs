@@ -191,6 +191,7 @@ namespace NetView
 			LeftControl = new treeviewContrainer();
 			LeftControl.OnBusModuleChanged += LeftControl_OnBusModuleChanged;
 			LeftControl.OnBusMenuAddClicked += LeftControl_OnBusMenuAddClicked;
+			LeftControl.OnBusMenuDeleteClicked += LeftControl_OnBusMenuDeleteClicked;
 			this.dockPanelLeft.Controls.Add(LeftControl);
 			LeftControl.Dock = DockStyle.Fill;
 			LeftControl.ProductContrainer = MiddleControl;
@@ -343,7 +344,12 @@ namespace NetView
 
 		}
 
-		private void LeftControl_OnBusMenuAddClicked(object sender, string e)
+		private void LeftControl_OnBusMenuDeleteClicked(object sender, string e)
+		{
+			
+		}
+
+		private void LeftControl_OnBusMenuAddClicked(object sender, string e)	//drop
 		{
 			NewProject(e);
 		}
