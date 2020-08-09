@@ -113,8 +113,8 @@ namespace TreeviewContrainer
                 OnBusModuleChanged?.Invoke(this,e);
             }
             treeView_ProductInfo.ExpandAll();
-			if(treeView_ProductInfo.Nodes.Count!=0)
-				this.treeView_ProductInfo.ContextMenuStrip = this.contextMenuStrip1;
+			/*if(treeView_ProductInfo.Nodes.Count!=0)
+				this.treeView_ProductInfo.ContextMenuStrip = this.contextMenuStrip1;*/
 			//RenameTreeNode();
 		}
 
@@ -195,7 +195,7 @@ namespace TreeviewContrainer
         public treeviewContrainer()
         {
             InitializeComponent();
-			SetButtonStyle(new Button[] { buttonUp, buttonDown, buttonDelete });
+			SetButtonStyle(new Button[] { buttonUp, buttonDown});
 		}
 		private void SetButtonStyle(Button[] buttons)
 		{
@@ -206,32 +206,6 @@ namespace TreeviewContrainer
 				bt.Size = new Size(35, 15);
 			}
 		}
-
-		private void treeView_ProductInfo_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Right)
-            {
-                Point point = this.treeView_ProductInfo.PointToScreen(e.Location);
-                TreeNode _treeNode = this.treeView_ProductInfo.GetNodeAt(e.Location);
-                if (_treeNode != null)
-                {
-                    if (_treeNode.Level == 0)
-                        this.contextMenuStrip1.Show(point);
-                    else
-                        this.contextMenuStrip2.Show(point);
-                    this.treeView_ProductInfo.SelectedNode = _treeNode;
-                }
-            }
-            else
-            {
-                Point point = this.treeView_ProductInfo.PointToScreen(e.Location);
-                TreeNode _treeNode = this.treeView_ProductInfo.GetNodeAt(e.Location);
-                if (_treeNode != null)
-                {
-                    this.treeView_ProductInfo.SelectedNode = _treeNode;
-                }
-            }
-        }
 
         private void treeView_ProductInfo_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -419,21 +393,29 @@ namespace TreeviewContrainer
 				}
 			}
 		}
-
-		private void buttonDelete_Click(object sender, EventArgs e)
+		private void treeView_ProductInfo_MouseUp(object sender, MouseEventArgs e)
 		{
-			//var treeNodes = treeView_ProductInfo.Nodes;
-			//if (treeNodes != null)
-			//{
-			//	var productNodes = treeNodes[0].Nodes;
-			//	var selectNode = treeView_ProductInfo.SelectedNode;
-			//	if (productNodes.Contains(selectNode))
-			//	{
-			//		var index = selectNode.Index;
-			//		productNodes.RemoveAt(index);
-			//	}
-			//}
-			OnBusMenuDeleteClicked?.Invoke(this, (sender as ToolStripMenuItem).Text);
+
+			if (e.Button == MouseButtons.Right)
+			{
+				Point point = this.treeView_ProductInfo.PointToScreen(e.Location);
+				var nodesCount = treeView_ProductInfo.Nodes.Count;
+				if (nodesCount != 0)
+				{
+					TreeNode _treeNode = this.treeView_ProductInfo.SelectedNode;
+					if (_treeNode != null)
+					{
+						if (_treeNode.Level == 0)
+							this.contextMenuStrip1.Show(point);
+						else if (_treeNode.Level == 1)
+							this.contextMenuStrip2.Show(point);
+					}
+				}
+				else
+				{
+					this.LeftControl_CTX_Menu.Show(point);
+				}
+			}
 		}
 	}
 }

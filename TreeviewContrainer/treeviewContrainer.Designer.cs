@@ -55,7 +55,6 @@
 			this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.tSMItem_SubModel_Property = new System.Windows.Forms.ToolStripMenuItem();
 			this.tSMItem_SubModel_Delete = new System.Windows.Forms.ToolStripMenuItem();
-			this.buttonDelete = new System.Windows.Forms.Button();
 			this.buttonDown = new System.Windows.Forms.Button();
 			this.buttonUp = new System.Windows.Forms.Button();
 			this.LeftControl_CTX_Menu.SuspendLayout();
@@ -69,7 +68,6 @@
 			this.treeView_ProductInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-			this.treeView_ProductInfo.ContextMenuStrip = this.LeftControl_CTX_Menu;
 			this.treeView_ProductInfo.Location = new System.Drawing.Point(0, 0);
 			this.treeView_ProductInfo.Margin = new System.Windows.Forms.Padding(2);
 			this.treeView_ProductInfo.Name = "treeView_ProductInfo";
@@ -77,8 +75,8 @@
 			this.treeView_ProductInfo.TabIndex = 0;
 			this.treeView_ProductInfo.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.treeView_ProductInfo_ItemDrag);
 			this.treeView_ProductInfo.DragDrop += new System.Windows.Forms.DragEventHandler(this.treeView_ProductInfo_DragDrop);
-			this.treeView_ProductInfo.MouseClick += new System.Windows.Forms.MouseEventHandler(this.treeView_ProductInfo_MouseClick);
 			this.treeView_ProductInfo.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView_ProductInfo_MouseDoubleClick);
+			this.treeView_ProductInfo.MouseUp += new System.Windows.Forms.MouseEventHandler(this.treeView_ProductInfo_MouseUp);
 			// 
 			// LeftControl_CTX_Menu
 			// 
@@ -172,7 +170,7 @@
 			// hL1001ToolStripMenuItem
 			// 
 			this.hL1001ToolStripMenuItem.Name = "hL1001ToolStripMenuItem";
-			this.hL1001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL1001ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL1001ToolStripMenuItem.Tag = "";
 			this.hL1001ToolStripMenuItem.Text = "HL1001";
 			this.hL1001ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
@@ -180,63 +178,63 @@
 			// hL2001ToolStripMenuItem
 			// 
 			this.hL2001ToolStripMenuItem.Name = "hL2001ToolStripMenuItem";
-			this.hL2001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL2001ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL2001ToolStripMenuItem.Text = "HL2001";
 			this.hL2001ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
 			// 
 			// hL2002ToolStripMenuItem
 			// 
 			this.hL2002ToolStripMenuItem.Name = "hL2002ToolStripMenuItem";
-			this.hL2002ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL2002ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL2002ToolStripMenuItem.Text = "HL2002";
 			this.hL2002ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
 			// 
 			// hL2003ToolStripMenuItem
 			// 
 			this.hL2003ToolStripMenuItem.Name = "hL2003ToolStripMenuItem";
-			this.hL2003ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL2003ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL2003ToolStripMenuItem.Text = "HL2003";
 			this.hL2003ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
 			// 
 			// hL3001ToolStripMenuItem
 			// 
 			this.hL3001ToolStripMenuItem.Name = "hL3001ToolStripMenuItem";
-			this.hL3001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL3001ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL3001ToolStripMenuItem.Text = "HL3001";
 			this.hL3001ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
 			// 
 			// hL3002ToolStripMenuItem
 			// 
 			this.hL3002ToolStripMenuItem.Name = "hL3002ToolStripMenuItem";
-			this.hL3002ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL3002ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL3002ToolStripMenuItem.Text = "HL3002";
 			this.hL3002ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
 			// 
 			// hL4001ToolStripMenuItem
 			// 
 			this.hL4001ToolStripMenuItem.Name = "hL4001ToolStripMenuItem";
-			this.hL4001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL4001ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL4001ToolStripMenuItem.Text = "HL4001";
 			this.hL4001ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
 			// 
 			// hL4002ToolStripMenuItem
 			// 
 			this.hL4002ToolStripMenuItem.Name = "hL4002ToolStripMenuItem";
-			this.hL4002ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL4002ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL4002ToolStripMenuItem.Text = "HL4002";
 			this.hL4002ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
 			// 
 			// hL5001ToolStripMenuItem
 			// 
 			this.hL5001ToolStripMenuItem.Name = "hL5001ToolStripMenuItem";
-			this.hL5001ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL5001ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL5001ToolStripMenuItem.Text = "HL5001";
 			this.hL5001ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
 			// 
 			// hL5002ToolStripMenuItem
 			// 
 			this.hL5002ToolStripMenuItem.Name = "hL5002ToolStripMenuItem";
-			this.hL5002ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.hL5002ToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
 			this.hL5002ToolStripMenuItem.Text = "HL5002";
 			this.hL5002ToolStripMenuItem.Click += new System.EventHandler(this.tSMItem_BusMedel_Add_Click);
 			// 
@@ -277,21 +275,10 @@
 			this.tSMItem_SubModel_Delete.Text = "Delete";
 			this.tSMItem_SubModel_Delete.Click += new System.EventHandler(this.tSMItem_SubModel_Delete_Click);
 			// 
-			// buttonDelete
-			// 
-			this.buttonDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonDelete.Location = new System.Drawing.Point(121, 307);
-			this.buttonDelete.Name = "buttonDelete";
-			this.buttonDelete.Size = new System.Drawing.Size(35, 23);
-			this.buttonDelete.TabIndex = 3;
-			this.buttonDelete.Text = "Del";
-			this.buttonDelete.UseVisualStyleBackColor = true;
-			this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
-			// 
 			// buttonDown
 			// 
 			this.buttonDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonDown.Location = new System.Drawing.Point(70, 307);
+			this.buttonDown.Location = new System.Drawing.Point(130, 307);
 			this.buttonDown.Name = "buttonDown";
 			this.buttonDown.Size = new System.Drawing.Size(35, 23);
 			this.buttonDown.TabIndex = 4;
@@ -302,7 +289,7 @@
 			// buttonUp
 			// 
 			this.buttonUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.buttonUp.Location = new System.Drawing.Point(19, 307);
+			this.buttonUp.Location = new System.Drawing.Point(94, 307);
 			this.buttonUp.Name = "buttonUp";
 			this.buttonUp.Size = new System.Drawing.Size(35, 23);
 			this.buttonUp.TabIndex = 5;
@@ -316,7 +303,6 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.Controls.Add(this.buttonUp);
 			this.Controls.Add(this.buttonDown);
-			this.Controls.Add(this.buttonDelete);
 			this.Controls.Add(this.treeView_ProductInfo);
 			this.Margin = new System.Windows.Forms.Padding(2);
 			this.Name = "treeviewContrainer";
@@ -356,7 +342,6 @@
 		private System.Windows.Forms.ToolStripMenuItem Menu_EatherCat;
 		private System.Windows.Forms.ToolStripMenuItem Menu_Canopen;
 		private System.Windows.Forms.ToolStripMenuItem Menu_DeviceNet;
-		private System.Windows.Forms.Button buttonDelete;
 		private System.Windows.Forms.Button buttonDown;
 		private System.Windows.Forms.Button buttonUp;
 	}
