@@ -43,6 +43,7 @@ namespace NetView
 
 		ControllerBase ControllerCard = new EC_Controller();
 		ProjectController ProjController = new ProjectController();
+		
 
 		const string FILE_DEMO_XML_FILE = @"Template\Demo.xml";
 		ComportSettingModel ComSettingCfgModel = new ComportSettingModel();
@@ -179,12 +180,14 @@ namespace NetView
 			treeViewDevice.ItemDrag += TreeViewDevice_ItemDrag;
 			treeViewDevice.NodeMouseDoubleClick += TreeViewDevice_NodeMouseDoubleClick;
 			this.barSubIteExportFile.Popup += BarSubIteExportFile_Popup;
+			//this.treeViewDevice
 
 
 			//添加中间控件
 			MiddleControl = new ProductContrainer();
 			this.dockPanelMiddle.Controls.Add(MiddleControl);
 			MiddleControl.Dock = DockStyle.Fill;
+			
 
 
 			//添加侧面控件
@@ -195,7 +198,7 @@ namespace NetView
 			this.dockPanelLeft.Controls.Add(LeftControl);
 			LeftControl.Dock = DockStyle.Fill;
 			LeftControl.ProductContrainer = MiddleControl;
-
+		
 
 			//VarMonitor
 			m_ucMonitor = new UC_VarMonitor();
@@ -513,7 +516,15 @@ namespace NetView
 
 		private void TreeViewDevice_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
-
+			var node = treeViewDevice.SelectedNode;
+			if (node != null)
+			{
+				string ProductName = node.Text;
+				var list = ProductName.Split(' ');
+				var nLen = list.Length;
+				MiddleControl.OnProductItemDoubleClick(this, list[0].Replace("-", "_"));
+			}
+			
 		}
 
 		private void TreeViewDevice_ItemDrag(object sender, ItemDragEventArgs e)

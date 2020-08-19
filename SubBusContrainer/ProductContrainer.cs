@@ -29,7 +29,7 @@ namespace SubBusContrainer
        
         Bitmap bitmap;
 
-
+		private int m_lastX = 10, m_lastY = 20;
         public event EventHandler<ModuleAddedArgs> OnProductChangedEvent;
 
 
@@ -85,6 +85,12 @@ namespace SubBusContrainer
             _pb.Refresh();
             this.SizeChanged += Panel_Product_SizeChanged;
         }
+		//OnDoubleClickItem
+		public void OnProductItemDoubleClick(object sender, string ProductName)
+		{
+
+			panel_Product_DragDrop(sender, new DragEventArgs(new DataObject(ProductName), 0, m_lastX + 20, -123, DragDropEffects.Copy, DragDropEffects.Copy));
+		}
 
         /// <summary>
         /// Middle——》Left
@@ -93,7 +99,15 @@ namespace SubBusContrainer
         /// <param name="e"></param>
         private void panel_Product_DragDrop(object sender, DragEventArgs e)
         {
-            Point point = this.PointToClient(new Point(e.X, e.Y));
+			Point point;
+			if (e.Y != -123)
+			{
+				point = this.PointToClient(new Point(e.X, e.Y));
+			}
+			else
+			{
+				point = new Point(e.X, m_lastY);
+			}
             object info = e.Data.GetData(typeof(string));
             
             List<string> ControlNameList = new List<string>();
@@ -121,7 +135,10 @@ namespace SubBusContrainer
                 BusModule_ControlMoveEvent(new object(), new ControlMoveEventArgs(""));
 
                 OnProductChangedEvent?.Invoke(this, new ModuleAddedArgs() {Module= SubBusModule,IsAdd = true});
-            }
+				m_lastX = m_lastX >point.X? m_lastX : point.X;
+				m_lastY = point.Y;
+
+			}
             else  //总线
             {
                 ChangeBus(info.ToString());
@@ -296,8 +313,13 @@ namespace SubBusContrainer
             LastSubModel.BringToFront();
             LastSubModel.Focus();
 
-        }
-        private bool CheckExit(string subproductname)
+			m_lastX = m_lastX > point.X ? m_lastX : point.X;
+			m_lastY = point.Y;
+
+
+		}
+
+		private bool CheckExit(string subproductname)
         {
             foreach (var member in this.Controls)
             {
@@ -333,7 +355,8 @@ namespace SubBusContrainer
                 }
             }
         }
-        public void ReplaceNewList(string BusName, List<Tuple<string,int,int,ModuleGUIBase>> SubModuleInfoList)
+
+		public void ReplaceNewList(string BusName, List<Tuple<string,int,int,ModuleGUIBase>> SubModuleInfoList)
         {
             List<SubBusModel> list = new List<SubBusModel>();
             foreach (var member in this.Controls)
