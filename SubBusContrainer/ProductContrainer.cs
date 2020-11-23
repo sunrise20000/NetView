@@ -423,11 +423,19 @@ namespace SubBusContrainer
                 ControlBase _controlBase = member as ControlBase;
                 if (_controlBase != null)
                 {
-                    if ($"{_controlBase.Name}_{_controlBase.LocalIndex}" == subproductnameWithLocalIndex)
-                    {
-                        _controlBase.ShowProperty();
-                        break;
-                    }
+					if (_controlBase is BusModel)
+					{
+						_controlBase.ShowProperty();
+						break;
+					}
+					else if (_controlBase is SubBusModel)
+					{
+						if ($"{_controlBase.Name}_{_controlBase.LocalIndex}" == subproductnameWithLocalIndex)
+						{
+							_controlBase.ShowProperty();
+							break;
+						}
+					}
                 }
             }
 
