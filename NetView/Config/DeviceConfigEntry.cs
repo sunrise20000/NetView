@@ -9,6 +9,8 @@ namespace NetView.Config
 {
     public class DeviceConfigEntry
     {
-        public AvilableDeviceModel[] Device { get; set; }
+		public string Name { get; set; }
+		public string Icon { get; set; }
+        public DeviceConfigEntry[] Child { get; set; }
     }
 }

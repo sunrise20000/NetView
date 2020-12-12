@@ -34,7 +34,7 @@ namespace NetView
 {
 	public partial class Form1 : DevExpress.XtraEditors.XtraForm
 	{
-		AvilableDeviceModel[] DeviceCfg = null;
+		DeviceConfigEntry DeviceCfg = null;
 		string FileOpenPath = @"C:\";
 
 		ProductContrainer MiddleControl = null;
@@ -71,6 +71,7 @@ namespace NetView
 		List<UInt32>  m_ModifyValueList = new List<UInt32>();
 		uint m_TransmitDelay = 500;
 		Queue<ControllerLib.Model.DataFromComport> m_msgQueue = new Queue<ControllerLib.Model.DataFromComport>();
+		Dictionary<string, int> ImageDic = new Dictionary<string, int>();
 
 		public Form1()
 		{
@@ -113,7 +114,7 @@ namespace NetView
 			try
 			{
 				Config.ConfigMgr.Instance.LoadConfig();
-				DeviceCfg = ConfigMgr.Instance.DeviceCfgEntry.Device;
+				DeviceCfg = ConfigMgr.Instance.DeviceCfgEntry;
 			}
 			catch (Exception ex)
 			{
@@ -121,6 +122,22 @@ namespace NetView
 				Close();
 			}
 		}
+
+		/// <summary>
+		/// 利用递归生成TreeNode
+		/// </summary>
+		/// <param name="DeviceCfg"></param>
+		/// <returns></returns>
+		private TreeNode GenNode(DeviceConfigEntry DeviceCfg, Dictionary<string,int> ImageDic)
+		{
+			TreeNode node = new TreeNode(DeviceCfg.Name, ImageDic[DeviceCfg.Icon], ImageDic[DeviceCfg.Icon]);
+			foreach (var it in DeviceCfg.Child)
+			{
+				node.Nodes.Add(GenNode(it, ImageDic));
+			}
+			return node;
+		}
+
 		private void InitCtrl()
 		{
 			ControllerCard.OnConnectStateChanged += BusController_OnConnectStateChanged;
@@ -132,50 +149,17 @@ namespace NetView
 
 
 			ImageList imgList = new ImageList();
-
-			imgList.Images.Add(new Bitmap(@"images/Category.png"));
-			imgList.Images.Add(new Bitmap(@"images/Bus.png"));
-			imgList.Images.Add(new Bitmap(@"images/SlaveMaster.png"));
-			imgList.Images.Add(new Bitmap(@"images/Company.png"));
-			imgList.Images.Add(new Bitmap(@"images/Device.png"));
-
+			string[] ImageList = new string[] { @"images/Category.png" , @"images/Bus.png" , @"images/SlaveMaster.png" , @"images/Device.png" };
+			for (int i = 0; i < ImageList.Length; i++)
+			{
+				imgList.Images.Add(new Bitmap(ImageList[i]));
+				ImageDic.Add(ImageList[i].Replace(@"images/",""), i);
+			}
 			treeViewDevice.ImageList = imgList;
 
-			this.FormClosed += Form1_FormClosed;
-
-			var BustypeList = new List<string>();
-			for (int i = 0; i < DeviceCfg.Length; i++)
-				BustypeList.Add(DeviceCfg[i].BusType);
-
-			var RootNode = new TreeNode("Device");
-			RootNode.ImageIndex = 0;
-			foreach (var BusType in BustypeList.Distinct())
-			{
-				var BusRelationshipList = new List<string>();
-				var BusTypeNode = new TreeNode(BusType);
-				BusTypeNode.ImageIndex = 1;
-				var DevBusType = DeviceCfg.Where(d => d.BusType.Equals(BusType));
-				for (int i = 0; i < DevBusType.Count(); i++)
-					BusRelationshipList.Add(DevBusType.ElementAt(i).Category);
-				foreach (var Relationship in BusRelationshipList.Distinct())
-				{
-					var DeviceNameList = new List<string>();
-					var BusRelationshipNode = new TreeNode(Relationship);
-					BusRelationshipNode.ImageIndex = 2;
-					var DevBusRelationship = DevBusType.Where(d => d.Category.Equals(Relationship));
-					for (int i = 0; i < DevBusRelationship.Count(); i++)
-						DeviceNameList.Add(DevBusRelationship.ElementAt(i).DeviceName);
-					foreach (var Dev in DeviceNameList.Distinct())
-					{
-						var DeviceNameNode = new TreeNode(Dev);
-						DeviceNameNode.ImageIndex = 4;
-						BusRelationshipNode.Nodes.Add(DeviceNameNode);
-					}
-					BusTypeNode.Nodes.Add(BusRelationshipNode);
-				}
-				RootNode.Nodes.Add(BusTypeNode);
-			}
-			treeViewDevice.Nodes.Add(RootNode);
+			
+			
+			treeViewDevice.Nodes.Add(GenNode(ConfigMgr.Instance.DeviceCfgEntry, ImageDic));
 			treeViewDevice.ExpandAll();
 			treeViewDevice.ItemDrag += TreeViewDevice_ItemDrag;
 			treeViewDevice.NodeMouseDoubleClick += TreeViewDevice_NodeMouseDoubleClick;
@@ -382,11 +366,6 @@ namespace NetView
 			}
 		}
 
-
-		private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-		{
-			
-		}
 
 		private void DockPanelDiagram_SizeChanged(object sender, EventArgs e)
 		{
