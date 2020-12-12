@@ -21,6 +21,6 @@ namespace ControlTest.BusConfigModle
         /// 是什么类型的总线
         /// </summary>
         public override string ShortName { get; protected set; } = "MT excel";
-  
+
     }
 }
